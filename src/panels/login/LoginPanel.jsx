@@ -1,8 +1,8 @@
 import React from 'react';
-import LoginForm from '../components/Login/LoginForm';
-import { login } from '../services/authService';
+import LoginFeature from '../../features/login/LoginForm.jsx';
+import { login } from '../../services/authService.js';
 
-const LoginPage = () => {
+const LoginPanel = () => {
     const handleLogin = async (id, password) => {
         try {
             const result = await login(id, password);
@@ -22,9 +22,9 @@ const LoginPage = () => {
     return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
             <h1>서비스 로그인</h1>
-            <LoginForm onLogin={handleLogin} />
+            <LoginFeature onLogin={handleLogin} />
         </div>
     );
 };
 
-export default LoginPage;
+export default LoginPanel;
