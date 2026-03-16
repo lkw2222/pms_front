@@ -12,6 +12,7 @@
   "dependencies": {
     "ag-grid-community": "^35.1.0",
     "ag-grid-react": "^35.1.0",
+    "axios": "^1.13.6",
     "dockview-react": "^5.1.0",
     "flatpickr": "^4.6.13",
     "ol": "^10.8.0",
