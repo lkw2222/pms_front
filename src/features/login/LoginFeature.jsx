@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { default as IdInput } from "@/components/input/IdInput.jsx";
-import { default as PasswordInput } from "@/components/input/PasswordInput.jsx";
+import TextInput from "@/components/input/TextInput.jsx";
 
 const LoginFeature = ({ onLogin }) => {
     const [id, setId] = useState('');
@@ -13,8 +12,8 @@ const LoginFeature = ({ onLogin }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <IdInput value={id} onChange={(e) => setId(e.target.value)}/>
-            <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)}></PasswordInput>
+            <TextInput value={id} onChange={(e) => setId(e.target.value)} placeholder={'ID'} isNotNull={true}/>
+            <TextInput value={password} type={'password'} onChange={(e) => setPassword(e.target.value)} placeholder={'PASSWORD'} isNotNull={true}/>
             <button type="submit">로그인</button>
         </form>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
-import LoginFeature from '../../features/login/LoginFeature.jsx';
-import { login } from '../../services/authService.js';
+import LoginFeature from '@/features/login/LoginFeature.jsx';
+import { login } from '@/services/authService.js';
 
 const LoginPanel = () => {
     const handleLogin = async (id, password) => {
