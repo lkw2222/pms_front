@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { default as IdInput } from "@/components/input/IdInput.jsx";
+import { default as PasswordInput } from "@/components/input/PasswordInput.jsx";
 
 const LoginFeature = ({ onLogin }) => {
     const [id, setId] = useState('');
@@ -11,22 +13,8 @@ const LoginFeature = ({ onLogin }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div>
-                <input
-                    type="id"
-                    value={id}
-                    onChange={(e) => setId(e.target.value)}
-                    placeholder="이메일"
-                />
-            </div>
-            <div>
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="비밀번호"
-                />
-            </div>
+            <IdInput value={id} onChange={(e) => setId(e.target.value)}/>
+            <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)}></PasswordInput>
             <button type="submit">로그인</button>
         </form>
     );

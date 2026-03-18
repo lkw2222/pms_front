@@ -1,5 +1,6 @@
 import React from 'react';
 import { DockviewReact } from 'dockview-react';
+import LoginPanel from "./panels/login/LoginPanel.jsx";
 import 'dockview-react/dist/styles/dockview.css'; // Dockview 기본 테마 CSS
 
 // 1. 각 탭 안에 들어갈 컴포넌트들을 임시로 만듭니다. (나중에 별도 파일로 분리할 예정)
@@ -19,13 +20,14 @@ const GridComponent = () => (
 
 // 2. Dockview에서 사용할 컴포넌트들을 매핑해 줍니다.
 const components = {
-  mapPanel: MapComponent,
-  gridPanel: GridComponent,
+    mapPanel: MapComponent,
+    gridPanel: GridComponent,
+    loginPanel: LoginPanel
 };
 
 const App = () => {
-  // 3. Dockview가 처음 렌더링될 때 실행될 초기 설정
-  const onReady = (event) => {
+    // 3. Dockview가 처음 렌더링될 때 실행될 초기 설정
+    const onReady = (event) => {
     // API를 통해 화면에 탭을 추가합니다.
     event.api.addPanel({
       id: 'map_1',
@@ -39,7 +41,14 @@ const App = () => {
       title: '우선순위 데이터 표',
       position: { referencePanel: 'map_1', direction: 'right' }, // 지도의 오른쪽에 분할해서 배치!
     });
-  };
+
+    event.api.addPanel({
+        id: 'login_1',
+        component: 'loginPanel',
+        title: '로그인',
+        position: { referencePanel: 'grid_1', direction: 'right' }, // 지도의 오른쪽에 분할해서 배치!
+    });
+};
 
   return (
     // 전체 화면을 꽉 채우는 컨테이너

@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginFeature from '../../features/login/LoginForm.jsx';
+import LoginFeature from '../../features/login/LoginFeature.jsx';
 import { login } from '../../services/authService.js';
 
 const LoginPanel = () => {
