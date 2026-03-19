@@ -1,0 +1,60 @@
+.dv-theme-dark,
+.dv-theme-light {
+  --dv-background-color:                                var(--color-bg-primary);
+  --dv-separator-border:                                var(--color-border);
+  --dv-tab-height:                                      38px;
+  --dv-tabs-and-actions-container-background-color:     var(--color-bg-tertiary);
+  --dv-activegroup-visiblepanel-tab-background-color:   var(--color-bg-secondary);
+  --dv-activegroup-hiddenpanel-tab-background-color:    var(--color-bg-tertiary);
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--color-bg-secondary);
+  --dv-inactivegroup-hiddenpanel-tab-background-color:  var(--color-bg-tertiary);
+  --dv-activegroup-visiblepanel-tab-color:              var(--color-text-primary);
+  --dv-activegroup-hiddenpanel-tab-color:               var(--color-text-muted);
+  --dv-inactivegroup-visiblepanel-tab-color:            var(--color-text-muted);
+  --dv-tab-divider-color:                               var(--color-border);
+  --dv-active-sash-color:                               var(--color-accent);
+  --dv-group-view-background-color:                     var(--color-bg-secondary);
+  --dv-tabs-and-actions-container-font-size:            13px;
+}
+
+/* 탭 기본 - 비활성 탭은 배경색으로 명확히 구분 */
+.dockview-react .tab {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border-right: 1px solid var(--color-border) !important;
+  background: var(--color-bg-tertiary) !important;
+  color: var(--color-text-muted) !important;
+}
+
+/* 활성 탭 - 밝게 + 상단 액센트 라인 */
+.dockview-react .tab.active-tab {
+  background: var(--color-bg-secondary) !important;
+  color: var(--color-text-primary) !important;
+  font-weight: 600 !important;
+  border-top: 2px solid var(--color-accent) !important;
+  border-bottom: 1px solid var(--color-bg-secondary) !important;
+}
+
+/* 탭 호버 */
+.dockview-react .tab:not(.active-tab):hover {
+  background: var(--color-bg-hover) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+/* 탭바 컨테이너 배경 */
+.dockview-react .tabs-and-actions-container {
+  background: var(--color-bg-tertiary) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+.dockview-react .floating-group-container {
+  border: 1px solid var(--color-accent) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  overflow: hidden;
+}
+
+.dv-drop-target-anchor {
+  background: rgba(88,166,255,0.1) !important;
+  border: 2px solid var(--color-accent) !important;
+}

@@ -1,154 +1,134 @@
-import React, { useState, useEffect, useId } from 'react';
+import React, { useState, useEffect } from 'react'
+import { ChevronDown } from 'lucide-react'
 
-const EmailInput = ({label, value = '', onChange, errorMessage = "유효한 이메일 형식이 아닙니다.", ...props}) => {
-    const uniqueId = useId();
-    const [isValid, setIsValid] = useState(true);
+const DOMAINS = [
+  { value: 'direct',    label: '직접 입력' },
+  { value: 'naver.com', label: 'naver.com'  },
+  { value: 'nate.com',  label: 'nate.com'   },
+  { value: 'daum.net',  label: 'daum.net'   },
+  { value: 'gmail.com', label: 'gmail.com'  },
+]
 
-    // 이메일 유효성 검사 정규식
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
-    // 내부적으로 아이디와 도메인을 쪼개서 관리합니다.
-    const [localPart, setLocalPart] = useState('');
-    const [domainPart, setDomainPart] = useState('');
-    const [email, setEmail] = useState('');
-    const [isDomainReadOnly, setIsDomainReadOnly] = useState(false);
+/**
+ * EmailInput
+ * - 너비는 부모 컨테이너가 결정 (width: 100% 고정)
+ * @param {string}   value
+ * @param {function} onChange  - (emailString) => void  (e.target.value 아닌 문자열 직접 전달)
+ * @param {string}   errorMessage
+ */
+export default function EmailInput({
+  label,
+  value = '',
+  onChange,
+  errorMessage = '유효한 이메일 형식이 아닙니다.',
+  className = '',
+  ...props
+}) {
+  const [localPart,      setLocalPart]      = useState('')
+  const [domainPart,     setDomainPart]     = useState('')
+  const [isDomainLocked, setIsDomainLocked] = useState(false)
+  const [isValid,        setIsValid]        = useState(true)
 
-    // 자주 사용하는 도메인 목록
-    const domains = [
-        { value: 'direct', label: '직접 입력' },
-        { value: 'naver.com', label: 'naver.com' },
-        { value: 'nate.com', label: 'nate.com' },
-        { value: 'daum.net', label: 'daum.net' },
-        { value: 'gmail.com', label: 'gmail.com' },
-    ];
+  useEffect(() => {
+    if (value) {
+      const [local = '', domain = ''] = value.split('@')
+      setLocalPart(local)
+      setDomainPart(domain)
+      setIsDomainLocked(DOMAINS.some(d => d.value !== 'direct' && d.value === domain))
+    } else {
+      setLocalPart(''); setDomainPart(''); setIsDomainLocked(false)
+    }
+  }, [value])
 
-    // 부모로부터 받은 value가 변경될 때 내부 상태(아이디/도메인) 업데이트
-    useEffect(() => {
-        if (value) {
-            const [local = '', domain = ''] = value.split('@');
-            setLocalPart(local);
-            setDomainPart(domain);
+  const triggerChange = (newLocal, newDomain) => {
+    const email = newLocal || newDomain ? `${newLocal}@${newDomain}` : ''
+    setIsValid(email === '' || EMAIL_REGEX.test(email))
+    onChange?.(email)
+  }
 
-            // 전달받은 도메인이 목록에 있으면 select 박스 동기화 및 읽기 전용 처리
-            const isCommonDomain = domains.some(d => d.value === domain);
-            setIsDomainReadOnly(isCommonDomain && domain !== '');
-        } else {
-            setLocalPart('');
-            setDomainPart('');
-            setIsDomainReadOnly(false);
-        }
-    }, [value]);
+  const handleLocalChange  = (e) => { const v = e.target.value; setLocalPart(v);  triggerChange(v, domainPart) }
+  const handleDomainChange = (e) => { const v = e.target.value; setDomainPart(v); triggerChange(localPart, v) }
+  const handleSelectChange = (e) => {
+    const selected = e.target.value
+    if (selected === 'direct') {
+      setIsDomainLocked(false); setDomainPart(''); triggerChange(localPart, '')
+    } else {
+      setIsDomainLocked(true); setDomainPart(selected); triggerChange(localPart, selected)
+    }
+  }
 
-    // 값이 변경될 때마다 정규식 검사 및 부모로 값 전달
-    const triggerChange = (newLocal, newDomain) => {
-        const newEmail = newLocal || newDomain ? `${newLocal}@${newDomain}` : '';
-
-        // 빈 값이면 에러 숨김, 값이 있으면 정규식 테스트
-        setIsValid(newEmail === '' || emailRegex.test(newEmail));
-
-        if (onChange) {
-            setEmail(newEmail);
-            // 부모의 onChange 이벤트에 이메일 문자열을 통째로 넘겨줍니다.
-            // (기존 e.target.value 대신 문자열 자체를 넘기므로 부모 쪽 코드 수정 필요)
-            onChange(newEmail);
-        }
-    };
-
-    const handleLocalChange = (e) => {
-        const newLocal = e.target.value;
-        setLocalPart(newLocal);
-        triggerChange(newLocal, domainPart);
-    };
-
-    const handleDomainChange = (e) => {
-        const newDomain = e.target.value;
-        setDomainPart(newDomain);
-        triggerChange(localPart, newDomain);
-    };
-
-    const handleSelectChange = (e) => {
-        const selectedDomain = e.target.value;
-        if (selectedDomain === 'direct') {
-            setIsDomainReadOnly(false);
-            setDomainPart('');
-            triggerChange(localPart, '');
-        } else {
-            setIsDomainReadOnly(true);
-            setDomainPart(selectedDomain);
-            triggerChange(localPart, selectedDomain);
-        }
-    };
-
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
-            {label && (
-                <label htmlFor={uniqueId} style={{ marginBottom: '4px', fontSize: '14px' }}>
-                    {label}
-                </label>
-            )}
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {/* 1. 아이디 입력 */}
-                <input
-                    id={uniqueId}
-                    type="text"
-                    value={localPart}
-                    onChange={handleLocalChange}
-                    placeholder="아이디"
-                    style={inputStyle(isValid)}
-                    {...props}
-                />
-
-                <span>@</span>
-
-                {/* 2. 도메인 입력 */}
-                <input
-                    type="text"
-                    value={domainPart}
-                    onChange={handleDomainChange}
-                    placeholder="도메인"
-                    readOnly={isDomainReadOnly}
-                    style={{
-                        ...inputStyle(isValid),
-                        backgroundColor: isDomainReadOnly ? '#f0f0f0' : 'white', // 읽기 전용일 때 배경색 변경
-                    }}
-                />
-
-                {/* 3. 도메인 선택 Select */}
-                <select
-                    onChange={handleSelectChange}
-                    style={inputStyle(isValid)}
-                    value={isDomainReadOnly ? domainPart : 'direct'}
-                >
-                    {domains.map((domain) => (
-                        <option key={domain.value} value={domain.value}>
-                            {domain.label}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {/* 유효성 검사 에러 메시지 */}
-            {!isValid && (
-                <span style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
-                {errorMessage}
-                </span>
-            )}
-
-            <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
-                현재 입력된 데이터: {email}
-            </div>
-        </div>
-    );
-};
-
-// 중복되는 input/select 스타일을 하나로 묶어둔 헬퍼 함수
-const inputStyle = (isValid) => ({
-    padding: '8px',
-    borderRadius: '4px',
-    border: `1px solid ${isValid ? '#ccc' : 'red'}`,
+  // 다른 Input 컴포넌트와 동일한 인라인 스타일
+  const inputStyle = (extra = {}) => ({
+    height: 36,
+    fontSize: 13,
+    borderRadius: 'var(--radius-md)',
+    border: `1px solid ${isValid ? 'var(--color-border)' : 'var(--color-danger)'}`,
+    padding: '0 12px',
+    background: 'var(--color-bg-tertiary)',
+    color: 'var(--color-text-primary)',
     outline: 'none',
-    flex: 1, // 남은 공간을 균율하게 차지하도록 설정
-});
+    transition: 'border-color .15s',
+    boxSizing: 'border-box',
+    ...extra,
+  })
 
-export default EmailInput;
+  return (
+    <div className={`flex flex-col gap-1.5 ${className}`}>
+      {label && (
+        <label style={{ fontSize:12, fontWeight:500, color:'var(--color-text-secondary)', display:'flex', flexDirection:'column', gap:6 }}>
+          {label}
+        </label>
+      )}
+      <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+        {/* 아이디 */}
+        <input
+          type="text"
+          value={localPart}
+          onChange={handleLocalChange}
+          placeholder="아이디"
+          style={{ ...inputStyle(), flex:1 }}
+          onFocus={e => e.target.style.borderColor = 'var(--color-border-focus)'}
+          onBlur={e  => e.target.style.borderColor = isValid ? 'var(--color-border)' : 'var(--color-danger)'}
+          {...props}
+        />
+
+        {/* @ */}
+        <span style={{ fontSize:13, color:'var(--color-text-muted)', flexShrink:0 }}>@</span>
+
+        {/* 도메인 직접 입력 */}
+        <input
+          type="text"
+          value={domainPart}
+          onChange={handleDomainChange}
+          placeholder="도메인"
+          readOnly={isDomainLocked}
+          style={{ ...inputStyle(), flex:1, opacity: isDomainLocked ? 0.5 : 1, cursor: isDomainLocked ? 'not-allowed' : 'text' }}
+          onFocus={e => { if (!isDomainLocked) e.target.style.borderColor = 'var(--color-border-focus)' }}
+          onBlur={e  => { if (!isDomainLocked) e.target.style.borderColor = isValid ? 'var(--color-border)' : 'var(--color-danger)' }}
+        />
+
+        {/* 도메인 선택 */}
+        <div style={{ position:'relative', flexShrink:0, width:120 }}>
+          <select
+            value={isDomainLocked ? domainPart : 'direct'}
+            onChange={handleSelectChange}
+            style={{ ...inputStyle(), width:'100%', paddingRight:28, appearance:'none', cursor:'pointer' }}
+            onFocus={e => e.target.style.borderColor = 'var(--color-border-focus)'}
+            onBlur={e  => e.target.style.borderColor = isValid ? 'var(--color-border)' : 'var(--color-danger)'}
+          >
+            {DOMAINS.map(d => (
+              <option key={d.value} value={d.value}>{d.label}</option>
+            ))}
+          </select>
+          <ChevronDown size={13} style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none', color:'var(--color-text-muted)' }} />
+        </div>
+      </div>
+
+      {!isValid && (
+        <span style={{ fontSize:11, color:'var(--color-danger)' }}>{errorMessage}</span>
+      )}
+    </div>
+  )
+}

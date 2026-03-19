@@ -1,27 +1,16 @@
-import React from 'react';
+import React from 'react'
+import { Check } from 'lucide-react'
+import styles from '../styles/CheckboxInput.module.css'
 
-const CheckboxInput = ({label = '', checked, onChange, ...props}) => {
-    return (
-        <div className="checkbox-container" style={{ display: 'inline-flex', alignItems: 'center' }}>
-            {/* label 태그로 묶어주면 텍스트를 클릭해도 체크박스가 작동하여 사용성이 좋아집니다. */}
-            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={onChange}
-                    style={{ cursor: 'pointer' }}
-                    {...props}
-                />
-
-                {/* showLabel이 true이고, label 텍스트가 존재할 때만 화면에 렌더링합니다. */}
-                {label && (
-                    <span style={{ marginLeft: '8px', fontSize: '14px', userSelect: 'none' }}>
-                        {label}
-                    </span>
-                )}
-            </label>
-        </div>
-    );
-};
-
-export default CheckboxInput;
+export default function CheckboxInput({ label, checked = false, onChange, disabled = false, className = '', ...props }) {
+  return (
+    <label className={[styles.label, disabled ? styles.disabled : '', className].join(' ')}>
+      <input type="checkbox" checked={checked} onChange={onChange} disabled={disabled}
+        className={styles.input} {...props} />
+      <div className={[styles.box, checked ? styles.checked : ''].join(' ')}>
+        {checked && <Check size={11} color="#fff" strokeWidth={3} />}
+      </div>
+      {label}
+    </label>
+  )
+}

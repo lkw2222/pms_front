@@ -1,0 +1,79 @@
+/* ── BasicButton ────────────────────────────────────────────────────────────
+   variant: primary | secondary | danger | ghost | success | warning
+   size:    sm | md | lg
+   퍼블리셔: 이 파일에서 버튼 스타일을 수정하세요.
+──────────────────────────────────────────────────────────────────────────── */
+
+.btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  font-weight:     500;
+  border-radius:   var(--radius-md);
+  border:          1px solid transparent;
+  cursor:          pointer;
+  transition:      all 0.15s;
+  user-select:     none;
+  white-space:     nowrap;
+  box-shadow:      var(--shadow-sm);
+}
+.btn:active    { transform: scale(0.97); }
+.btn:disabled  { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ── 크기 ── */
+.sm { height: 30px; padding: 0 14px; font-size: 12px; gap: 6px; }
+.md { height: 34px; padding: 0 16px; font-size: 13px; gap: 7px; }
+.lg { height: 38px; padding: 0 20px; font-size: 14px; gap: 8px; }
+
+/* ── variant ── */
+.primary {
+  background:   var(--color-accent);
+  border-color: var(--color-accent);
+  color:        #fff;
+}
+.primary:hover:not(:disabled) {
+  background:   var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.secondary {
+  background:   var(--color-bg-tertiary);
+  border-color: var(--color-border);
+  color:        var(--color-text-primary);
+}
+.secondary:hover:not(:disabled) {
+  background:   var(--color-bg-hover);
+  border-color: var(--color-text-muted);
+}
+
+.danger {
+  background:   var(--color-danger);
+  border-color: var(--color-danger);
+  color:        #fff;
+}
+.danger:hover:not(:disabled) { opacity: 0.9; }
+
+.ghost {
+  background:   transparent;
+  border-color: transparent;
+  color:        var(--color-text-secondary);
+}
+.ghost:hover:not(:disabled) {
+  background:   var(--color-bg-tertiary);
+  border-color: var(--color-border);
+  color:        var(--color-text-primary);
+}
+
+.success {
+  background:   var(--color-success);
+  border-color: var(--color-success);
+  color:        #fff;
+}
+.success:hover:not(:disabled) { opacity: 0.9; }
+
+.warning {
+  background:   var(--color-warning);
+  border-color: var(--color-warning);
+  color:        #fff;
+}
+.warning:hover:not(:disabled) { opacity: 0.9; }

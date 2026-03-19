@@ -1,43 +1,54 @@
-import React, { useId } from 'react';
-import Flatpickr from "react-flatpickr";
-import 'flatpickr/dist/themes/light.css';
-import { Korean } from 'flatpickr/dist/l10n/ko.js';
+import React from 'react'
+import Flatpickr from 'react-flatpickr'
+import 'flatpickr/dist/flatpickr.css'
+import { Korean } from 'flatpickr/dist/l10n/ko.js'
+import { Calendar } from 'lucide-react'
 
-const DateInput = ({label = '', value, onChange, options = {}, ...props}) => {
-    const uniqueId = useId();
-
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
-            {label && (
-                <label htmlFor={uniqueId} style={{ marginBottom: '4px', fontSize: '14px' }}>
-                    {label}
-                </label>
-            )}
-
-            <Flatpickr id={uniqueId} value={value}
-                // onChange 시 날짜 문자열(예: '2026-03-18')을 바로 부모로 넘겨주도록 처리
-                onChange={(selectedDates, dateStr) => {
-                    if (onChange) {
-                        onChange(dateStr, selectedDates);
-                    }
-                }}
-                options={{
-                    locale: Korean,        // 한국어 달력 적용
-                    dateFormat: 'Y-m-d',   // 데이터베이스에 넣기 좋은 표준 포맷
-                    ...options             // 부모에서 특정 옵션(minDate 등)을 덮어쓸 수 있도록 전개
-                }}
-                style={{
-                    padding: '8px',
-                    borderRadius: '4px',
-                    border: '1px solid #ccc',
-                    outline: 'none',
-                    cursor: 'pointer',
-                }}
-                placeholder="날짜 선택"
-                {...props}
-            />
+/**
+ * DateInput
+ * - 너비는 부모 컨테이너가 결정 (width: 100% 고정)
+ * - options 으로 flatpickr 옵션 확장 (mode, minDate 등 특수 케이스만)
+ */
+export default function DateInput({
+  label, value, onChange,
+  placeholder = '날짜를 선택하세요',
+  options = {}, disabled = false, className = '', ...props
+}) {
+  return (
+    <div className={`flex flex-col gap-1.5 ${className}`}>
+      <label style={{ display:'flex', flexDirection:'column', gap:6, cursor: disabled ? 'not-allowed' : 'pointer' }}>
+        {label && (
+          <span style={{ fontSize:12, fontWeight:500, color:'var(--color-text-secondary)' }}>
+            {label}
+          </span>
+        )}
+        <div style={{ position:'relative' }}>
+          <Calendar size={13} style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none', color:'var(--color-text-muted)', zIndex:1 }} />
+          <Flatpickr
+            value={value}
+            onChange={(dates, dateStr) => onChange?.(dateStr, dates)}
+            options={{ locale:Korean, dateFormat:'Y-m-d', ...options }}
+            disabled={disabled}
+            placeholder={placeholder}
+            style={{
+              width:'100%', height:36, fontSize:13,
+              borderRadius:'var(--radius-md)',
+              border:'1px solid var(--color-border)',
+              padding:'0 12px 0 32px',
+              background:'var(--color-bg-tertiary)',
+              color:'var(--color-text-primary)',
+              outline:'none',
+              cursor: disabled ? 'not-allowed' : 'pointer',
+              opacity: disabled ? 0.4 : 1,
+              boxSizing:'border-box', transition:'border-color .15s',
+              overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+            }}
+            onFocus={e => e.target.style.borderColor = 'var(--color-border-focus)'}
+            onBlur={e  => e.target.style.borderColor = 'var(--color-border)'}
+            {...props}
+          />
         </div>
-    );
-};
-
-export default DateInput;
+      </label>
+    </div>
+  )
+}

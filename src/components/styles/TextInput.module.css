@@ -1,0 +1,43 @@
+/* ── TextInput ───────────────────────────────────────────────────────────────
+   퍼블리셔: 이 파일에서 텍스트 입력 스타일을 수정하세요.
+──────────────────────────────────────────────────────────────────────────── */
+
+.wrapper    { display: flex; flex-direction: column; gap: 6px; }
+.label      { display: flex; flex-direction: column; gap: 6px; cursor: text; }
+.label.disabled { cursor: not-allowed; }
+
+.labelText  { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); }
+.required   { color: var(--color-danger); margin-right: 2px; }
+
+.inputWrap  { position: relative; }
+
+.input {
+  width:         100%;
+  height:        36px;
+  font-size:     13px;
+  border-radius: var(--radius-md);
+  border:        1px solid var(--color-border);
+  padding:       0 12px;
+  background:    var(--color-bg-tertiary);
+  color:         var(--color-text-primary);
+  outline:       none;
+  transition:    border-color 0.15s;
+  box-sizing:    border-box;
+}
+.input:focus        { border-color: var(--color-border-focus); }
+.input.error        { border-color: var(--color-danger); }
+.input:disabled     { opacity: 0.4; cursor: not-allowed; }
+.input.hasIcon      { padding-left: 32px; }
+
+.icon {
+  position:      absolute;
+  left:          10px;
+  top:           50%;
+  transform:     translateY(-50%);
+  pointer-events:none;
+  color:         var(--color-text-muted);
+  display:       flex;
+  align-items:   center;
+}
+
+.errorMsg { font-size: 11px; color: var(--color-danger); }
