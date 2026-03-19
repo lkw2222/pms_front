@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, forwardRef } from 'react'
+import { useAppStore } from '@/store/useAppStore.js'
 import { AgGridReact } from 'ag-grid-react'
 import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community'
 
@@ -45,22 +46,28 @@ const BasicGrid = forwardRef(function BasicGrid({
   }, [onRowClick])
 
   // ── Theming API (v33+) ────────────────────────────────────────────────────
-  // CSS 변수와 연동되도록 커스텀 테마 구성
-  const theme = themeQuartz.withParams({
-    backgroundColor:            'var(--color-bg-secondary)',
-    foregroundColor:            'var(--color-text-primary)',
-    headerBackgroundColor:      'var(--color-bg-tertiary)',
-    headerTextColor:            'var(--color-text-secondary)',
-    borderColor:                'var(--color-border)',
-    rowHoverColor:              'var(--color-bg-hover)',
-    selectedRowBackgroundColor: 'rgba(88,166,255,0.12)',
-    oddRowBackgroundColor:      'var(--color-bg-primary)',
-    fontSize:                   13,
-    rowHeight:                  36,
-    headerHeight:               38,
-    cellHorizontalPaddingScale: 1.2,
-    fontFamily:                 'inherit',
-  })
+  // theme 변경 시 CSS 변수값을 다시 읽어 그리드 테마 재적용
+  const { theme: appTheme } = useAppStore()
+
+  const theme = useMemo(() => {
+    const s = getComputedStyle(document.documentElement)
+    const v = (name) => s.getPropertyValue(name).trim()
+    return themeQuartz.withParams({
+      backgroundColor:            v('--color-bg-secondary')  || '#ffffff',
+      foregroundColor:            v('--color-text-primary')  || '#1f2328',
+      headerBackgroundColor:      v('--color-bg-tertiary')   || '#f6f8fa',
+      headerTextColor:            v('--color-text-secondary')|| '#656d76',
+      borderColor:                v('--color-border')        || '#d0d7de',
+      rowHoverColor:              v('--color-bg-hover')      || '#f3f4f6',
+      selectedRowBackgroundColor: appTheme === 'dark' ? 'rgba(88,166,255,0.15)' : 'rgba(37,99,235,0.08)',
+      oddRowBackgroundColor:      v('--color-bg-primary')    || '#f9fafb',
+      fontSize:                   13,
+      rowHeight:                  36,
+      headerHeight:               38,
+      cellHorizontalPaddingScale: 1.2,
+      fontFamily:                 'inherit',
+    })
+  }, [appTheme])
 
   // ── 모드별 props ──────────────────────────────────────────────────────────
   const infiniteProps = mode === 'infinite' ? {
