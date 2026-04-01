@@ -133,7 +133,7 @@ export default function App() {
   if (new URLSearchParams(window.location.search).get('panel')) return <PanelOnlyApp />
 
   const apiRef = useRef(null)
-  const { theme, toggleTheme, sidebarOpen, setSidebarOpen } = useAppStore()
+  const { theme, toggleTheme, sidebarOpen, setSidebarOpen, toggleSidebar } = useAppStore()
   const [openPanels,     setOpenPanels]     = useState(new Set())
   const [expandedGroups, setExpandedGroups] = useState(new Set(['work','gis','sample','system']))
   const [pipBlocked,     setPipBlocked]     = useState(false)
@@ -174,7 +174,7 @@ export default function App() {
 
       {/* ── 탑바 ── */}
       <header className={styles.topbar}>
-        <button className={styles.iconBtn} onClick={() => setSidebarOpen(o => !o)}>
+        <button className={styles.iconBtn} onClick={toggleSidebar}>
           <Menu size={16} />
         </button>
 
@@ -224,7 +224,7 @@ export default function App() {
             ))}
           </nav>
           <div className={styles.sidebarFoot}>
-            <button className={styles.collapseBtn} onClick={() => setSidebarOpen(o => !o)}
+            <button className={styles.collapseBtn} onClick={toggleSidebar}
               style={{ justifyContent: sidebarOpen ? 'flex-end' : 'center' }}>
               {sidebarOpen && <span>접기</span>}
               {sidebarOpen ? <ChevronLeft size={13} /> : <ChevronRight size={13} />}
