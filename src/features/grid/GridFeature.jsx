@@ -1,6 +1,8 @@
-import React, { useState, useMemo, useRef } from 'react'
+import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import BasicGrid   from '@/components/grid/BasicGrid.jsx'
+import BasicGrid          from '@/components/grid/BasicGrid.jsx'
+import GridActionButtons  from '@/components/grid/GridActionButtons.jsx'
+import GridDetailPanel    from '@/components/grid/GridDetailPanel.jsx'
 import TextInput   from '@/components/input/TextInput.jsx'
 import SelectInput from '@/components/input/SelectInput.jsx'
 import DateInput   from '@/components/input/DateInput.jsx'
@@ -92,9 +94,13 @@ function SearchForm({ search, setSearch, onSearch, onReset, totalCount, isLoadin
 // ── 페이징 그리드 (useQuery 적용) ─────────────────────────────────────────────
 function PaginateGrid() {
   const INIT = { name:'', category:'', status:'', dateFrom:'', dateTo:'' }
-  const [search,   setSearch]   = useState(INIT)
-  const [applied,  setApplied]  = useState(INIT)
-  const [selected, setSelected] = useState(null)
+  const [search,      setSearch]      = useState(INIT)
+  const [applied,     setApplied]     = useState(INIT)
+  const [detailOpen,  setDetailOpen]  = useState(false)
+  const [detailData,  setDetailData]  = useState(null)
+
+  const openDetail  = useCallback((data) => { setDetailData(data); setDetailOpen(true) }, [])
+  const closeDetail = useCallback(()     => setDetailOpen(false), [])
 
   // ── TanStack Query - 서버 상태 관리 ────────────────────────────────────
   const { data, isLoading, isError, error } = useQuery({
@@ -121,6 +127,23 @@ function PaginateGrid() {
     staleTime: 1000 * 60,  // 1분간 캐시 유지 (같은 조건 재조회 안 함)
   })
 
+  const colDefs = useMemo(() => [
+    ...COL_DEFS,
+    {
+      headerName: '액션', width:130, flex:0, sortable:false, filter:false,
+      cellRenderer: ({ data }) => (
+        <GridActionButtons
+          data={data}
+          buttons={[
+            { type:'detail', onClick: openDetail                    },
+            { type:'edit',   onClick: d => alert(`수정: ${d.name}`) },
+            { type:'delete', onClick: d => alert(`삭제: ${d.name}`) },
+          ]}
+        />
+      ),
+    },
+  ], [openDetail])
+
   const onSearch = () => setApplied({ ...search })
   const onReset  = () => { setSearch(INIT); setApplied(INIT) }
 
@@ -139,24 +162,25 @@ function PaginateGrid() {
         totalCount={data?.totalCount ?? 0}
         isLoading={isLoading}
       />
-      <div style={{ flex:1, overflow:'hidden' }}>
-        <BasicGrid
-          mode="paginate"
-          rowData={data?.list ?? []}
-          colDefs={COL_DEFS}
-          onRowClick={setSelected}
-          height="100%"
-          pageSize={20}
+      <div style={{ flex:1, overflow:'hidden', display:'flex' }}>
+        <div style={{ flex:1, overflow:'hidden', minWidth:0 }}>
+          <BasicGrid
+            mode="paginate"
+            rowData={data?.list ?? []}
+            colDefs={colDefs}
+            onRowClick={openDetail}
+            height="100%"
+            pageSize={20}
+          />
+        </div>
+        <GridDetailPanel
+          open={detailOpen}
+          data={detailData}
+          onClose={closeDetail}
+          defaultWidth={500}
+          columns={2}
         />
       </div>
-      {selected && (
-        <div style={{ padding:'8px 16px', borderTop:'1px solid var(--color-border)', fontSize:12, color:'var(--color-text-muted)', display:'flex', gap:16, flexShrink:0 }}>
-          <span>선택: <strong style={{ color:'var(--color-text-primary)' }}>{selected.name}</strong></span>
-          <span>분류: {selected.category}</span>
-          <span>상태: <BasicLabel text={selected.status} variant={STATUS_VARIANT[selected.status]} /></span>
-          <span>우선순위: <BasicLabel text={selected.priority} variant={PRIORITY_VARIANT[selected.priority]} /></span>
-        </div>
-      )}
     </div>
   )
 }

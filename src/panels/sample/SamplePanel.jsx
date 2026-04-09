@@ -9,6 +9,7 @@ import EmailInputFeature   from '@/features/sample/EmailInputFeature.jsx'
 import FileInputFeature    from '@/features/sample/FileInputFeature.jsx'
 import ButtonFeature       from '@/features/sample/ButtonFeature.jsx'
 import LabelFeature        from '@/features/sample/LabelFeature.jsx'
+import GridActionButtonsFeature from '@/features/sample/GridActionButtonsFeature.jsx'
 
 // ── Props 테이블 ──────────────────────────────────────────────────────────────
 function PropTable({ rows }) {
@@ -59,6 +60,7 @@ const SECTIONS = [
   { id:'file-input',     label:'FileInput'         },
   { id:'buttons',        label:'Button'            },
   { id:'labels',         label:'Label'             },
+  { id:'grid-action-buttons', label:'GridActionButtons' },
 ]
 
 // ── SamplePanel ───────────────────────────────────────────────────────────────
@@ -195,6 +197,23 @@ export default function SamplePanel() {
           ]}
         >
           <LabelFeature />
+        </SectionCard>
+
+        <SectionCard id="grid-action-buttons" title="GridActionButtons"
+          propRows={[
+            ['data',              'object', '-',  '현재 로우 데이터 (AG Grid에서 자동 전달)'],
+            ['buttons',           'Array',  '[]', '버튼 설정 배열'],
+            ['buttons[].type',    'string', '-',  'detail | edit | delete | download | copy | add | confirm | cancel | custom'],
+            ['buttons[].label',   'string', '-',  '버튼 텍스트 (type 기본값 사용 가능)'],
+            ['buttons[].icon',    'Component','-','lucide-react 아이콘 (type 기본값 사용 가능)'],
+            ['buttons[].variant', 'string', '-',  'ghost | primary | secondary | danger | success | warning'],
+            ['buttons[].onClick', 'function','-', '(data) => void'],
+            ['buttons[].disabled','bool | (data)=>bool', 'false', '비활성 조건'],
+            ['buttons[].hidden',  'bool | (data)=>bool', 'false', '숨김 조건'],
+            ['buttons[].title',   'string', '-',  '툴팁'],
+          ]}
+        >
+          <GridActionButtonsFeature />
         </SectionCard>
 
       </div>

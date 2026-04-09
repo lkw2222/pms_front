@@ -31,15 +31,18 @@ export const useAppStore = create(
       toggleSidebar:  () => set(s => ({ sidebarOpen: !s.sidebarOpen })),
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
 
+
       // ── 인증 ──────────────────────────────────────────────────────────────
-      user:  null,
-      token: null,
-      setAuth:   (user, token) => set({ user, token }),
-      clearAuth: () => set({ user: null, token: null }),
-      isLoggedIn: () => !!get().token,
+      // JWT는 httpOnly 쿠키로 관리 (프론트에서 토큰 직접 보관 안 함)
+      // 로그인 성공 시 백엔드가 쿠키 발급, 로그아웃 시 백엔드가 쿠키 만료 처리
+      user:       null,
+      setAuth:    (user) => set({ user }),
+      clearAuth:  () => set({ user: null }),
+      isLoggedIn: () => !!get().user,
     }),
     {
       name: 'pms-app-store',
+      partialize: (s) => ({ theme: s.theme, sidebarOpen: s.sidebarOpen, user: s.user }),
     }
   )
 )

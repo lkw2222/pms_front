@@ -42,6 +42,7 @@ const BasicGrid = forwardRef(function BasicGrid({
   }), [])
 
   const onRowClicked = useCallback((e) => {
+    if (e.event?.target?.closest('button')) return
     onRowClick?.(e.data)
   }, [onRowClick])
 

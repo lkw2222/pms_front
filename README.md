@@ -586,11 +586,64 @@ export const GRID_KEYS = {
 }
 ```
 
+### 인증 방식 — httpOnly 쿠키 + JWT
+
+> 보안 정책: JWT를 프론트(localStorage 등)에 저장하지 않고 **httpOnly 쿠키**로만 관리
+
+| 항목 | 내용 |
+|---|---|
+| 토큰 저장 위치 | 백엔드가 httpOnly 쿠키로 발급 (JS 접근 불가) |
+| 프론트 보관 | 없음 — `withCredentials: true` 로 브라우저가 자동 포함 |
+| 로그인 | 백엔드 `/login` 호출 → 쿠키 발급 → 유저 정보만 Zustand 저장 |
+| 로그아웃 | 백엔드 `/logout` 호출 → 쿠키 만료 처리 |
+| 401 발생 시 | 로그인 페이지 이동 (PiP 창이면 창 닫기) |
+
+**프론트 연동 (자동 적용)**
+
+```js
+// api.js — withCredentials: true 로 모든 요청에 쿠키 자동 포함
+// 별도 토큰 처리 불필요
+```
+
+**로그인 처리 예시**
+
+```js
+import { useAppStore } from '@/store/useAppStore.js'
+import apiClient from '@/services/api.js'
+
+const { setAuth } = useAppStore()
+
+const handleLogin = async ({ username, password }) => {
+  const user = await apiClient.post('/auth/login', { username, password })
+    .then(r => r.data)    // 백엔드: 쿠키 발급 + 유저 정보 반환
+  setAuth(user)           // 유저 정보만 Zustand에 저장
+}
+```
+
+**로그아웃 처리 예시**
+
+```js
+const { clearAuth } = useAppStore()
+
+const handleLogout = async () => {
+  await apiClient.post('/auth/logout')  // 백엔드에서 쿠키 만료
+  clearAuth()
+}
+```
+
+**백엔드 CORS 필수 설정 (Spring Boot)**
+
+```java
+config.setAllowCredentials(true);
+config.setAllowedOrigins(List.of("http://localhost:5173"));
+// allowedOrigins 에 * 사용 불가 (credentials 와 함께 사용 시 오류)
+```
+
 ### 기본 설정 (자동 적용)
 
-- `baseURL`: `http://localhost:8080/api`
-- JWT 토큰 자동 헤더 첨부 (`Authorization: Bearer {token}`)
-- 401 응답 시 토큰 자동 제거
+- `baseURL`: 환경변수 `VITE_API_URL` (기본 `http://localhost:8080/api`)
+- `withCredentials: true` — 모든 요청에 쿠키 자동 포함
+- 401 응답 시 로그인 페이지 이동
 
 ### 엑셀 다운로드
 
@@ -637,6 +690,102 @@ const colDefs = [
 | 수백 건 이하 | `paginate` |
 | 수천 건 이상 | `infinite` |
 | 간단한 목록  | `none` |
+
+### GridActionButtons — 로우 액션 버튼
+
+그리드 로우에 버튼이 필요한 경우 `GridActionButtons` 컴포넌트를 사용해요.
+
+```jsx
+import GridActionButtons from '@/components/grid/GridActionButtons.jsx'
+
+{
+  headerName: '액션', width: 130, flex: 0, sortable: false, filter: false,
+  cellRenderer: ({ data }) => (
+    <GridActionButtons
+      data={data}
+      buttons={[
+        { type: 'detail', onClick: openDetail },
+        { type: 'edit',   onClick: handleEdit },
+        { type: 'delete', onClick: handleDelete },
+      ]}
+    />
+  ),
+}
+```
+
+**기본 제공 타입**
+
+| type | 라벨 | 스타일 |
+|---|---|---|
+| `detail` | 상세 | ghost |
+| `edit` | 수정 | ghost |
+| `delete` | 삭제 | danger |
+| `download` | 다운 | ghost |
+| `copy` | 복사 | ghost |
+| `add` | 추가 | primary |
+| `confirm` | 승인 | success |
+| `cancel` | 반려 | secondary |
+| `custom` | 직접 지정 | 직접 지정 |
+
+**조건부 제어**
+
+```jsx
+// 특정 조건일 때 버튼 숨기기
+{ type: 'edit',   hidden:   d => d.status === '완료' }
+
+// 특정 조건일 때 버튼 비활성화
+{ type: 'delete', disabled: d => d.status === '점검중' }
+```
+
+### GridDetailPanel — 우측 상세 패널
+
+상세 보기가 필요한 그리드에 사용해요. 로우 클릭 시 오른쪽에서 슬라이드로 열리고, 다른 로우 클릭하면 내용만 교체돼요.
+
+```jsx
+import GridDetailPanel from '@/components/grid/GridDetailPanel.jsx'
+
+// 상태
+const [detailOpen, setDetailOpen] = useState(false)
+const [detailData, setDetailData] = useState(null)
+
+const openDetail  = useCallback(async (row) => {
+  const detail = await workApi.getDetail(row.id)  // 백엔드 상세 조회
+  setDetailData(detail)
+  setDetailOpen(true)
+}, [])
+
+const closeDetail = useCallback(() => setDetailOpen(false), [])
+
+// 그리드 + 패널 레이아웃
+<div style={{ flex:1, overflow:'hidden', display:'flex' }}>
+  <div style={{ flex:1, overflow:'hidden', minWidth:0 }}>
+    <BasicGrid
+      colDefs={colDefs}
+      onRowClick={openDetail}
+      ...
+    />
+  </div>
+  <GridDetailPanel
+    open={detailOpen}
+    data={detailData}
+    onClose={closeDetail}
+    defaultWidth={500}   // 화면마다 조절
+    columns={2}          // 기본정보 탭 열 수 1 | 2 | 3
+  />
+</div>
+```
+
+**Props**
+
+| Prop | 타입 | 기본값 | 설명 |
+|---|---|---|---|
+| `open` | boolean | - | 패널 열림 여부 |
+| `data` | object | - | 로우 데이터 |
+| `onClose` | function | - | 닫기 핸들러 |
+| `defaultWidth` | number | `420` | 초기 너비 (px), 드래그로 조절 가능 |
+| `columns` | number | `1` | 기본정보 탭 열 수 |
+
+> 상세가 없는 그리드는 `GridDetailPanel` 자체를 추가하지 않으면 됩니다.
 
 ---
 

@@ -14,9 +14,11 @@ import {
   FileSpreadsheet, Map, LogIn, Menu, Sun, Moon, Bell, HelpCircle,
   ChevronLeft, ChevronRight, ChevronDown, ChevronRight as ChevRight,
   LayoutDashboard, FilePlus, BarChart2, Layers, Settings,
-  X, PanelLeftClose,
+  X, PanelLeftClose, Activity,
 } from 'lucide-react'
 
+import NotificationPanel from '@/components/notification/NotificationPanel.jsx'
+import JobProgressPanel  from '@/components/job/JobProgressPanel.jsx'
 import styles from '@/styles/layout.module.css'
 
 // ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
@@ -35,7 +37,7 @@ const PANEL_COMPONENTS = {
 const components = Object.fromEntries(
   Object.entries(PANEL_COMPONENTS).map(([key, Comp]) => [
     key,
-    () => <div style={{ height:'100%', overflow:'auto', background:'var(--color-bg-primary)' }}><Comp /></div>,
+    ({ params }) => <div style={{ height:'100%', overflow:'auto', background:'var(--color-bg-primary)' }}><Comp params={params} /></div>,
   ])
 )
 
@@ -137,6 +139,8 @@ export default function App() {
   const [openPanels,     setOpenPanels]     = useState(new Set())
   const [expandedGroups, setExpandedGroups] = useState(new Set(['work','gis','sample','system']))
   const [pipBlocked,     setPipBlocked]     = useState(false)
+  const [notiOpen,       setNotiOpen]       = useState(false)
+  const [jobOpen,        setJobOpen]        = useState(false)
 
   const toggleGroup = (id) => setExpandedGroups(prev => {
     const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s
@@ -202,10 +206,16 @@ export default function App() {
           <button className={styles.iconBtn} onClick={toggleTheme} title={theme==='dark'?'라이트 모드':'다크 모드'}>
             {theme==='dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
-          <button className={styles.iconBtn}>
+          <button className={styles.iconBtn} onClick={() => { setJobOpen(o => !o); setNotiOpen(false) }} title="작업 현황" style={{ position:'relative' }}>
+            <Activity size={15} />
+            <span className={styles.notiBadge} />
+          </button>
+          <button className={styles.iconBtn} onClick={() => { setNotiOpen(o => !o); setJobOpen(false) }} title="알림">
             <Bell size={15} />
             <span className={styles.notiBadge} />
           </button>
+          <JobProgressPanel  open={jobOpen}  onClose={() => setJobOpen(false)}  />
+          <NotificationPanel open={notiOpen} onClose={() => setNotiOpen(false)} />
           <div className={styles.avatar}>A</div>
         </div>
       </header>
