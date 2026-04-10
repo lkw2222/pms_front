@@ -19,7 +19,9 @@
 10. [그리드 사용 규칙](#10-그리드-사용-규칙-ag-grid)
 11. [사이드바 메뉴 추가](#11-사이드바-메뉴-추가)
 12. [서버 배포](#12-서버-배포-apache--nginx)
-13. [금지 사항](#13-금지-사항-dont)
+13. [대시보드 차트 구성](#13-대시보드-차트-구성)
+14. [GIS 지도 사용 규칙](#14-gis-지도-사용-규칙-openlayers)
+15. [금지 사항](#15-금지-사항-dont)
 
 ---
 
@@ -943,7 +945,122 @@ sudo nginx -s reload            # Nginx
 
 ---
 
-## 14. 금지 사항 (DON'T)
+## 14. GIS 지도 사용 규칙 (OpenLayers)
+
+> `src/features/gis/GisFeature.jsx` 기준으로 작성된 가이드입니다.
+> GeoServer 연동 전까지는 샘플 데이터로 동작하며, 연동 시 WMS/WFS 레이어로 교체하면 됩니다.
+
+### UI 레이아웃
+
+| 위치 | 내용 |
+|---|---|
+| 좌상단 (top:0, left:0) | 지역본부 / 사업소 위치 이동 셀렉트 |
+| 우상단 | 레이어 전환 · 측정 도구 · 캡처 · 전체화면 |
+| 우중앙 | 줌 컨트롤 + 줌 레벨 게이지 |
+| 좌하단 | 측정 안내 / 측정 결과 |
+| 하단 | 현재 좌표 · 레이어 배지 |
+
+---
+
+### 위치 이동 기능 (지역본부 → 사업소)
+
+`REGION_DATA` 배열에 지역본부/사업소 정보를 정의합니다.
+사업소 선택 시 `view.animate()`로 부드럽게 해당 좌표로 이동합니다.
+
+```js
+// src/features/gis/GisFeature.jsx
+const REGION_DATA = [
+  {
+    id: 'seoul', label: '서울본부',
+    offices: [
+      { id: 'seoul-gangnam', label: '강남사업소', lon: 127.0471, lat: 37.5172, zoom: 14 },
+      // ...
+    ],
+  },
+  // ...
+]
+```
+
+> **실제 연동 시**: `REGION_DATA` 상수를 API 호출 결과로 교체하면 됩니다.
+
+---
+
+### 측정 도구
+
+우상단 🖊 버튼 클릭 시 드롭다운으로 도구를 선택합니다.
+
+| 도구 | 사용법 |
+|---|---|
+| 기본 | 기본 포인터 모드 |
+| 거리 측정 | 클릭으로 경로 지정, 더블클릭 완료. 구간별 거리 표시 |
+| 각도 측정 | **시작점 → 꼭짓점 → 끝점** 순서로 클릭, 꼭짓점에서의 꺾임 각도 표시 |
+| 면적 측정 | 클릭으로 영역 지정, 더블클릭 완료. 면적 표시 |
+| 마커 찍기 | 클릭 위치에 핀 마커 추가 |
+| 초기화 | 측정 결과 + 마커 전체 삭제 |
+
+**ESC 키**: 그리는 중인 도형만 취소, 완료된 측정값은 유지됩니다.
+새 측정 도구를 선택하면 이전 측정 결과가 초기화됩니다.
+
+---
+
+### 설비 레이어 (전주 / 전선 / 변전소 / 변압기)
+
+`FACILITY_FEATURES` 배열에 샘플 Feature를 정의합니다.
+GeoServer 연동 시 WFS TileLayer로 교체합니다.
+
+```js
+// 설비 Feature 구조
+new Feature({
+  geometry: new Point(fromLonLat([lon, lat])),
+  type: '전주',          // 전주 | 전선 | 변압기 | 변전소
+  id:   'P-001',
+  props: {              // 팝업에 표시될 제원 정보 (key: value)
+    관리번호: 'P-001',
+    규격:     '16m/400kg',
+    상태:     '정상',   // '점검필요' 시 경고색(amber)으로 강조
+  },
+})
+```
+
+**색상 규칙**
+- 모든 설비 타입 단일 파란색(`#3b82f6`) 통일
+- `상태 = '점검필요'` 인 설비만 amber(`#f59e0b`)로 표시
+- 선택(클릭) 시 더 진한 파란색(`#1d4ed8`)으로 강조
+
+**팝업 클릭 시**
+설비를 클릭하면 팝업 오버레이가 표시됩니다.
+`props` 객체의 key/value가 그대로 제원 테이블로 렌더링됩니다.
+
+---
+
+### 새 설비 타입 추가
+
+1. `FACILITY_FEATURES` 배열에 Feature 추가
+2. 팝업은 `props` 객체 그대로 렌더링되므로 별도 코드 수정 불필요
+
+---
+
+### GeoServer 연동 시 교체 포인트
+
+```js
+// 현재 (샘플 데이터)
+const facilityLayer = new VectorLayer({
+  source: facilitySourceRef.current,  // 직접 Feature 배열
+})
+
+// GeoServer 연동 후
+import TileWMS from 'ol/source/TileWMS'
+const facilityLayer = new TileLayer({
+  source: new TileWMS({
+    url:    'http://[geoserver-host]/geoserver/wms',
+    params: { LAYERS: 'workspace:layer_name', TILED: true },
+  }),
+})
+```
+
+---
+
+## 15. 금지 사항 (DON'T)
 
 ### ❌ useState 로 API 데이터 관리
 

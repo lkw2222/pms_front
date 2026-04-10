@@ -11,14 +11,16 @@ import { getLength, getArea } from 'ol/sphere'
 import { unByKey } from 'ol/Observable'
 import Overlay from 'ol/Overlay'
 import { LineString, Polygon, Point } from 'ol/geom'
-import { Stroke, Fill, Style, Circle as CircleStyle, Icon as OlIcon } from 'ol/style'
+import { Stroke, Fill, Style, Circle as CircleStyle, Icon as OlIcon, Text as OlText } from 'ol/style'
 import Feature from 'ol/Feature'
+import Select from 'ol/interaction/Select'
+import { click } from 'ol/events/condition'
 import 'ol/ol.css'
 
 import {
   Ruler, Square, Trash2, MousePointer,
   ZoomIn, ZoomOut, Maximize2,
-  MapPin, Camera, Layers, ChevronRight,
+  MapPin, Camera, Layers, ChevronRight, PenTool,
 } from 'lucide-react'
 
 // ── OpenLayers 스타일 ────────────────────────────────────────────────────────
@@ -45,6 +47,161 @@ const MARKER_STYLE = new Style({
     scale: 1,
   }),
 })
+
+// ── 설비 샘플 데이터 (GeoServer 연동 시 WMS/WFS 레이어로 교체) ───────────────
+const FACILITY_FEATURES = [
+  // 점 - 전주
+  new Feature({
+    geometry: new Point(fromLonLat([127.0246, 37.5326])),
+    type: '전주', id: 'P-001',
+    props: { 관리번호:'P-001', 규격:'16m/400kg', 재질:'철근콘크리트', 설치일:'2018-03-15', 관리기관:'한전 서울본부', 등급:'A', 상태:'정상' },
+  }),
+  new Feature({
+    geometry: new Point(fromLonLat([127.0268, 37.5312])),
+    type: '변압기', id: 'T-001',
+    props: { 관리번호:'T-001', 용량:'100kVA', 전압:'22.9kV/380V', 설치일:'2020-07-22', 관리기관:'한전 서울본부', 등급:'C', 상태:'정상' },
+  }),
+  new Feature({
+    geometry: new Point(fromLonLat([127.0225, 37.5338])),
+    type: '전주', id: 'P-002',
+    props: { 관리번호:'P-002', 규격:'14m/350kg', 재질:'철근콘크리트', 설치일:'2019-11-05', 관리기관:'한전 서울본부', 등급:'E', 상태:'점검필요' },
+  }),
+
+  // 선 - 전선
+  new Feature({
+    geometry: new LineString([
+      fromLonLat([127.0246, 37.5326]),
+      fromLonLat([127.0255, 37.5320]),
+      fromLonLat([127.0268, 37.5312]),
+    ]),
+    type: '전선', id: 'L-001',
+    props: { 관리번호:'L-001', 전압등급:'22.9kV', 전선종류:'ACSR 95mm²', 길이:'320m', 설치일:'2018-03-15', 등급:'B', 상태:'정상' },
+  }),
+  new Feature({
+    geometry: new LineString([
+      fromLonLat([127.0225, 37.5338]),
+      fromLonLat([127.0235, 37.5330]),
+      fromLonLat([127.0246, 37.5326]),
+    ]),
+    type: '전선', id: 'L-002',
+    props: { 관리번호:'L-002', 전압등급:'22.9kV', 전선종류:'ACSR 95mm²', 길이:'280m', 설치일:'2019-11-05', 등급:'D', 상태:'정상' },
+  }),
+
+  // 면 - 변전소 구역
+  new Feature({
+    geometry: new Polygon([[
+      fromLonLat([127.0260, 37.5335]),
+      fromLonLat([127.0275, 37.5335]),
+      fromLonLat([127.0275, 37.5325]),
+      fromLonLat([127.0260, 37.5325]),
+      fromLonLat([127.0260, 37.5335]),
+    ]]),
+    type: '변전소', id: 'S-001',
+    props: { 관리번호:'S-001', 명칭:'강남 변전소', 전압등급:'154kV/22.9kV', 면적:'2,400m²', 준공일:'2010-06-01', 관리기관:'한전 서울본부', 등급:'B', 상태:'정상' },
+  }),
+]
+
+// ── 설비 색상 ─────────────────────────────────────────────────────────────────
+const F_COLOR_LINE     = '#f97316'   // 전선 주황
+const F_COLOR_LINE_SEL = '#ea580c'   // 전선 선택
+const F_COLOR_WARN     = '#f59e0b'   // 상태 '점검필요' 텍스트
+
+// hex → rgba 변환 (OL 색상 파서가 8자리 hex를 미지원하므로 rgba 사용)
+const hexToRgba = (hex, alpha) => {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r},${g},${b},${alpha})`
+}
+
+// 포인트 공통 색상 (파랑 계열 통일)
+const F_POINT      = '#3b82f6'   // 기본 — blue-500
+const F_POINT_SEL  = '#1d4ed8'   // 선택 — blue-700
+const GRADE_TEXT   = { A:'#16a34a', B:'#2563eb', C:'#ca8a04', D:'#ea580c', E:'#dc2626', F:'#7f1d1d' }
+
+// 설비 통합 스타일
+const FACILITY_STYLE = (feature, selected = false) => {
+  const geomType  = feature.getGeometry().getType()
+  const grade     = feature.get('props')?.등급
+  const gradeTextColor = GRADE_TEXT[grade] ?? '#475569'
+
+  if (geomType === 'Point') {
+    return new Style({
+      image: new CircleStyle({
+        radius: selected ? 9 : 7,
+        fill:   new Fill({ color: selected ? F_POINT_SEL : F_POINT }),
+        stroke: new Stroke({ color: '#fff', width: selected ? 2.5 : 1.5 }),
+      }),
+      text: grade ? new OlText({
+        text:    selected ? `${grade}  ${feature.get('type')} ${feature.get('id')}` : grade,
+        offsetY: -14,
+        font:    `bold 10px sans-serif`,
+        fill:    new Fill({ color: gradeTextColor }),
+        stroke:  new Stroke({ color: '#fff', width: 3 }),
+      }) : undefined,
+    })
+  }
+  if (geomType === 'LineString') {
+    // 전선은 주황 고정, 등급은 팝업으로만 확인
+    return new Style({
+      stroke: new Stroke({
+        color: selected ? F_COLOR_LINE_SEL : F_COLOR_LINE,
+        width: selected ? 4 : 3,
+      }),
+    })
+  }
+  if (geomType === 'Polygon') {
+    return new Style({
+      fill:   new Fill({ color: selected ? 'rgba(59,130,246,0.22)' : 'rgba(59,130,246,0.10)' }),
+      stroke: new Stroke({ color: selected ? F_POINT_SEL : F_POINT, width: selected ? 2.5 : 1.5 }),
+      text: selected ? new OlText({
+        text:   feature.get('props')?.명칭 ?? feature.get('type'),
+        font:   'bold 12px sans-serif',
+        fill:   new Fill({ color: F_POINT_SEL }),
+        stroke: new Stroke({ color: '#fff', width: 3 }),
+      }) : undefined,
+    })
+  }
+  return new Style()
+}
+
+// ── 지역본부 / 사업소 샘플 데이터 (API 연동 시 서버 데이터로 교체) ────────────
+const REGION_DATA = [
+  {
+    id: 'seoul', label: '서울본부',
+    offices: [
+      { id: 'seoul-gangnam',  label: '강남사업소', lon: 127.0471, lat: 37.5172, zoom: 14 },
+      { id: 'seoul-gangbuk',  label: '강북사업소', lon: 127.0276, lat: 37.6396, zoom: 14 },
+      { id: 'seoul-jongno',   label: '종로사업소', lon: 126.9784, lat: 37.5704, zoom: 14 },
+      { id: 'seoul-mapo',     label: '마포사업소', lon: 126.9010, lat: 37.5511, zoom: 14 },
+    ],
+  },
+  {
+    id: 'gyeonggi', label: '경기본부',
+    offices: [
+      { id: 'gyeonggi-suwon',   label: '수원사업소', lon: 127.0286, lat: 37.2636, zoom: 13 },
+      { id: 'gyeonggi-seongnam',label: '성남사업소', lon: 127.1378, lat: 37.4201, zoom: 13 },
+      { id: 'gyeonggi-bucheon', label: '부천사업소', lon: 126.7830, lat: 37.5034, zoom: 13 },
+      { id: 'gyeonggi-anyang',  label: '안양사업소', lon: 126.9568, lat: 37.3943, zoom: 13 },
+    ],
+  },
+  {
+    id: 'incheon', label: '인천본부',
+    offices: [
+      { id: 'incheon-main',    label: '인천사업소', lon: 126.7052, lat: 37.4563, zoom: 13 },
+      { id: 'incheon-bupyeong',label: '부평사업소', lon: 126.7218, lat: 37.5082, zoom: 14 },
+      { id: 'incheon-namdong', label: '남동사업소', lon: 126.7296, lat: 37.4456, zoom: 14 },
+    ],
+  },
+  {
+    id: 'gangwon', label: '강원본부',
+    offices: [
+      { id: 'gangwon-chuncheon', label: '춘천사업소', lon: 127.7298, lat: 37.8813, zoom: 13 },
+      { id: 'gangwon-wonju',     label: '원주사업소', lon: 127.9298, lat: 37.3422, zoom: 13 },
+      { id: 'gangwon-gangneung', label: '강릉사업소', lon: 128.8784, lat: 37.7519, zoom: 13 },
+    ],
+  },
+]
 
 // ── 브이월드 API 설정 ────────────────────────────────────────────────────────
 const VWORLD_KEY = '8105102E-2501-375F-87BF-64F42A2720FA'
@@ -118,9 +275,12 @@ function AngleIcon({ size = 14 }) {
 function Tip({ text, side = 'right', children }) {
   const tipStyle = {
     position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    ...(side === 'right' ? { left: 'calc(100% + 8px)' } : { right: 'calc(100% + 8px)' }),
+    ...(side === 'bottom'
+      ? { top: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)' }
+      : side === 'right'
+        ? { top: '50%', transform: 'translateY(-50%)', left: 'calc(100% + 8px)' }
+        : { top: '50%', transform: 'translateY(-50%)', right: 'calc(100% + 8px)' }
+    ),
     background: 'var(--color-bg-secondary)',
     border: '1px solid var(--color-border)',
     borderRadius: 'var(--radius-sm)',
@@ -156,26 +316,72 @@ export default function GisFeature() {
   const segOverlays  = useRef([])     // 구간 거리 overlay 목록
   const baseLayers   = useRef([])
 
-  const [mode,       setMode]       = useState('none')
-  const [result,     setResult]     = useState(null)
-  const [zoomLevel,  setZoomLevel]  = useState(12)
-  const [layerType,  setLayerType]  = useState('Base')
+  const facilitySourceRef = useRef(new VectorSource({ features: FACILITY_FEATURES }))
+  const popupRef          = useRef(null)
+  const popupOverlayRef   = useRef(null)
+
+  const [mode,           setMode]           = useState('none')
+  const [result,         setResult]         = useState(null)
+  const [zoomLevel,      setZoomLevel]      = useState(12)
+  const [layerType,      setLayerType]      = useState('Base')
+  const [selectedHub,    setSelectedHub]    = useState('')
+  const [selectedOffice, setSelectedOffice] = useState('')
   const [coordInfo,  setCoordInfo]  = useState(null)
   const [showLayers, setShowLayers] = useState(false)
+  const [showTools,  setShowTools]  = useState(false)
+  const [popup,      setPopup]      = useState(null)   // { type, id, props }
 
   // ── 지도 초기화 ─────────────────────────────────────────────────────────────
   useEffect(() => {
-    const drawLayer   = new VectorLayer({ source: sourceRef.current,   style: DRAW_STYLE,   zIndex: 10 })
-    const markerLayer = new VectorLayer({ source: markerSrcRef.current, style: MARKER_STYLE, zIndex: 11 })
-    const baseLayer   = LAYERS.Base.create()
+    const drawLayer     = new VectorLayer({ source: sourceRef.current,         style: DRAW_STYLE,   zIndex: 10 })
+    const markerLayer   = new VectorLayer({ source: markerSrcRef.current,       style: MARKER_STYLE, zIndex: 11 })
+    const facilityLayer = new VectorLayer({
+      source: facilitySourceRef.current,
+      style:  (f) => FACILITY_STYLE(f, false),
+      zIndex: 5,
+    })
+    const baseLayer = LAYERS.Base.create()
     baseLayers.current = [baseLayer]
 
     const map = new Map({
       target: mapRef.current,
-      layers: [baseLayer, drawLayer, markerLayer],
-      view: new View({ center: fromLonLat([127.024612, 37.532600]), zoom: 12, minZoom: 3, maxZoom: 20 }),
+      layers: [baseLayer, facilityLayer, drawLayer, markerLayer],
+      view: new View({ center: fromLonLat([127.024612, 37.532600]), zoom: 15, minZoom: 3, maxZoom: 20 }),
       controls: [],
     })
+
+    // ── 팝업 오버레이 ──────────────────────────────────────────────────────
+    const popupOverlay = new Overlay({
+      element:    popupRef.current,
+      positioning:'bottom-center',
+      offset:     [0, -10],
+      stopEvent:  false,
+    })
+    map.addOverlay(popupOverlay)
+    popupOverlayRef.current = popupOverlay
+
+    // ── 설비 클릭 Select ──────────────────────────────────────────────────
+    const select = new Select({
+      condition: click,
+      layers:    [facilityLayer],
+      style:     (f) => FACILITY_STYLE(f, true),
+    })
+    select.on('select', (e) => {
+      if (e.selected.length > 0) {
+        const f    = e.selected[0]
+        const coord = f.getGeometry().getType() === 'Point'
+          ? f.getGeometry().getCoordinates()
+          : f.getGeometry().getType() === 'LineString'
+            ? f.getGeometry().getCoordinateAt(0.5)
+            : f.getGeometry().getInteriorPoint().getCoordinates()
+        popupOverlay.setPosition(coord)
+        setPopup({ type: f.get('type'), id: f.get('id'), props: f.get('props') })
+      } else {
+        popupOverlay.setPosition(undefined)
+        setPopup(null)
+      }
+    })
+    map.addInteraction(select)
 
     // 실시간 마우스 툴팁
     const tooltipEl = document.createElement('div')
@@ -242,17 +448,16 @@ export default function GisFeature() {
   const fmtDist  = (m)  => m >= 1000   ? `${(m/1000).toFixed(2)} km`       : `${Math.round(m)} m`
   const fmtArea  = (m2) => m2 >= 1000000 ? `${(m2/1000000).toFixed(2)} km²` : `${Math.round(m2).toLocaleString()} m²`
 
-  // 두 좌표(OL 투영) 사이 방위각(°) 계산
-  const calcBearing = (c1, c2) => {
-    const [lon1, lat1] = toLonLat(c1)
-    const [lon2, lat2] = toLonLat(c2)
-    const toRad = d => d * Math.PI / 180
-    const dLon  = toRad(lon2 - lon1)
-    const y = Math.sin(dLon) * Math.cos(toRad(lat2))
-    const x = Math.cos(toRad(lat1)) * Math.sin(toRad(lat2))
-            - Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLon)
-    const brng = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360
-    return `${brng.toFixed(1)}°`
+  // 두 선분이 꼭짓점(vertex)에서 이루는 각도 계산 (OL 투영 좌표 그대로 사용)
+  const calcAngleBetween = (p1, vertex, p2) => {
+    const v1 = [p1[0] - vertex[0], p1[1] - vertex[1]]
+    const v2 = [p2[0] - vertex[0], p2[1] - vertex[1]]
+    const dot  = v1[0] * v2[0] + v1[1] * v2[1]
+    const mag1 = Math.sqrt(v1[0] ** 2 + v1[1] ** 2)
+    const mag2 = Math.sqrt(v2[0] ** 2 + v2[1] ** 2)
+    if (mag1 === 0 || mag2 === 0) return '0.0°'
+    const cosA = Math.max(-1, Math.min(1, dot / (mag1 * mag2)))
+    return `${(Math.acos(cosA) * 180 / Math.PI).toFixed(1)}°`
   }
 
   // ── 측정 모드 ───────────────────────────────────────────────────────────────
@@ -260,10 +465,12 @@ export default function GisFeature() {
     const map = mapObj.current
     if (!map) return
     if (drawRef.current) { map.removeInteraction(drawRef.current); drawRef.current = null }
+    if (tooltipRef.current) tooltipRef.current.style.display = 'none'
+    // 'none'/'marker' 전환 시 → 완료된 측정 결과 유지
+    if (mode === 'none' || mode === 'marker') return
+    // 새 측정 모드 전환 시에만 이전 결과 초기화
     clearSegOverlays()
     setResult(null)
-    if (tooltipRef.current) tooltipRef.current.style.display = 'none'
-    if (mode === 'none' || mode === 'marker') return
 
 
     const type = (mode === 'distance' || mode === 'bearing') ? 'LineString' : 'Polygon'
@@ -286,7 +493,7 @@ export default function GisFeature() {
           // 확정된 점 수 = coords.length - 1
           const fixedCount = coords.length - 1
 
-          // 확정된 점이 늘었을 때만 구간 오버레이 추가
+          // 확정된 점이 늘었을 때 오버레이 추가
           if (fixedCount > prevCoords.length && fixedCount >= 2) {
             const fixedCoords = coords.slice(0, fixedCount)
             const segStart = fixedCoords[fixedCoords.length - 2]
@@ -298,8 +505,12 @@ export default function GisFeature() {
             if (mode === 'distance') {
               const segDist = getLength(new LineString([segStart, segEnd]))
               createSegOverlay(map, fmtDist(segDist), midCoord)
-            } else if (mode === 'bearing') {
-              createSegOverlay(map, calcBearing(segStart, segEnd), midCoord)
+            } else if (mode === 'bearing' && fixedCount >= 3) {
+              // 꼭짓점(직전 점)에서 두 선분 사이 각도 표시
+              const p1     = fixedCoords[fixedCount - 3]
+              const vertex = fixedCoords[fixedCount - 2]
+              const p2     = fixedCoords[fixedCount - 1]
+              createSegOverlay(map, calcAngleBetween(p1, vertex, p2), vertex)
             }
             prevCoords = fixedCoords
           }
@@ -308,13 +519,19 @@ export default function GisFeature() {
           const lastCoord = coords[coords.length - 1]
           if (tooltipRef.current && overlayRef.current) {
             if (mode === 'distance') {
-              // 확정 구간만의 누적 거리
               const fixedLine = new LineString(coords.slice(0, fixedCount + 1))
               tooltipRef.current.textContent = `누적: ${fmtDist(getLength(fixedLine))}`
             } else if (mode === 'bearing') {
-              // 방위각은 구간 오버레이로만 표시 — 실시간 툴팁 불필요
-              tooltipRef.current.style.display = 'none'
-              return
+              // 고정점 2개 이상이면 커서 위치 기준 각도 미리보기
+              if (fixedCount >= 2) {
+                const fixedCoords = coords.slice(0, fixedCount)
+                const p1     = fixedCoords[fixedCount - 2]
+                const vertex = fixedCoords[fixedCount - 1]
+                tooltipRef.current.textContent = `∠ ${calcAngleBetween(p1, vertex, lastCoord)}`
+              } else {
+                tooltipRef.current.style.display = 'none'
+                return
+              }
             }
             tooltipRef.current.style.display = 'block'
             overlayRef.current.setPosition(lastCoord)
@@ -344,8 +561,16 @@ export default function GisFeature() {
           createSegOverlay(map, `✓ ${fmtDist(totalDist)}`, lastCoord, true)
           setResult(`거리: ${fmtDist(totalDist)}`)
         } else if (mode === 'bearing') {
-          // 구간별 방위각은 이미 change 이벤트에서 표시됨 — 최종값 불필요
-          setResult(null)
+          // 각도는 꼭짓점 오버레이로 표시됨 — drawend 시 마지막 꼭짓점 각도 최종 강조
+          const allCoords = coords
+          if (allCoords.length >= 3) {
+            const p1     = allCoords[allCoords.length - 3]
+            const vertex = allCoords[allCoords.length - 2]
+            const p2     = allCoords[allCoords.length - 1]
+            setResult(`꺾임 각도: ${calcAngleBetween(p1, vertex, p2)}`)
+          } else {
+            setResult(null)
+          }
         }
 
       } else if (geom instanceof Polygon) {
@@ -383,8 +608,7 @@ export default function GisFeature() {
         if (drawRef.current) {
           drawRef.current.abortDrawing?.()
         }
-        setMode('none')
-        setResult(null)
+        setMode('none') // 완료된 측정 결과는 유지 (초기화는 handleClear로만)
       }
     }
     window.addEventListener('keydown', handler)
@@ -437,6 +661,25 @@ export default function GisFeature() {
     map.renderSync()
   }, [])
 
+  // ── 지도 flyTo 이동 ──────────────────────────────────────────────────────────
+  const flyTo = useCallback((lon, lat, zoom = 14) => {
+    const view = mapObj.current?.getView()
+    if (!view) return
+    view.animate({ center: fromLonLat([lon, lat]), zoom, duration: 800 })
+  }, [])
+
+  const handleHubChange = useCallback((hubId) => {
+    setSelectedHub(hubId)
+    setSelectedOffice('')
+  }, [])
+
+  const handleOfficeChange = useCallback((officeId) => {
+    setSelectedOffice(officeId)
+    const hub    = REGION_DATA.find(h => h.id === selectedHub)
+    const office = hub?.offices.find(o => o.id === officeId)
+    if (office) flyTo(office.lon, office.lat, office.zoom)
+  }, [selectedHub, flyTo])
+
   // ── 초기화 ───────────────────────────────────────────────────────────────────
   const handleClear = () => {
     sourceRef.current.clear(); markerSrcRef.current.clear()
@@ -445,43 +688,124 @@ export default function GisFeature() {
     setResult(null); setMode('none')
   }
 
+
   return (
     <div style={{ width:'100%', height:'100%', position:'relative', overflow:'hidden' }}>
 
       {/* 지도 */}
       <div ref={mapRef} style={{ width:'100%', height:'100%' }} />
 
+      {/* ── 설비 팝업 오버레이 ── */}
+      <div ref={popupRef}>
+        {popup && (
+          <div style={{
+            background:   'var(--color-bg-secondary)',
+            border:       '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-md)',
+            boxShadow:    'var(--shadow-lg)',
+            minWidth:     210,
+            maxWidth:     280,
+            overflow:     'hidden',
+            transform:    'translateX(-50%)',
+          }}>
+            {/* 헤더 */}
+            <div style={{
+              padding: '9px 12px',
+              borderBottom: '1px solid var(--color-border)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              background: 'var(--color-bg-tertiary)',
+            }}>
+              <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+                {/* 등급 배지 */}
+                {popup.props?.등급 && (() => {
+                  const gc = GRADE_TEXT[popup.props.등급] ?? '#475569'
+                  return (
+                    <span style={{
+                      fontSize:11, fontWeight:800, letterSpacing:'0.06em',
+                      padding:'2px 8px', borderRadius:99,
+                      background: hexToRgba(gc, 0.12),
+                      color:      gc,
+                      border:     `1px solid ${hexToRgba(gc, 0.4)}`,
+                    }}>{popup.props.등급}</span>
+                  )
+                })()}
+                {/* 타입 · ID */}
+                <span style={{ fontSize:12, fontWeight:600, color:'var(--color-text-primary)' }}>
+                  {popup.type} · {popup.id}
+                </span>
+              </div>
+              <button
+                onClick={() => { popupOverlayRef.current?.setPosition(undefined); setPopup(null) }}
+                style={{ background:'none', border:'none', color:'var(--color-text-muted)', cursor:'pointer', fontSize:16, lineHeight:1, padding:'0 2px', display:'flex', alignItems:'center' }}
+              >✕</button>
+            </div>
+            {/* 제원 */}
+            <div style={{ padding:'4px 0' }}>
+              {Object.entries(popup.props).map(([key, val]) => (
+                <div key={key} style={{ display:'grid', gridTemplateColumns:'76px 1fr', padding:'5px 12px', fontSize:12, transition:'background 0.1s' }}
+                  onMouseEnter={e => e.currentTarget.style.background='var(--color-bg-tertiary)'}
+                  onMouseLeave={e => e.currentTarget.style.background='transparent'}
+                >
+                  <span style={{ color:'var(--color-text-muted)', fontWeight:500 }}>{key}</span>
+                  <span style={{
+                    color:      key === '상태' && val !== '정상' ? F_COLOR_WARN : 'var(--color-text-primary)',
+                    fontWeight: key === '상태' ? 600 : 400,
+                  }}>{val}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
 
-      {/* ── 좌상단 — 도구 패널 ── */}
-      <div style={{ position:'absolute', top:12, left:12, zIndex:10, ...CTRL_PANEL }}>
-        {[
-          { key:'none',     icon:MousePointer, title:'기본'      },
-          { key:'distance', icon:Ruler,        title:'거리 측정' },
-          { key:'bearing',  icon:AngleIcon,    title:'각도 측정' },
-          { key:'area',     icon:Square,       title:'면적 측정' },
-          { key:'marker',   icon:MapPin,       title:'마커 찍기' },
-        ].map(({ key, icon: Icon, title }) => (
-          <Tip key={key} text={title} side="right">
-            <button onClick={() => setMode(key)}
-              style={CTRL_BTN(mode === key)}
-              onMouseEnter={e => { if (mode !== key) e.currentTarget.style.background = 'var(--color-bg-tertiary)' }}
-              onMouseLeave={e => { if (mode !== key) e.currentTarget.style.background = 'transparent' }}
-            >
-              <Icon size={14} />
-            </button>
-          </Tip>
-        ))}
-        <div style={DIVIDER} />
-        <Tip text="초기화 (측정/마커 전체 삭제)" side="right">
-          <button onClick={handleClear}
-            style={CTRL_BTN(false, true)}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-tertiary)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          >
-            <Trash2 size={14} />
-          </button>
-        </Tip>
+
+      {/* ── 상단 좌측 — 위치 이동 패널 (여백 없이 맵 상단에 붙임) ── */}
+      <div style={{
+        position:'absolute', top:0, left:0, zIndex:10,
+        ...CTRL_PANEL,
+        flexDirection:'row',
+        alignItems:'center',
+        gap:6,
+        padding:'6px 8px',
+        borderTop:'none',
+        borderLeft:'none',
+        borderTopLeftRadius:0,
+      }}>
+        <select
+          value={selectedHub}
+          onChange={e => handleHubChange(e.target.value)}
+          style={{
+            height:28, padding:'0 6px', fontSize:12, cursor:'pointer', outline:'none',
+            border:'1px solid var(--color-border)', borderRadius:'var(--radius-sm)',
+            background:'var(--color-bg-primary)', color: selectedHub ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+            minWidth:96,
+          }}
+        >
+          <option value="">지역본부 선택</option>
+          {REGION_DATA.map(h => (
+            <option key={h.id} value={h.id}>{h.label}</option>
+          ))}
+        </select>
+
+        <select
+          value={selectedOffice}
+          onChange={e => handleOfficeChange(e.target.value)}
+          disabled={!selectedHub}
+          style={{
+            height:28, padding:'0 6px', fontSize:12, outline:'none',
+            border:'1px solid var(--color-border)', borderRadius:'var(--radius-sm)',
+            background:'var(--color-bg-primary)', color: selectedOffice ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+            cursor: selectedHub ? 'pointer' : 'not-allowed',
+            opacity: selectedHub ? 1 : 0.5,
+            minWidth:96,
+          }}
+        >
+          <option value="">사업소 선택</option>
+          {(REGION_DATA.find(h => h.id === selectedHub)?.offices ?? []).map(o => (
+            <option key={o.id} value={o.id}>{o.label}</option>
+          ))}
+        </select>
       </div>
 
       {/* ── 우상단 — 유틸 패널 (줌컨트롤과 같은 right:12 정렬) ── */}
@@ -490,7 +814,7 @@ export default function GisFeature() {
         {/* 레이어 전환 */}
         <div style={{ position:'relative' }}>
           <Tip text="레이어 전환" side="left">
-          <button onClick={() => setShowLayers(v => !v)}
+          <button onClick={() => { setShowLayers(v => !v); setShowTools(false) }}
             style={CTRL_BTN(showLayers)}
             onMouseEnter={e => { if (!showLayers) e.currentTarget.style.background = 'var(--color-bg-tertiary)' }}
             onMouseLeave={e => { if (!showLayers) e.currentTarget.style.background = 'transparent' }}
@@ -527,6 +851,76 @@ export default function GisFeature() {
                   {layerType === key && <ChevronRight size={11} />}
                 </button>
               ))}
+            </div>
+          )}
+        </div>
+
+        <div style={DIVIDER} />
+
+        {/* 도구 */}
+        <div style={{ position:'relative' }}>
+          <Tip text="측정 도구" side="left">
+            <button onClick={() => { setShowTools(v => !v); setShowLayers(false) }}
+              style={CTRL_BTN(showTools || mode !== 'none')}
+              onMouseEnter={e => { if (!showTools && mode === 'none') e.currentTarget.style.background = 'var(--color-bg-tertiary)' }}
+              onMouseLeave={e => { if (!showTools && mode === 'none') e.currentTarget.style.background = 'transparent' }}
+            >
+              <PenTool size={14} />
+            </button>
+          </Tip>
+
+          {/* 도구 드롭다운 */}
+          {showTools && (
+            <div style={{
+              position:'absolute', top:0, right:40,
+              background:'var(--color-bg-secondary)',
+              border:'1px solid var(--color-border)',
+              borderRadius:'var(--radius-md)',
+              boxShadow:'var(--shadow-md)',
+              padding:4, minWidth:120,
+              display:'flex', flexDirection:'column', gap:2,
+            }}>
+              {[
+                { key:'none',     icon:MousePointer, label:'기본'      },
+                { key:'distance', icon:Ruler,        label:'거리 측정' },
+                { key:'bearing',  icon:AngleIcon,    label:'각도 측정' },
+                { key:'area',     icon:Square,       label:'면적 측정' },
+                { key:'marker',   icon:MapPin,       label:'마커 찍기' },
+              ].map(({ key, icon: Icon, label }) => (
+                <button key={key}
+                  onClick={() => { setMode(key); setShowTools(false) }}
+                  style={{
+                    display:'flex', alignItems:'center', gap:8,
+                    padding:'6px 10px', borderRadius:4, border:'none', cursor:'pointer',
+                    fontSize:12, fontWeight: mode === key ? 600 : 400,
+                    background: mode === key ? 'var(--color-accent)' : 'transparent',
+                    color: mode === key ? '#fff' : 'var(--color-text-primary)',
+                    transition:'all .1s',
+                  }}
+                  onMouseEnter={e => { if (mode !== key) e.currentTarget.style.background = 'var(--color-bg-tertiary)' }}
+                  onMouseLeave={e => { if (mode !== key) e.currentTarget.style.background = 'transparent' }}
+                >
+                  <Icon size={12} />
+                  {label}
+                  {mode === key && <ChevronRight size={11} style={{ marginLeft:'auto' }} />}
+                </button>
+              ))}
+              <div style={{ height:1, background:'var(--color-border)', margin:'2px 0' }} />
+              <button
+                onClick={() => { handleClear(); setShowTools(false) }}
+                style={{
+                  display:'flex', alignItems:'center', gap:8,
+                  padding:'6px 10px', borderRadius:4, border:'none', cursor:'pointer',
+                  fontSize:12, fontWeight:400,
+                  background:'transparent', color:'var(--color-danger)',
+                  transition:'all .1s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-tertiary)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <Trash2 size={12} />
+                초기화
+              </button>
             </div>
           )}
         </div>
@@ -630,7 +1024,9 @@ export default function GisFeature() {
         }}>
           {result
             ? `📐 ${result}`
-            : `클릭해서 ${mode === 'distance' ? '거리' : mode === 'bearing' ? '각도' : '면적'} 측정 (더블클릭 완료)`
+            : mode === 'bearing'
+              ? '시작점 → 꼭짓점 → 끝점 순서로 클릭 (더블클릭 완료)'
+              : `클릭해서 ${mode === 'distance' ? '거리' : '면적'} 측정 (더블클릭 완료)`
           }
         </div>
       )}
