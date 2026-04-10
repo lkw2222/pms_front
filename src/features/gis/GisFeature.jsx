@@ -808,31 +808,28 @@ export default function GisFeature() {
         </select>
       </div>
 
-      {/* ── 우상단 — 유틸 패널 (줌컨트롤과 같은 right:12 정렬) ── */}
-      <div style={{ position:'absolute', top:12, right:12, zIndex:10, ...CTRL_PANEL }}>
-
+      {/* ── 우상단 — 통합 패널 (유틸 + 줌, 여백 없이 맵 상단에 붙임) ── */}
+      <div style={{
+        position:'absolute', top:0, right:0, zIndex:10,
+        ...CTRL_PANEL,
+        borderTop:'none', borderRight:'none', borderTopRightRadius:0,
+        padding:'5px 6px', gap:3,
+      }}>
         {/* 레이어 전환 */}
         <div style={{ position:'relative' }}>
           <Tip text="레이어 전환" side="left">
-          <button onClick={() => { setShowLayers(v => !v); setShowTools(false) }}
-            style={CTRL_BTN(showLayers)}
-            onMouseEnter={e => { if (!showLayers) e.currentTarget.style.background = 'var(--color-bg-tertiary)' }}
-            onMouseLeave={e => { if (!showLayers) e.currentTarget.style.background = 'transparent' }}
-          >
-            <Layers size={14} />
-          </button>
+            <button onClick={() => { setShowLayers(v => !v); setShowTools(false) }}
+              style={CTRL_BTN(showLayers)}
+              onMouseEnter={e => { if (!showLayers) e.currentTarget.style.background = 'var(--color-bg-tertiary)' }}
+              onMouseLeave={e => { if (!showLayers) e.currentTarget.style.background = 'transparent' }}
+            ><Layers size={14} /></button>
           </Tip>
-
-          {/* 레이어 드롭다운 */}
           {showLayers && (
             <div style={{
               position:'absolute', top:0, right:40,
-              background:'var(--color-bg-secondary)',
-              border:'1px solid var(--color-border)',
-              borderRadius:'var(--radius-md)',
-              boxShadow:'var(--shadow-md)',
-              padding:4, minWidth:100,
-              display:'flex', flexDirection:'column', gap:2,
+              background:'var(--color-bg-secondary)', border:'1px solid var(--color-border)',
+              borderRadius:'var(--radius-md)', boxShadow:'var(--shadow-md)',
+              padding:4, minWidth:100, display:'flex', flexDirection:'column', gap:2,
             }}>
               {Object.entries(LAYERS).map(([key, val]) => (
                 <button key={key} onClick={() => handleLayerChange(key)}
@@ -841,21 +838,17 @@ export default function GisFeature() {
                     padding:'6px 10px', borderRadius:4, border:'none', cursor:'pointer',
                     fontSize:12, fontWeight: layerType===key ? 600 : 400,
                     background: layerType===key ? 'var(--color-accent)' : 'transparent',
-                    color: layerType===key ? '#fff' : 'var(--color-text-primary)',
-                    transition:'all .1s',
+                    color: layerType===key ? '#fff' : 'var(--color-text-primary)', transition:'all .1s',
                   }}
                   onMouseEnter={e => { if (layerType !== key) e.currentTarget.style.background = 'var(--color-bg-tertiary)' }}
                   onMouseLeave={e => { if (layerType !== key) e.currentTarget.style.background = 'transparent' }}
                 >
-                  {val.label}
-                  {layerType === key && <ChevronRight size={11} />}
+                  {val.label}{layerType === key && <ChevronRight size={11} />}
                 </button>
               ))}
             </div>
           )}
         </div>
-
-        <div style={DIVIDER} />
 
         {/* 도구 */}
         <div style={{ position:'relative' }}>
@@ -864,21 +857,14 @@ export default function GisFeature() {
               style={CTRL_BTN(showTools || mode !== 'none')}
               onMouseEnter={e => { if (!showTools && mode === 'none') e.currentTarget.style.background = 'var(--color-bg-tertiary)' }}
               onMouseLeave={e => { if (!showTools && mode === 'none') e.currentTarget.style.background = 'transparent' }}
-            >
-              <PenTool size={14} />
-            </button>
+            ><PenTool size={14} /></button>
           </Tip>
-
-          {/* 도구 드롭다운 */}
           {showTools && (
             <div style={{
               position:'absolute', top:0, right:40,
-              background:'var(--color-bg-secondary)',
-              border:'1px solid var(--color-border)',
-              borderRadius:'var(--radius-md)',
-              boxShadow:'var(--shadow-md)',
-              padding:4, minWidth:120,
-              display:'flex', flexDirection:'column', gap:2,
+              background:'var(--color-bg-secondary)', border:'1px solid var(--color-border)',
+              borderRadius:'var(--radius-md)', boxShadow:'var(--shadow-md)',
+              padding:4, minWidth:120, display:'flex', flexDirection:'column', gap:2,
             }}>
               {[
                 { key:'none',     icon:MousePointer, label:'기본'      },
@@ -887,93 +873,67 @@ export default function GisFeature() {
                 { key:'area',     icon:Square,       label:'면적 측정' },
                 { key:'marker',   icon:MapPin,       label:'마커 찍기' },
               ].map(({ key, icon: Icon, label }) => (
-                <button key={key}
-                  onClick={() => { setMode(key); setShowTools(false) }}
+                <button key={key} onClick={() => { setMode(key); setShowTools(false) }}
                   style={{
                     display:'flex', alignItems:'center', gap:8,
                     padding:'6px 10px', borderRadius:4, border:'none', cursor:'pointer',
                     fontSize:12, fontWeight: mode === key ? 600 : 400,
                     background: mode === key ? 'var(--color-accent)' : 'transparent',
-                    color: mode === key ? '#fff' : 'var(--color-text-primary)',
-                    transition:'all .1s',
+                    color: mode === key ? '#fff' : 'var(--color-text-primary)', transition:'all .1s',
                   }}
                   onMouseEnter={e => { if (mode !== key) e.currentTarget.style.background = 'var(--color-bg-tertiary)' }}
                   onMouseLeave={e => { if (mode !== key) e.currentTarget.style.background = 'transparent' }}
                 >
-                  <Icon size={12} />
-                  {label}
+                  <Icon size={12} />{label}
                   {mode === key && <ChevronRight size={11} style={{ marginLeft:'auto' }} />}
                 </button>
               ))}
               <div style={{ height:1, background:'var(--color-border)', margin:'2px 0' }} />
-              <button
-                onClick={() => { handleClear(); setShowTools(false) }}
+              <button onClick={() => { handleClear(); setShowTools(false) }}
                 style={{
                   display:'flex', alignItems:'center', gap:8,
                   padding:'6px 10px', borderRadius:4, border:'none', cursor:'pointer',
-                  fontSize:12, fontWeight:400,
-                  background:'transparent', color:'var(--color-danger)',
-                  transition:'all .1s',
+                  fontSize:12, background:'transparent', color:'var(--color-danger)', transition:'all .1s',
                 }}
                 onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-tertiary)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <Trash2 size={12} />
-                초기화
-              </button>
+              ><Trash2 size={12} />초기화</button>
             </div>
           )}
         </div>
 
         <div style={DIVIDER} />
 
+        {/* 캡처 */}
         <Tip text="지도 캡처 (PNG 저장)" side="left">
-          <button onClick={captureMap}
-            style={CTRL_BTN()}
+          <button onClick={captureMap} style={CTRL_BTN()}
             onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-tertiary)'}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          >
-            <Camera size={14} />
-          </button>
+          ><Camera size={14} /></button>
         </Tip>
-        <Tip text="전체화면" side="left">
-          <button onClick={toggleFullscreen}
-            style={CTRL_BTN()}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-tertiary)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          >
-            <Maximize2 size={14} />
-          </button>
-        </Tip>
-      </div>
 
-      {/* ── 우측 중앙 — 줌 컨트롤 ── */}
-      <div style={{
-        position:'absolute', right:12, top:'50%', transform:'translateY(-50%)',
-        zIndex:10, display:'flex', flexDirection:'column', alignItems:'center', gap:3,
-      }}>
+        {/* 전체화면 */}
+        <Tip text="전체화면" side="left">
+          <button onClick={toggleFullscreen} style={CTRL_BTN()}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-tertiary)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          ><Maximize2 size={14} /></button>
+        </Tip>
+
+        <div style={DIVIDER} />
+
         {/* 줌인 */}
         <Tip text="확대" side="left">
-          <button onClick={zoomIn}
-            style={{ ...CTRL_BTN(), ...CTRL_PANEL, width:32, height:32, padding:0 }}
+          <button onClick={zoomIn} style={CTRL_BTN()}
             onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-tertiary)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'var(--color-bg-secondary)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           ><ZoomIn size={14} /></button>
         </Tip>
 
         {/* 줌 게이지 */}
-        <div style={{
-          ...CTRL_PANEL, padding:0, width:32, overflow:'hidden', gap:0,
-          alignItems:'center',
-        }}>
-          {/* 줌 레벨 숫자 */}
-          <div style={{
-            fontSize:10, fontWeight:700, padding:'4px 0', width:'100%', textAlign:'center',
-            color:'var(--color-accent)', borderBottom:'1px solid var(--color-border)',
-          }}>{zoomLevel}</div>
-
-          {/* 게이지 바 */}
-          <div style={{ position:'relative', height:100, width:32, padding:'5px 8px' }}>
+        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:0 }}>
+          <div style={{ fontSize:8, padding:'2px 0', color:'var(--color-text-muted)' }}>MAX</div>
+          <div style={{ position:'relative', height:80, width:20, padding:'4px 6px' }}>
             <div style={{
               width:'100%', height:'100%', borderRadius:4,
               background:'var(--color-bg-tertiary)', position:'relative', overflow:'hidden',
@@ -992,21 +952,40 @@ export default function GisFeature() {
                 bottom:`${((lvl-3)/(20-3))*100}%`, transform:'translateY(50%)',
               }}>
                 <div style={{
-                  width:5, height:1, marginLeft:'auto', marginRight:3,
+                  width:4, height:1, marginLeft:'auto', marginRight:2,
                   background: zoomLevel >= lvl ? 'var(--color-accent)' : 'var(--color-border)',
                 }} />
               </div>
             ))}
+            {/* 줌 레벨 숫자 — 게이지 채움 끝에 따라가기 */}
+            <div style={{
+              position:'absolute',
+              bottom:`${Math.max(0, Math.min(100, ((zoomLevel-3)/(20-3))*100))}%`,
+              left:0, right:0,
+              display:'flex', justifyContent:'center',
+              transform:'translateY(50%)',
+              pointerEvents:'none',
+              zIndex:1,
+            }}>
+              <span style={{
+                fontSize:9, fontWeight:700,
+                color:'var(--color-accent)',
+                background:'var(--color-bg-secondary)',
+                border:'1px solid var(--color-accent)',
+                borderRadius:3,
+                padding:'0 2px',
+                lineHeight:'13px',
+              }}>{zoomLevel}</span>
+            </div>
           </div>
-          <div style={{ fontSize:8, padding:'2px 0 4px', color:'var(--color-text-muted)' }}>MIN</div>
+          <div style={{ fontSize:8, padding:'2px 0', color:'var(--color-text-muted)' }}>MIN</div>
         </div>
 
         {/* 줌아웃 */}
         <Tip text="축소" side="left">
-          <button onClick={zoomOut}
-            style={{ ...CTRL_BTN(), ...CTRL_PANEL, width:32, height:32, padding:0 }}
+          <button onClick={zoomOut} style={CTRL_BTN()}
             onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-tertiary)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'var(--color-bg-secondary)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           ><ZoomOut size={14} /></button>
         </Tip>
       </div>

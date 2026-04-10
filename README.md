@@ -79,17 +79,36 @@ npm run build
 src/
 ├── components/              # 공통 재사용 UI 컴포넌트 (스타일 고정)
 │   ├── button/BasicButton.jsx
-│   ├── input/               # TextInput, SelectInput, DateInput ...
-│   ├── grid/BasicGrid.jsx
-│   └── label/BasicLabel.jsx
+│   ├── input/               # TextInput, SelectInput, DateInput,
+│   │                        # EmailInput, FileInput, CheckboxInput,
+│   │                        # RadioInput, RangeInput
+│   ├── grid/
+│   │   ├── BasicGrid.jsx
+│   │   ├── GridActionButtons.jsx
+│   │   └── GridDetailDrawer.jsx
+│   ├── label/BasicLabel.jsx
+│   ├── job/JobProgressPanel.jsx
+│   ├── notification/NotificationPanel.jsx
+│   └── styles/              # 컴포넌트 CSS Module 모음
 │
 ├── panels/                  # Dockview 탭 단위 (얇게 유지, useMutation 담당)
 │   ├── login/LoginPanel.jsx
+│   ├── dashboard/DashboardPanel.jsx
 │   ├── grid/GridPanel.jsx
-│   └── gis/GisPanel.jsx
+│   ├── gis/GisPanel.jsx
+│   ├── sample/SamplePanel.jsx
+│   └── readme/ReadmePanel.jsx
 │
 ├── features/                # 비즈니스 로직 + UI 조합 (useQuery, useForm 사용)
 │   ├── login/LoginFeature.jsx
+│   ├── dashboard/           # 대시보드 위젯 모음
+│   │   ├── DashboardFeature.jsx
+│   │   ├── KpiFeature.jsx
+│   │   ├── StatusChartFeature.jsx
+│   │   ├── MonthlyChartFeature.jsx
+│   │   ├── TrendChartFeature.jsx
+│   │   ├── DeptChartFeature.jsx
+│   │   └── lib/             # 차트 공통 유틸
 │   ├── grid/GridFeature.jsx
 │   ├── gis/GisFeature.jsx
 │   └── sample/              # 컴포넌트 쇼케이스 (서비스 없음)
@@ -107,6 +126,7 @@ src/
 ├── lib/queryClient.js       # TanStack Query 전역 클라이언트 설정
 ├── styles/
 │   ├── index.css            # CSS 변수(테마), 전역 리셋
+│   ├── layout.module.css    # 앱 레이아웃 CSS Module
 │   └── dockview.css         # Dockview 테마 오버라이드
 ├── App.jsx                  # 레이아웃 (탑바 + 사이드바 + Dockview)
 └── main.jsx                 # React 진입점 + QueryClientProvider

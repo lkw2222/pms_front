@@ -7,7 +7,7 @@ export default function FileInputFeature() {
       <FileInput
         label="파일 업로드"
         accept=".pdf,.doc,.docx,.xls,.xlsx,image/*"
-        onChange={files => console.log('선택된 파일:', files)}
+        onChange={() => {}}
       />
     </div>
   )

@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import BasicGrid          from '@/components/grid/BasicGrid.jsx'
 import GridActionButtons  from '@/components/grid/GridActionButtons.jsx'
-import GridDetailPanel    from '@/components/grid/GridDetailPanel.jsx'
+import GridDetailDrawer  from '@/components/grid/GridDetailDrawer.jsx'
 import TextInput   from '@/components/input/TextInput.jsx'
 import SelectInput from '@/components/input/SelectInput.jsx'
 import DateInput   from '@/components/input/DateInput.jsx'
@@ -173,7 +173,7 @@ function PaginateGrid() {
             pageSize={20}
           />
         </div>
-        <GridDetailPanel
+        <GridDetailDrawer
           open={detailOpen}
           data={detailData}
           onClose={closeDetail}

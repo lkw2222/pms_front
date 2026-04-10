@@ -17,8 +17,8 @@ const MIN_WIDTH = 300
 const MAX_WIDTH = 700
 
 /**
- * GridDetailPanel
- * 그리드 우측 고정형 상세 패널 (드래그 리사이즈 지원)
+ * GridDetailDrawer
+ * 그리드 우측 고정형 상세 드로어 (드래그 리사이즈 지원)
  *
  * @param {boolean}  open         - 패널 열림 여부
  * @param {object}   data         - 선택된 로우 데이터
@@ -26,7 +26,7 @@ const MAX_WIDTH = 700
  * @param {number}   defaultWidth - 초기 너비 (기본 420px)
  * @param {number}   columns      - 기본정보 탭 열 수 1 | 2 | 3 (기본 1)
  */
-export default function GridDetailPanel({ open, data, onClose, defaultWidth = 420, columns = 1 }) {
+export default function GridDetailDrawer({ open, data, onClose, defaultWidth = 420, columns = 1 }) {
   const [tab,   setTab]   = useState('info')
   const [width, setWidth] = useState(defaultWidth)
 
@@ -90,12 +90,22 @@ export default function GridDetailPanel({ open, data, onClose, defaultWidth = 42
         flexDirection: 'column',
       }}>
 
-        {/* 헤더 요약 */}
-        <div style={{ padding:'12px 16px', borderBottom:'1px solid var(--color-border)', flexShrink:0 }}>
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: data ? 6 : 0 }}>
-            <span style={{ fontSize:13, fontWeight:700, color:'var(--color-text-primary)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
-              {data ? data.name : '상세 정보'}
-            </span>
+        {/* 헤더 요약 — 그리드 컬럼 헤더(38px)와 높이 통일 */}
+        <div style={{ height:38, padding:'0 16px', boxSizing:'border-box', borderBottom:'1px solid var(--color-border)', flexShrink:0, display:'flex', alignItems:'center' }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:6, width:'100%' }}>
+            {/* 이름 + 뱃지 + 날짜 한 줄 */}
+            <div style={{ display:'flex', alignItems:'center', gap:6, minWidth:0, flexWrap:'wrap' }}>
+              <span style={{ fontSize:13, fontWeight:700, color:'var(--color-text-primary)', flexShrink:0 }}>
+                {data ? data.name : '상세 정보'}
+              </span>
+              {data && (
+                <>
+                  <BasicLabel text={data.status}   variant={STATUS_VARIANT[data.status]     ?? 'default'} />
+                  <BasicLabel text={data.priority} variant={PRIORITY_VARIANT[data.priority] ?? 'default'} />
+                  <span style={{ fontSize:11, color:'var(--color-text-muted)' }}>{data.date}</span>
+                </>
+              )}
+            </div>
             <button onClick={onClose} style={{
               display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
               width:26, height:26, border:'1px solid transparent', borderRadius:'var(--radius-md)',
@@ -107,13 +117,6 @@ export default function GridDetailPanel({ open, data, onClose, defaultWidth = 42
               <X size={14} />
             </button>
           </div>
-          {data && (
-            <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
-              <BasicLabel text={data.status}   variant={STATUS_VARIANT[data.status]     ?? 'default'} />
-              <BasicLabel text={data.priority} variant={PRIORITY_VARIANT[data.priority] ?? 'default'} />
-              <span style={{ fontSize:11, color:'var(--color-text-muted)', alignSelf:'center' }}>{data.date}</span>
-            </div>
-          )}
         </div>
 
         {/* 탭 */}
