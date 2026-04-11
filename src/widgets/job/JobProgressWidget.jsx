@@ -24,13 +24,13 @@ const STATUS_CONFIG = {
 }
 
 /**
- * JobProgressPanel
- * 탑바 작업 현황 드롭다운 패널
+ * JobProgressWidget
+ * 탑바 작업 현황 드롭다운
  *
- * @param {boolean}  open    - 패널 열림 여부
+ * @param {boolean}  open    - 열림 여부
  * @param {function} onClose - 닫기 핸들러
  */
-export default function JobProgressPanel({ open, onClose }) {
+export default function JobProgressWidget({ open, onClose }) {
   const panelRef   = useRef(null)
   const runningCount = SAMPLE_JOBS.filter(j => j.status === 'running').length
 

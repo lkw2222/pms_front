@@ -39,6 +39,12 @@ export const useAppStore = create(
       setAuth:    (user) => set({ user }),
       clearAuth:  () => set({ user: null }),
       isLoggedIn: () => !!get().user,
+
+      // ── 세션 만료 ─────────────────────────────────────────────────────────
+      // API 401 응답 시 setSessionExpired(true) → 로그인 오버레이 표시
+      // 실제 연동: axios interceptor response error 에서 호출
+      sessionExpired:    false,
+      setSessionExpired: (v) => set({ sessionExpired: v }),
     }),
     {
       name: 'pms-app-store',

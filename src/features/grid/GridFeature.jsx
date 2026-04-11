@@ -65,10 +65,15 @@ function SearchForm({ search, setSearch, onSearch, onReset, totalCount, isLoadin
         />
         <DateInput
           label="등록일(시작)" value={search.dateFrom}
-          onChange={v => setSearch(s => ({ ...s, dateFrom: v }))}
+          onChange={v => setSearch(s => ({
+            ...s,
+            dateFrom: v,
+            dateTo: s.dateTo && v > s.dateTo ? '' : s.dateTo,
+          }))}
         />
         <DateInput
           label="등록일(종료)" value={search.dateTo}
+          options={{ minDate: search.dateFrom || undefined }}
           onChange={v => setSearch(s => ({ ...s, dateTo: v }))}
         />
       </div>
@@ -76,11 +81,7 @@ function SearchForm({ search, setSearch, onSearch, onReset, totalCount, isLoadin
         <BasicButton label="조회"   icon={isLoading ? Loader2 : Search} variant="primary"   onClick={onSearch} disabled={isLoading} />
         <BasicButton label="초기화" icon={RotateCcw}                    variant="secondary" onClick={onReset} />
         <BasicButton label="엑셀"   icon={Download}                     variant="ghost"
-          onClick={() => {
-            // import { workApi } from '@/services/grid/gridService.js'
-            // gridApi.downloadExcel(search)
-            toast.info('엑셀 다운로드를 시작합니다.')
-          }}
+          onClick={() => toast.info('엑셀 다운로드를 시작합니다.')}
         />
         <span style={{ fontSize:12, color:'var(--color-text-muted)', marginLeft:4 }}>
           {isLoading

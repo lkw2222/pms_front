@@ -58,7 +58,19 @@ function SectionTitle({ children }) {
 
 // ── ErrorBoundary 데모 ────────────────────────────────────────────────────────
 function ErrorBoundaryDemo() {
-  const [explode, setExplode] = useState(false)
+  const [explode,  setExplode]  = useState(false)
+  const [resetKey, setResetKey] = useState(0)
+
+  const handleToggle = () => {
+    if (explode) {
+      // 복구: explode 끄고 ErrorBoundary 강제 리마운트 (key 변경)
+      setExplode(false)
+      setResetKey(k => k + 1)
+    } else {
+      setExplode(true)
+    }
+  }
+
   return (
     <div style={{ marginBottom:24 }}>
       <SectionTitle>ErrorBoundary</SectionTitle>
@@ -71,11 +83,11 @@ function ErrorBoundaryDemo() {
           icon={AlertTriangle}
           variant={explode ? 'secondary' : 'danger'}
           size="sm"
-          onClick={() => setExplode(v => !v)}
+          onClick={handleToggle}
         />
       </div>
       <DemoBox label="ErrorBoundary 감싼 영역 — 에러 시 내부만 교체">
-        <ErrorBoundary>
+        <ErrorBoundary key={resetKey}>
           {explode ? <BombComponent /> : (
             <div style={{
               display:'flex', alignItems:'center', justifyContent:'center',

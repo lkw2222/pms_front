@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 
 import TextInputFeature    from '@/features/sample/TextInputFeature.jsx'
 import SelectInputFeature  from '@/features/sample/SelectInputFeature.jsx'
@@ -14,6 +14,9 @@ import GridActionButtonsFeature from '@/features/sample/GridActionButtonsFeature
 import ToastFeature           from '@/features/sample/ToastFeature.jsx'
 import ConfirmModalFeature    from '@/features/sample/ConfirmModalFeature.jsx'
 import ErrorBoundaryFeature   from '@/features/sample/ErrorBoundaryFeature.jsx'
+import FormDrawerFeature          from '@/features/sample/FormDrawerFeature.jsx'
+import GridDetailDrawerFeature    from '@/features/sample/GridDetailDrawerFeature.jsx'
+import { useAppStore }        from '@/store/useAppStore.js'
 
 // ── Props 테이블 ──────────────────────────────────────────────────────────────
 function PropTable({ rows }) {
@@ -65,26 +68,70 @@ const SECTIONS = [
   { id:'buttons',        label:'Button'            },
   { id:'labels',         label:'Label'             },
   { id:'basic-grid',          label:'BasicGrid'         },
-  { id:'grid-action-buttons', label:'GridActionButtons' },
+  { id:'grid-action-buttons',  label:'GridActionButtons'  },
+  { id:'grid-detail-drawer',  label:'GridDetailDrawer'   },
+  { id:'form-drawer',         label:'FormDrawer'         },
   { id:'toast',               label:'Toast'             },
   { id:'confirm-modal',       label:'ConfirmModal'      },
   { id:'error-boundary',      label:'ErrorBoundary / Suspense' },
+  { id:'session-expired',     label:'세션 만료 오버레이'       },
 ]
+
+// ── 세션 만료 데모 ────────────────────────────────────────────────────────────
+function SessionExpiredSection() {
+  const setSessionExpired = useAppStore(s => s.setSessionExpired)
+  return (
+    <div id="session-expired" className="section-card">
+      <div className="section-title">세션 만료 오버레이</div>
+      <p style={{ fontSize:13, color:'var(--color-text-secondary)', marginBottom:16, lineHeight:1.7 }}>
+        세션이 만료되었을 때 전체 화면 위에 로그인 폼을 블러 오버레이로 표시합니다.<br />
+        로그인 성공 시 오버레이가 사라지고 <strong style={{ color:'var(--color-accent)' }}>열려있던 탭과 작업 상태가 그대로 유지</strong>됩니다.
+      </p>
+      <div style={{ display:'flex', alignItems:'center', gap:10, padding:'14px 16px', borderRadius:'var(--radius-md)', background:'var(--color-bg-tertiary)', border:'1px solid var(--color-border)', marginBottom:16 }}>
+        <div style={{ fontSize:12, color:'var(--color-text-muted)', flex:1 }}>
+          💡 실제 환경: axios interceptor에서 <code style={{ color:'var(--color-accent)', background:'var(--color-bg-primary)', padding:'1px 5px', borderRadius:3 }}>401</code> 응답 시
+          {' '}<code style={{ color:'var(--color-accent)', background:'var(--color-bg-primary)', padding:'1px 5px', borderRadius:3 }}>useAppStore.getState().setSessionExpired(true)</code> 한 줄만 호출하면 됩니다.
+        </div>
+      </div>
+      <button
+        onClick={() => setSessionExpired(true)}
+        style={{
+          display:'inline-flex', alignItems:'center', gap:8,
+          padding:'10px 20px', borderRadius:'var(--radius-md)', fontSize:13,
+          fontWeight:600, cursor:'pointer', border:'none',
+          background:'var(--color-warning)',
+          color:'#fff', letterSpacing:'0.01em',
+          boxShadow:'0 2px 6px rgba(0,0,0,0.25)',
+          transition:'all .15s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.opacity='0.88'; e.currentTarget.style.transform='translateY(-1px)' }}
+        onMouseLeave={e => { e.currentTarget.style.opacity='1';    e.currentTarget.style.transform='translateY(0)'    }}
+      >
+        🔒 세션 만료 시뮬레이션
+      </button>
+    </div>
+  )
+}
 
 // ── SamplePanel ───────────────────────────────────────────────────────────────
 export default function SamplePanel() {
-  const [active, setActive] = useState('text-input')
+  const [active,     setActive]     = useState('text-input')
+  const contentRef = useRef(null)
 
   const scrollTo = (id) => {
     setActive(id)
-    document.getElementById(id)?.scrollIntoView({ behavior:'smooth', block:'start' })
+    const el        = document.getElementById(id)
+    const container = contentRef.current
+    if (!el || !container) return
+    const top = el.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop - 16
+    container.scrollTo({ top, behavior: 'smooth' })
   }
 
   return (
     <div style={{ display:'flex', height:'100%', overflow:'hidden', background:'var(--color-bg-primary)' }}>
 
       {/* 좌측 목차 */}
-      <div style={{ width:180, flexShrink:0, borderRight:'1px solid var(--color-border)', background:'var(--color-bg-secondary)', padding:'16px 8px', overflowY:'auto' }}>
+      <div style={{ width:180, flexShrink:0, borderRight:'1px solid var(--color-border)', background:'var(--color-bg-secondary)', padding:'16px 8px', overflowY:'auto', overscrollBehavior:'contain' }}>
         <div style={{ fontSize:10, fontWeight:700, color:'var(--color-text-muted)', textTransform:'uppercase', letterSpacing:'0.1em', padding:'0 8px 10px' }}>컴포넌트</div>
         {SECTIONS.map(s => (
           <button key={s.id} onClick={() => scrollTo(s.id)}
@@ -105,7 +152,7 @@ export default function SamplePanel() {
       </div>
 
       {/* 우측 내용 - 각 Feature 조합 */}
-      <div style={{ flex:1, overflowY:'auto', padding:'20px 24px' }}>
+      <div ref={contentRef} style={{ flex:1, overflowY:'auto', padding:'20px 24px', overscrollBehavior:'contain' }}>
 
         <SectionCard id="text-input" title="TextInput"
           propRows={[
@@ -241,6 +288,31 @@ export default function SamplePanel() {
           <GridActionButtonsFeature />
         </SectionCard>
 
+        <SectionCard id="grid-detail-drawer" title="GridDetailDrawer"
+          propRows={[
+            ['open',         'boolean',  'false', '드로어 열림 여부'],
+            ['data',         'object',   '-',     '선택된 로우 데이터'],
+            ['onClose',      'function', '-',     '닫기 핸들러'],
+            ['defaultWidth', 'number',   '420',   '초기 너비(px), 드래그로 조절 가능 (300~700)'],
+            ['columns',      'number',   '1',     '기본정보 탭 열 수 1 | 2 | 3'],
+          ]}
+        >
+          <GridDetailDrawerFeature />
+        </SectionCard>
+
+        <SectionCard id="form-drawer" title="FormDrawer"
+          propRows={[
+            ['open',         'boolean',  'false', '드로어 열림 여부'],
+            ['title',        'string',   '-',     '헤더 제목'],
+            ['onClose',      'function', '-',     '닫기 핸들러'],
+            ['footer',       'ReactNode','-',     '하단 버튼 영역 (저장/취소 등)'],
+            ['children',     'ReactNode','-',     '폼 내용'],
+            ['defaultWidth', 'number',   '600',   '초기 너비(px), 드래그로 조절 가능 (400~900)'],
+          ]}
+        >
+          <FormDrawerFeature />
+        </SectionCard>
+
         <SectionCard id="toast" title="Toast"
           propRows={[
             ['toast.success(msg)', '-', '-', '초록 — 성공 알림'],
@@ -275,6 +347,8 @@ export default function SamplePanel() {
         >
           <ErrorBoundaryFeature />
         </SectionCard>
+
+        <SessionExpiredSection />
 
       </div>
     </div>

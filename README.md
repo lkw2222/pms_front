@@ -21,17 +21,25 @@
 12. [서버 배포](#12-서버-배포-apache--nginx)
 13. [대시보드 차트 구성](#13-대시보드-차트-구성)
 14. [GIS 지도 사용 규칙](#14-gis-지도-사용-규칙-openlayers)
-15. [금지 사항](#15-금지-사항-dont)
+15. [세션 만료 처리](#15-세션-만료-처리)
+16. [탭 레이아웃 자동 저장/복원](#16-탭-레이아웃-자동-저장복원)
+17. [뒤로가기 / 백스페이스 방지](#17-뒤로가기--백스페이스-방지)
+18. [금지 사항](#18-금지-사항-dont)
+- [부록. 아이콘 사용법](#부록-아이콘-사용법-lucide-react)
 
 ---
 
 ## 1. 프로젝트 실행
 
 ```bash
-# 의존성 설치 (최초 1회)
+# 1. 의존성 설치 (최초 1회)
 npm install
 
-# 개발 서버 실행
+# 2. 환경변수 설정 (최초 1회)
+cp .env.example .env
+# .env 파일을 열어 VITE_API_URL 을 백엔드 주소로 변경
+
+# 3. 개발 서버 실행
 npm run dev
 
 # 배포용 빌드
@@ -40,9 +48,15 @@ npm run build
 
 | 명령어 | 설명 |
 |---|---|
-| `npm run dev`   | 개발 서버 실행. 브라우저 `http://localhost:5173` 접속 |
-| `npm run build` | `dist/` 폴더에 정적 파일 생성 → 서버에 업로드 |
+| `npm run dev`     | 개발 서버 실행. 브라우저 `http://localhost:5173` 접속 |
+| `npm run build`   | `dist/` 폴더에 정적 파일 생성 → 서버에 업로드 |
 | `npm run preview` | 빌드 결과물 로컬에서 미리보기 |
+
+### 환경변수
+
+| 변수 | 설명 | 예시 |
+|------|------|------|
+| `VITE_API_URL` | 백엔드 API 서버 주소 | `http://localhost:8080/api` |
 
 ### PiP (새 창으로 패널 열기)
 
@@ -64,9 +78,12 @@ npm run build
 | 스타일 | Tailwind CSS | 4 | 유틸리티 클래스 |
 | 아이콘 | lucide-react | - | 아이콘 (SVG 기반) |
 | 그리드 | AG-Grid | 35 | 데이터 테이블 |
+| 차트 | Apache ECharts | 5 | 대시보드 차트 (게이지, 혼합 차트, 히트맵 등) |
+| 차트 | Nivo | 0.99 | 대시보드 차트 (도넛, 라인, 레이더 등) |
 | 지도 | OpenLayers | 10 | GIS 지도 |
-| HTTP | Axios | - | API 통신 |
-| 날짜 | Flatpickr | - | 날짜 선택기 |
+| HTTP | Axios | 1 | API 통신 |
+| 날짜 | Flatpickr | 4 | 날짜 선택기 |
+| 토스트 | Sonner | 2 | 토스트 알림 |
 | 빌드 | Vite | 7 | 개발 서버 / 번들러 |
 
 ---
@@ -77,52 +94,97 @@ npm run build
 
 ```
 src/
-├── components/              # 공통 재사용 UI 컴포넌트 (스타일 고정)
-│   ├── button/BasicButton.jsx
-│   ├── input/               # TextInput, SelectInput, DateInput,
-│   │                        # EmailInput, FileInput, CheckboxInput,
-│   │                        # RadioInput, RangeInput
+├── components/              # 순수 재사용 UI 컴포넌트 — props만 받아 렌더링, 자체 상태·데이터 없음
+│   ├── button/
+│   │   └── BasicButton.jsx
+│   ├── feedback/
+│   │   ├── ErrorBoundary.jsx          # 렌더 에러 격리
+│   │   └── QueryState.jsx             # LoadingState / ErrorState
 │   ├── grid/
-│   │   ├── BasicGrid.jsx
-│   │   ├── GridActionButtons.jsx
-│   │   └── GridDetailDrawer.jsx
-│   ├── label/BasicLabel.jsx
-│   ├── job/JobProgressPanel.jsx
-│   ├── notification/NotificationPanel.jsx
-│   └── styles/              # 컴포넌트 CSS Module 모음
+│   │   ├── BasicGrid.jsx              # AG Grid 래퍼 (paginate / infinite)
+│   │   ├── FormDrawer.jsx             # 등록·수정·상세 사이드 드로어
+│   │   ├── GridActionButtons.jsx      # 상세·수정·삭제 버튼 셀 렌더러
+│   │   └── GridDetailDrawer.jsx       # 행 클릭 상세 드로어
+│   ├── input/
+│   │   ├── TextInput.jsx
+│   │   ├── SelectInput.jsx
+│   │   ├── DateInput.jsx
+│   │   ├── EmailInput.jsx
+│   │   ├── FileInput.jsx
+│   │   ├── CheckboxInput.jsx
+│   │   ├── RadioInput.jsx
+│   │   └── RangeInput.jsx
+│   ├── label/
+│   │   └── BasicLabel.jsx
+│   ├── modal/
+│   │   └── ConfirmModal.jsx           # 삭제 확인 등 공통 확인 모달
+│   └── styles/                        # 컴포넌트 CSS Module 모음
+│       ├── BasicButton.module.css
+│       ├── BasicLabel.module.css
+│       ├── CheckboxInput.module.css
+│       ├── DateInput.module.css
+│       ├── RadioInput.module.css
+│       ├── SelectInput.module.css
+│       └── TextInput.module.css
+│
+├── widgets/                 # 독립 UI 모듈 — 자체 데이터·상태 보유, 특정 위치에 고정
+│   ├── auth/
+│   │   ├── ProfileDropdown.jsx        # 우상단 프로필 / 로그아웃
+│   │   └── SessionExpiredOverlay.jsx  # 세션 만료 블러 오버레이
+│   ├── job/
+│   │   └── JobProgressWidget.jsx      # 탑바 작업 현황 드롭다운
+│   └── notification/
+│       └── NotificationWidget.jsx     # 탑바 알림 드롭다운
 │
 ├── panels/                  # Dockview 탭 단위 (얇게 유지, useMutation 담당)
-│   ├── login/LoginPanel.jsx
+│   ├── archive/ArchivePanel.jsx
 │   ├── dashboard/DashboardPanel.jsx
-│   ├── grid/GridPanel.jsx
 │   ├── gis/GisPanel.jsx
-│   ├── sample/SamplePanel.jsx
-│   └── readme/ReadmePanel.jsx
+│   ├── grid/GridPanel.jsx
+│   ├── login/LoginPanel.jsx
+│   ├── readme/ReadmePanel.jsx
+│   └── sample/SamplePanel.jsx
 │
 ├── features/                # 비즈니스 로직 + UI 조합 (useQuery, useForm 사용)
-│   ├── login/LoginFeature.jsx
-│   ├── dashboard/           # 대시보드 위젯 모음
+│   ├── archive/
+│   │   └── ArchiveFeature.jsx         # 자료실 목록·등록·상세
+│   ├── dashboard/
 │   │   ├── DashboardFeature.jsx
 │   │   ├── KpiFeature.jsx
 │   │   ├── StatusChartFeature.jsx
 │   │   ├── MonthlyChartFeature.jsx
 │   │   ├── TrendChartFeature.jsx
 │   │   ├── DeptChartFeature.jsx
-│   │   └── lib/             # 차트 공통 유틸
-│   ├── grid/GridFeature.jsx
+│   │   └── lib/                       # 차트 공통 컴포넌트·유틸
+│   │       ├── DashboardComponents.jsx
+│   │       └── dashboardUtils.js
 │   ├── gis/GisFeature.jsx
+│   ├── grid/GridFeature.jsx
+│   ├── login/LoginFeature.jsx
 │   └── sample/              # 컴포넌트 쇼케이스 (서비스 없음)
 │       ├── TextInputFeature.jsx
+│       ├── SelectInputFeature.jsx
+│       ├── DateInputFeature.jsx
+│       ├── EmailInputFeature.jsx
+│       ├── FileInputFeature.jsx
+│       ├── CheckboxRadioFeature.jsx
+│       ├── RangeInputFeature.jsx
 │       ├── ButtonFeature.jsx
-│       └── ...
+│       ├── LabelFeature.jsx
+│       ├── BasicGridFeature.jsx
+│       ├── GridActionButtonsFeature.jsx
+│       ├── ConfirmModalFeature.jsx
+│       ├── ToastFeature.jsx
+│       └── ErrorBoundaryFeature.jsx
 │
 ├── services/                # API 함수 — features 폴더 구조와 1:1 대응
 │   ├── api.js               # axios 인스턴스 (공통, 수정 금지)
-│   ├── login/loginService.js    ↔  features/login/
-│   ├── grid/gridService.js      ↔  features/grid/
-│   └── gis/gisService.js        ↔  features/gis/
+│   ├── archive/archiveService.js  ↔  features/archive/
+│   ├── gis/gisService.js          ↔  features/gis/
+│   ├── grid/gridService.js        ↔  features/grid/
+│   └── login/loginService.js      ↔  features/login/
 │
-├── store/useAppStore.js     # Zustand 전역 상태 (테마, 사이드바, 인증)
+├── store/useAppStore.js     # Zustand 전역 상태 (테마, 사이드바, 인증, 세션)
 ├── lib/queryClient.js       # TanStack Query 전역 클라이언트 설정
 ├── styles/
 │   ├── index.css            # CSS 변수(테마), 전역 리셋
@@ -137,10 +199,10 @@ src/
 > **Feature 이름 = Panel 이름 = Service 폴더명 = Service 파일명**
 
 ```
-도메인: login
-  panels/login/LoginPanel.jsx
-  features/login/LoginFeature.jsx
-  services/login/loginService.js
+도메인: archive
+  panels/archive/ArchivePanel.jsx
+  features/archive/ArchiveFeature.jsx
+  services/archive/archiveService.js
 
 도메인: grid
   panels/grid/GridPanel.jsx
@@ -160,43 +222,127 @@ services/equipment/equipmentService.js   ← API 있을 경우만
 
 ```
 features/sample/TextInputFeature.jsx  →  services 없음
+features/sample/ButtonFeature.jsx     →  services 없음
 ```
 
 ---
 
 ## 4. 아키텍처 패턴
 
+### 레이어 구조
+
 ```
-panels/          ← Dockview 탭 단위. useMutation 담당, 얇게 유지
-  └── features/  ← 비즈니스 로직 + UI. useQuery / useForm 사용
-        └── components/  ← 순수 UI (스타일만, 로직 없음)
+┌─────────────────────────────────────────────────┐
+│  panels/   Dockview 탭 단위. useMutation 담당    │
+│    └── features/   비즈니스 로직 + UI            │
+│          ├── useQuery / useForm 사용             │
+│          └── components/   순수 UI (props만)     │
+│                                                  │
+│  widgets/  탑바·전역 고정 UI 모듈                │
+│                                                  │
+│  services/ API 호출 함수 모음 ──────────────────►│ 백엔드
+│    └── features 에서만 호출 (직접 호출 금지)     │
+└─────────────────────────────────────────────────┘
 ```
 
-```jsx
-// Panel — useMutation 으로 서버 데이터 변경
-export default function LoginPanel() {
-  const loginMutation = useMutation({
-    mutationFn: ({ id, password }) => loginApi.login(id, password),
-    onSuccess:  (result) => setAuth(result.user, result.token),
-    onError:    (err)    => alert(err.message),
-  })
-  return <LoginFeature onLogin={loginMutation.mutate} />
+### 각 레이어 역할
+
+| 레이어 | 역할 | 아는 것 | 모르는 것 |
+|--------|------|---------|----------|
+| `panels/` | 탭 마운트, useMutation | Feature | API URL |
+| `features/` | UI + 쿼리 + 폼 | Component, Service | 탭 구조 |
+| `components/` | 스타일 고정 UI | props | 데이터, 도메인 |
+| `widgets/` | 탑바·전역 독립 모듈 | Store, Service | 탭 구조 |
+| `services/` | API URL + HTTP 호출 | axios | React |
+
+### services/ 와 features/ 를 분리하는 이유
+
+```
+services/ = "어디에 요청하냐"  (URL, HTTP 메서드, 파라미터)
+features/ = "그 결과로 뭘 하냐" (화면 렌더링, 상태 관리, 폼 처리)
+```
+
+```js
+// services/grid/gridService.js — React 를 전혀 모름
+export const gridApi = {
+  getList: (params) => apiClient.get('/work/list', { params }).then(r => r.data),
+  create:  (data)   => apiClient.post('/work', data).then(r => r.data),
 }
 
-// Feature — useQuery 로 조회 + useForm 으로 폼 관리
-export default function GridFeature() {
-  const { data, isLoading } = useQuery({
-    queryKey: GRID_KEYS.list(applied),
-    queryFn:  () => gridApi.getList(applied),
+// features/grid/GridFeature.jsx — 서비스를 가져다 씀
+const { data } = useQuery({
+  queryKey: ['grid', 'list', applied],
+  queryFn:  () => gridApi.getList(applied),  // ← 서비스 호출
+})
+```
+
+이렇게 분리하면:
+- API URL 변경 시 → `gridService.js` 한 곳만 수정
+- 같은 API를 여러 Feature에서 쓸 때 → `gridApi.getList()` 재사용
+- 백엔드 없이 개발할 때 → service 파일만 mock 으로 교체
+- Feature 가 길어져도 → URL·파라미터 걱정 없이 UI 로직에 집중
+
+### 코드 예시
+
+```jsx
+// ── Panel — useMutation 으로 서버 데이터 변경 ──────────────────────────────
+export default function ArchivePanel() {
+  const queryClient = useQueryClient()
+  const createMutation = useMutation({
+    mutationFn: (data) => archiveApi.create(data),
+    onSuccess:  ()     => queryClient.invalidateQueries({ queryKey: ['archive'] }),
   })
+  return <ArchiveFeature onCreate={createMutation.mutate} />
+}
+
+// ── Feature — useQuery 로 조회, useForm 으로 폼 관리 ──────────────────────
+export default function ArchiveFeature({ onCreate }) {
+  const { data } = useQuery({
+    queryKey: ['archive', 'list'],
+    queryFn:  () => archiveApi.getList(),
+  })
+  const { register, handleSubmit } = useForm()
   // ...
 }
 
-// Component — 값(props)만 받고 스타일은 내부 고정
-export default function TextInput({ label, value, onChange, ...props }) {
-  return ( /* 스타일 고정 */ )
+// ── Component — props 만 받고 스타일 내부 고정 ─────────────────────────────
+export default function TextInput({ label, value, onChange }) {
+  return ( /* 스타일 고정, 도메인 모름 */ )
 }
 ```
+
+### 새 위젯 추가 패턴
+
+탑바·전역에 고정되는 독립 UI 모듈은 `widgets/`에 추가합니다.
+
+**언제 `widgets/`에 만드나**
+
+| 조건 | 예시 |
+|------|------|
+| 탑바·전역 고정 위치에 마운트 | 알림, 작업현황, 프로필 |
+| Dockview 탭이 아닌 오버레이·드롭다운 | 세션 만료 오버레이 |
+| `useAppStore` 또는 자체 데이터를 직접 보유 | WebSocket 데이터, 전역 상태 |
+
+**추가 절차**
+
+```
+1. src/widgets/{도메인}/{위젯명}Widget.jsx  생성
+2. App.jsx 탑바에 직접 마운트
+```
+
+```jsx
+// 1. src/widgets/search/GlobalSearchWidget.jsx 생성
+export default function GlobalSearchWidget({ open, onClose }) {
+  // 자체 상태·데이터 보유 가능
+}
+
+// 2. App.jsx 탑바에 마운트
+import GlobalSearchWidget from '@/widgets/search/GlobalSearchWidget.jsx'
+
+<GlobalSearchWidget open={searchOpen} onClose={() => setSearchOpen(false)} />
+```
+
+> `widgets/`는 `panels/`와 달리 `PANEL_COMPONENTS`·`MENU_GROUPS` 등록이 필요 없습니다.
 
 ---
 
@@ -1263,7 +1409,106 @@ const facilityLayer = new TileLayer({
 
 ---
 
-## 15. 금지 사항 (DON'T)
+## 15. 세션 만료 처리
+
+API 응답이 `401 Unauthorized`이면 로그인 오버레이를 자동으로 표시합니다.
+로그인 성공 시 오버레이가 닫히고 **열려있던 탭과 작업 상태가 그대로 유지**됩니다.
+
+### 동작 흐름
+
+```
+API 401 응답
+  → useAppStore.getState().setSessionExpired(true)
+  → SessionExpiredOverlay 표시 (기존 탭 위에 블러 오버레이)
+  → 로그인 성공 → setSessionExpired(false) → 오버레이 닫힘
+```
+
+### axios interceptor 연동 (실제 API 연동 시)
+
+```js
+// src/services/api.js
+apiClient.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      useAppStore.getState().setSessionExpired(true)  // ← 이 한 줄만 추가
+    }
+    return Promise.reject(error)
+  }
+)
+```
+
+### 데모 시뮬레이션
+
+컴포넌트 샘플 → **세션 만료 오버레이** 섹션에서 확인할 수 있습니다.
+
+### 관련 파일
+
+| 파일 | 역할 |
+|------|------|
+| `src/components/auth/SessionExpiredOverlay.jsx` | 오버레이 UI 컴포넌트 |
+| `src/store/useAppStore.js` | `sessionExpired`, `setSessionExpired` 상태 |
+| `src/App.jsx` | 루트에 `<SessionExpiredOverlay />` 배치 |
+
+---
+
+## 16. 탭 레이아웃 자동 저장/복원
+
+**별도 작업 불필요** — App.jsx에서 자동으로 처리됩니다.
+
+### 저장되는 정보
+
+| 항목 | 내용 |
+|------|------|
+| 탭 목록 | 열려있던 모든 탭 |
+| 탭 순서 | 탭 배치 순서 |
+| 분할 레이아웃 | 좌우/상하 분할 위치 및 크기 비율 |
+| 활성 탭 | 마지막으로 보고 있던 탭 |
+
+### 동작 방식
+
+```
+탭 열기 / 닫기 / 분할 / 활성 탭 변경
+  → Dockview api.toJSON() → localStorage('pms-layout') 저장
+
+F5 새로고침 또는 재접속
+  → localStorage('pms-layout') 읽기
+  → api.fromJSON(saved) → 탭·분할·활성 탭 전부 복원
+  → 저장된 레이아웃 없으면 대시보드만 열림
+```
+
+### 새 메뉴 추가 시
+
+`PANEL_COMPONENTS`에 컴포넌트를 등록하면 자동으로 저장/복원에 포함됩니다.
+별도 코드 추가가 필요 없습니다.
+
+```js
+// src/App.jsx
+const PANEL_COMPONENTS = {
+  dashboardPanel: DashboardPanel,
+  archivePanel:   ArchivePanel,
+  newPanel:       NewPanel,   // ← 여기에만 추가하면 됨
+}
+```
+
+---
+
+## 17. 뒤로가기 / 백스페이스 방지
+
+**별도 작업 불필요** — App.jsx에서 전역으로 처리됩니다.
+
+### 처리 대상
+
+| 입력 | 처리 방식 |
+|------|-----------|
+| 브라우저 뒤로가기 버튼 | `popstate` 이벤트 차단 + 경고 토스트 |
+| 키보드 백스페이스 | `input` / `textarea` 외부에서만 차단 + 경고 토스트 |
+
+> input, textarea 안에서 백스페이스는 정상 동작합니다.
+
+---
+
+## 18. 금지 사항 (DON'T)
 
 ### ❌ useState 로 API 데이터 관리
 
@@ -1374,4 +1619,4 @@ import { Save, Search, Trash2, Plus, Edit, Download } from 'lucide-react'
 
 ---
 
-*최종 수정: 2026-03-18*
+*최종 수정: 2026-04-12*

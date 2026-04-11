@@ -1,7 +1,7 @@
-import React, { useRef, useCallback, useState } from 'react'
+import React, { useRef, useCallback, useState, useEffect } from 'react'
 import { DockviewReact } from 'dockview-react'
 import 'dockview-react/dist/styles/dockview.css'
-import { Toaster } from 'sonner'
+import { Toaster, toast } from 'sonner'
 import { useAppStore } from '@/store/useAppStore.js'
 
 import DashboardPanel from '@/panels/dashboard/DashboardPanel.jsx'
@@ -19,22 +19,44 @@ import {
   X, PanelLeftClose, Activity, Archive,
 } from 'lucide-react'
 
-import NotificationPanel from '@/components/notification/NotificationPanel.jsx'
-import JobProgressPanel  from '@/components/job/JobProgressPanel.jsx'
+import NotificationWidget     from '@/widgets/notification/NotificationWidget.jsx'
+import JobProgressWidget      from '@/widgets/job/JobProgressWidget.jsx'
+import SessionExpiredOverlay  from '@/widgets/auth/SessionExpiredOverlay.jsx'
+import ProfileDropdown        from '@/widgets/auth/ProfileDropdown.jsx'
 import styles from '@/styles/layout.module.css'
+
+// ── 레이아웃 localStorage 저장/복원 (Dockview toJSON/fromJSON) ───────────────
+const LAYOUT_STORAGE_KEY = 'pms-layout'
+
+function saveLayout(api) {
+  try {
+    localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(api.toJSON()))
+  } catch {}
+}
+
+function loadLayout() {
+  try {
+    const raw = localStorage.getItem(LAYOUT_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
 
 // ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
 const PANEL_COMPONENTS = {
-  dashboardPanel: DashboardPanel,
-  loginPanel:     LoginPanel,
-  gridPanel:      GridPanel,
-  gridPanel2:     GridPanel,
-  gisPanel:       GisPanel,
-  gisPanel2:      GisPanel,
-  samplePanel:    SamplePanel,
-  readmePanel:    ReadmePanel,
-  settingPanel:   SamplePanel,
-  archivePanel:   ArchivePanel,
+  dashboardPanel:   DashboardPanel,
+  loginPanel:       LoginPanel,
+  gridPanel:        GridPanel,
+  gridPanel2:       GridPanel,
+  gridPanel_sample: GridPanel,
+  gisPanel:         GisPanel,
+  gisPanel2:        GisPanel,
+  gisPanel_sample:  GisPanel,
+  samplePanel:      SamplePanel,
+  readmePanel:      ReadmePanel,
+  settingPanel:     SamplePanel,
+  archivePanel:     ArchivePanel,
 }
 
 const components = Object.fromEntries(
@@ -152,11 +174,62 @@ export default function App() {
     const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s
   })
 
+  // ── 뒤로가기 / 백스페이스 방지 ──────────────────────────────────────────
+  useEffect(() => {
+    history.pushState(null, '', window.location.href)
+
+    // 브라우저 뒤로가기 버튼
+    const handlePop = () => {
+      history.pushState(null, '', window.location.href)
+      toast.warning('뒤로가기는 지원하지 않습니다.')
+    }
+
+    // 백스페이스 키 — input/textarea 외부에서만 차단
+    const handleKeyDown = (e) => {
+      if (e.key !== 'Backspace') return
+      const tag = e.target.tagName
+      const editable = e.target.isContentEditable
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || editable) return
+      e.preventDefault()
+      toast.warning('뒤로가기는 지원하지 않습니다.')
+    }
+
+    window.addEventListener('popstate',  handlePop)
+    window.addEventListener('keydown',   handleKeyDown)
+    return () => {
+      window.removeEventListener('popstate',  handlePop)
+      window.removeEventListener('keydown',   handleKeyDown)
+    }
+  }, [])
+
+  // ── Dockview 준비 → 레이아웃 복원 ───────────────────────────────────────
   const onReady = useCallback((event) => {
     apiRef.current = event.api
-    event.api.addPanel({ id:'dashboardPanel', component:'dashboardPanel', title:'대시보드' })
-    setOpenPanels(new Set(['dashboardPanel']))
-    event.api.onDidRemovePanel(p => setOpenPanels(prev => { const s = new Set(prev); s.delete(p.id); return s }))
+    const saved = loadLayout()
+
+    if (saved) {
+      // 저장된 레이아웃 복원 (탭 순서·분할·활성 탭 전부 포함)
+      try {
+        event.api.fromJSON(saved)
+        setOpenPanels(new Set(event.api.panels.map(p => p.id)))
+      } catch {
+        // 복원 실패 시 (컴포넌트 불일치 등) 기본 대시보드로 폴백
+        event.api.addPanel({ id:'dashboardPanel', component:'dashboardPanel', title:'대시보드' })
+        setOpenPanels(new Set(['dashboardPanel']))
+      }
+    } else {
+      event.api.addPanel({ id:'dashboardPanel', component:'dashboardPanel', title:'대시보드' })
+      setOpenPanels(new Set(['dashboardPanel']))
+    }
+
+    // 레이아웃 변경 시마다 저장
+    event.api.onDidAddPanel(()          => saveLayout(event.api))
+    event.api.onDidRemovePanel(p => {
+      setOpenPanels(prev => { const s = new Set(prev); s.delete(p.id); return s })
+      saveLayout(event.api)
+    })
+    event.api.onDidActivePanelChange(() => saveLayout(event.api))
+    event.api.onDidLayoutChange(()      => saveLayout(event.api))
   }, [])
 
   const openPanel = useCallback((item) => {
@@ -188,6 +261,7 @@ export default function App() {
       closeButton
       duration={3000}
     />
+    <SessionExpiredOverlay />
     <div className={styles.appRoot}>
 
       {/* ── 탑바 ── */}
@@ -228,9 +302,9 @@ export default function App() {
             <Bell size={15} />
             <span className={styles.notiBadge} />
           </button>
-          <JobProgressPanel  open={jobOpen}  onClose={() => setJobOpen(false)}  />
-          <NotificationPanel open={notiOpen} onClose={() => setNotiOpen(false)} />
-          <div className={styles.avatar}>A</div>
+          <JobProgressWidget  open={jobOpen}  onClose={() => setJobOpen(false)}  />
+          <NotificationWidget open={notiOpen} onClose={() => setNotiOpen(false)} />
+          <ProfileDropdown />
         </div>
       </header>
 

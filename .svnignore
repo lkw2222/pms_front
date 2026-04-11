@@ -1,0 +1,28 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# .svnignore
+#
+# SVN은 이 파일을 자동으로 읽지 않습니다.
+# 아래 방법 중 하나로 직접 적용해야 합니다.
+#
+# [CLI]
+#   svn propset svn:ignore -F .svnignore .
+#   svn commit -m "svnignore 설정"
+#
+# [TortoiseSVN GUI]
+#   폴더 우클릭 → TortoiseSVN → Properties → svn:ignore 에 직접 입력
+# ──────────────────────────────────────────────────────────────────────────────
+
+node_modules
+dist
+dist-ssr
+.env
+*.local
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+.idea
+.vscode
+*.suo
+*.sw?

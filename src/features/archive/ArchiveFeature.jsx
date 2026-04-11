@@ -11,7 +11,7 @@ import FileInput         from '@/components/input/FileInput.jsx'
 import BasicButton       from '@/components/button/BasicButton.jsx'
 import BasicLabel        from '@/components/label/BasicLabel.jsx'
 import ConfirmModal      from '@/components/modal/ConfirmModal.jsx'
-import { Search, RotateCcw, Plus, Download, FileText, Loader2, Paperclip } from 'lucide-react'
+import { Search, RotateCcw, Plus, Download, FileText, Loader2, Paperclip, Pencil, Trash2, X, Save } from 'lucide-react'
 // Download, FileText 는 DetailView 내 파일 목록에서 사용
 import { toast } from 'sonner'
 
@@ -78,7 +78,7 @@ function SearchForm({ search, setSearch, onSearch, onReset, onRegister, totalCou
           }
         </span>
         <div style={{ marginLeft:'auto' }}>
-          <BasicButton label="등록" icon={Plus} variant="primary" onClick={onRegister} />
+          <BasicButton label="등록" icon={Plus} variant="primary" size="sm" onClick={onRegister} />
         </div>
       </div>
     </div>
@@ -417,20 +417,21 @@ export default function ArchiveFeature({ onRegister, onEdit, onDelete }) {
   const drawerFooter = useMemo(() => {
     if (drawerMode === 'detail') return (
       <>
-        <BasicButton label="수정하기" variant="primary"   size="sm" onClick={() => openEdit(drawerData)} />
-        <BasicButton label="삭제"     variant="danger"    size="sm" onClick={() => { closeDrawer(); openDeleteConfirm(drawerData) }} />
-        <BasicButton label="닫기"     variant="secondary" size="sm" onClick={closeDrawer} />
+        <BasicButton label="수정"  icon={Pencil} variant="primary"   size="sm" onClick={() => openEdit(drawerData)} />
+        <BasicButton label="삭제"  icon={Trash2} variant="danger"    size="sm" onClick={() => { closeDrawer(); openDeleteConfirm(drawerData) }} />
+        <BasicButton label="닫기"  icon={X}      variant="secondary" size="sm" onClick={closeDrawer} />
       </>
     )
     if (drawerMode === 'register' || drawerMode === 'edit') return (
       <>
         <BasicButton
           label={isSubmitting ? '저장 중...' : '저장'}
+          icon={isSubmitting ? Loader2 : Save}
           variant="primary" size="sm"
           disabled={isSubmitting}
           onClick={handleSubmit(onSubmit)}
         />
-        <BasicButton label="취소" variant="secondary" size="sm" onClick={closeDrawer} />
+        <BasicButton label="취소" icon={X} variant="secondary" size="sm" onClick={closeDrawer} />
       </>
     )
     return null

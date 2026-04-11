@@ -19,13 +19,13 @@ const TYPE_ICON = {
 }
 
 /**
- * NotificationPanel
- * 탑바 알림 드롭다운 패널
+ * NotificationWidget
+ * 탑바 알림 드롭다운
  *
  * @param {boolean}  open     - 패널 열림 여부
  * @param {function} onClose  - 닫기 핸들러
  */
-export default function NotificationPanel({ open, onClose }) {
+export default function NotificationWidget({ open, onClose }) {
   const panelRef = useRef(null)
   const unreadCount = SAMPLE_NOTIFICATIONS.filter(n => !n.read).length
 

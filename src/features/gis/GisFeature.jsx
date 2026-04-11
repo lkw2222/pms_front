@@ -382,7 +382,7 @@ export default function GisFeature() {
     const map = new Map({
       target: mapRef.current,
       layers: [baseLayer, facilityLayer, drawLayer, markerLayer],
-      view: new View({ center: fromLonLat([127.024612, 37.532600]), zoom: 15, minZoom: 3, maxZoom: 20 }),
+      view: new View({ center: fromLonLat([127.024612, 37.532600]), zoom: 15, minZoom: 6, maxZoom: 19 }),
       controls: [],
     })
 
@@ -977,7 +977,7 @@ export default function GisFeature() {
               <div style={{
                 position:'absolute', bottom:0, left:0, right:0, borderRadius:4,
                 transition:'height .3s ease',
-                height:`${((zoomLevel-3)/(20-3))*100}%`,
+                height:`${((zoomLevel-6)/(19-6))*100}%`,
                 background:'linear-gradient(to top, var(--color-accent), var(--color-purple))',
               }} />
             </div>
@@ -996,7 +996,7 @@ export default function GisFeature() {
             {/* 줌 레벨 숫자 — 게이지 채움 끝에 따라가기 */}
             <div style={{
               position:'absolute',
-              bottom:`${Math.max(0, Math.min(100, ((zoomLevel-3)/(20-3))*100))}%`,
+              bottom:`${Math.max(0, Math.min(100, ((zoomLevel-6)/(19-6))*100))}%`,
               left:0, right:0,
               display:'flex', justifyContent:'center',
               transform:'translateY(50%)',

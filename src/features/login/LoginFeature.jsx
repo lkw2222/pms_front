@@ -14,10 +14,14 @@ export default function LoginFeature({ onLogin }) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: { id: '', password: '' },
   })
+
+  const idValue       = watch('id',       '')
+  const passwordValue = watch('password', '')
 
   const onSubmit = async (data) => {
     await onLogin(data.id, data.password)
@@ -31,6 +35,7 @@ export default function LoginFeature({ onLogin }) {
         placeholder="아이디를 입력하세요"
         icon={User}
         isNotNull
+        value={idValue}
         {...register('id', { required: '아이디를 입력하세요.' })}
       />
       {errors.id && <span style={{ fontSize:11, color:'var(--color-danger)', marginTop:-8 }}>{errors.id.message}</span>}
@@ -41,6 +46,7 @@ export default function LoginFeature({ onLogin }) {
         placeholder="비밀번호를 입력하세요"
         icon={Lock}
         isNotNull
+        value={passwordValue}
         {...register('password', {
           required:  '비밀번호를 입력하세요.',
           minLength: { value: 4, message: '비밀번호는 4자 이상 입력하세요.' },
