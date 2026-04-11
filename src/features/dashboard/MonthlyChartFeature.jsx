@@ -3,7 +3,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, eTT, useEChart } from './lib/dashboardUtils.js'
 import { LoadingState } from '@/components/feedback/QueryState.jsx'
-import {BarChart3, CalendarDays} from "lucide-react";
+import {BarChart3, CalendarDays} from 'lucide-react'
 
 function getChartColors() {
     const css = getComputedStyle(document.documentElement)

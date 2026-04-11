@@ -5,7 +5,7 @@ import { ResponsiveScatterPlot } from '@nivo/scatterplot'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, useNivoTheme } from './lib/dashboardUtils.js'
 import { LoadingState } from '@/components/feedback/QueryState.jsx'
-import {Building2, Waypoints} from "lucide-react";
+import { Building2, Waypoints } from 'lucide-react'
 
 function NV_DeptBar() {
   useSuspenseQuery({
