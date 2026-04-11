@@ -47,7 +47,7 @@ const CATEGORY_VARIANT = { 공지:'info', 기술문서:'purple', '양식/서식'
 function SearchForm({ search, setSearch, onSearch, onReset, onRegister, totalCount, isLoading }) {
   return (
     <div className="panel-toolbar" style={{ flexDirection:'column', alignItems:'flex-start', gap:10 }}>
-      <div style={{ display:'grid', gridTemplateColumns:'200px 140px 160px 160px', gap:10, alignItems:'end' }}>
+      <div className="panel-search-value" style={{ display:'grid', gridTemplateColumns:'200px 140px 160px 160px', gap:10, alignItems:'end' }}>
         <TextInput
           label="제목" placeholder="제목 검색"
           value={search.title}
@@ -68,16 +68,18 @@ function SearchForm({ search, setSearch, onSearch, onReset, onRegister, totalCou
           onChange={v => setSearch(s => ({ ...s, dateTo: v }))}
         />
       </div>
-      <div style={{ display:'flex', alignItems:'center', gap:8, width:'100%' }}>
-        <BasicButton label="조회"   icon={isLoading ? Loader2 : Search} variant="primary"   onClick={onSearch} disabled={isLoading} />
-        <BasicButton label="초기화" icon={RotateCcw}                    variant="secondary" onClick={onReset}  />
-        <span style={{ fontSize:12, color:'var(--color-text-muted)', marginLeft:4 }}>
+      <div className="panel-search-function" style={{ display:'grid', gridTemplateColumns:'1fr auto 1fr', alignItems:'center', gap:8, width:'100%' }}>
+        <div style={{ justifySelf:'start', fontSize:13, color:'var(--color-text-muted)', position:'relative', top:5 }}>
           {isLoading
-            ? <span style={{ color:'var(--color-accent)' }}>조회 중...</span>
-            : <>총 <strong style={{ color:'var(--color-accent)' }}>{totalCount.toLocaleString()}</strong>건</>
+            ? <span style={{ color:'var(--color-danger-total)' }}>조회 중...</span>
+            : <>총 <strong style={{ color:'var(--color-danger-total)' }}>{totalCount.toLocaleString()}</strong>건</>
           }
-        </span>
-        <div style={{ marginLeft:'auto' }}>
+        </div>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+          <BasicButton label="초기화" icon={RotateCcw}                    variant="secondary" onClick={onReset} />
+          <BasicButton label="조회"   icon={isLoading ? Loader2 : Search} variant="primary"   onClick={onSearch} disabled={isLoading} />
+        </div>
+        <div style={{ display:'flex', justifyContent:'flex-end' }}>
           <BasicButton label="등록" icon={Plus} variant="primary" size="sm" onClick={onRegister} />
         </div>
       </div>
@@ -442,7 +444,7 @@ export default function ArchiveFeature({ onRegister, onEdit, onDelete }) {
     : drawerData?.title ?? '자료 상세'
 
   return (
-    <div className="panel-container">
+    <div className="grid-wrap" style={{ display:'flex', flexDirection:'column', height:'100%' }}>
 
       <SearchForm
         search={search} setSearch={setSearch}
