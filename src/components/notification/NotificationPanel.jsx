@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { Bell, CheckCheck, AlertCircle, Info, CheckCircle, AlertTriangle, Download, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 // ── 샘플 데이터 (WebSocket 연동 시 교체) ─────────────────────────────────────
 const SAMPLE_NOTIFICATIONS = [
@@ -120,7 +121,7 @@ export default function NotificationPanel({ open, onClose }) {
                   </p>
                   {n.download && (
                     <button
-                      onClick={e => { e.stopPropagation(); alert('다운로드 시작') }}
+                      onClick={e => { e.stopPropagation(); toast.info('다운로드를 시작합니다.') }}
                       style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, color:'var(--color-accent)', background:'rgba(37,99,235,0.08)', border:'1px solid rgba(37,99,235,0.2)', borderRadius:'var(--radius-md)', padding:'2px 8px', cursor:'pointer', transition:'all 0.15s' }}
                       onMouseEnter={e => e.currentTarget.style.background='rgba(37,99,235,0.15)'}
                       onMouseLeave={e => e.currentTarget.style.background='rgba(37,99,235,0.08)'}

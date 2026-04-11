@@ -9,7 +9,11 @@ import EmailInputFeature   from '@/features/sample/EmailInputFeature.jsx'
 import FileInputFeature    from '@/features/sample/FileInputFeature.jsx'
 import ButtonFeature       from '@/features/sample/ButtonFeature.jsx'
 import LabelFeature        from '@/features/sample/LabelFeature.jsx'
+import BasicGridFeature         from '@/features/sample/BasicGridFeature.jsx'
 import GridActionButtonsFeature from '@/features/sample/GridActionButtonsFeature.jsx'
+import ToastFeature           from '@/features/sample/ToastFeature.jsx'
+import ConfirmModalFeature    from '@/features/sample/ConfirmModalFeature.jsx'
+import ErrorBoundaryFeature   from '@/features/sample/ErrorBoundaryFeature.jsx'
 
 // ── Props 테이블 ──────────────────────────────────────────────────────────────
 function PropTable({ rows }) {
@@ -60,7 +64,11 @@ const SECTIONS = [
   { id:'file-input',     label:'FileInput'         },
   { id:'buttons',        label:'Button'            },
   { id:'labels',         label:'Label'             },
+  { id:'basic-grid',          label:'BasicGrid'         },
   { id:'grid-action-buttons', label:'GridActionButtons' },
+  { id:'toast',               label:'Toast'             },
+  { id:'confirm-modal',       label:'ConfirmModal'      },
+  { id:'error-boundary',      label:'ErrorBoundary / Suspense' },
 ]
 
 // ── SamplePanel ───────────────────────────────────────────────────────────────
@@ -199,6 +207,23 @@ export default function SamplePanel() {
           <LabelFeature />
         </SectionCard>
 
+        <SectionCard id="basic-grid" title="BasicGrid"
+          propRows={[
+            ['mode',          'string',   'paginate', 'paginate | infinite | none'],
+            ['rowData',       'Array',    '[]',       '행 데이터 배열 (paginate/none 모드)'],
+            ['colDefs',       'Array',    '[]',       'AG Grid 컬럼 정의 배열'],
+            ['onRowClick',    'function', '-',        '(rowData) => void — 행 클릭 핸들러 (버튼 클릭은 무시)'],
+            ['height',        'string',   '100%',     '그리드 높이'],
+            ['pageSize',      'number',   '20',       '페이지당 행 수 (paginate 모드)'],
+            ['datasource',    'object',   '-',        '{ getRows } — infinite 모드 전용'],
+            ['cacheBlockSize','number',   '50',       '한 번에 로드할 행 수 (infinite 모드)'],
+            ['loading',       'boolean',  'false',    '로딩 상태 표시'],
+            ['...props',      '-',        '-',        'AgGridReact에 그대로 전달'],
+          ]}
+        >
+          <BasicGridFeature />
+        </SectionCard>
+
         <SectionCard id="grid-action-buttons" title="GridActionButtons"
           propRows={[
             ['data',              'object', '-',  '현재 로우 데이터 (AG Grid에서 자동 전달)'],
@@ -214,6 +239,41 @@ export default function SamplePanel() {
           ]}
         >
           <GridActionButtonsFeature />
+        </SectionCard>
+
+        <SectionCard id="toast" title="Toast"
+          propRows={[
+            ['toast.success(msg)', '-', '-', '초록 — 성공 알림'],
+            ['toast.error(msg)',   '-', '-', '빨강 — 오류 알림'],
+            ['toast.warning(msg)', '-', '-', '노랑 — 경고 알림'],
+            ['toast.info(msg)',    '-', '-', '파랑 — 정보 알림'],
+          ]}
+        >
+          <ToastFeature />
+        </SectionCard>
+
+        <SectionCard id="confirm-modal" title="ConfirmModal"
+          propRows={[
+            ['open',        'boolean',  '-',      '모달 열림 여부'],
+            ['title',       'string',   '-',      '제목'],
+            ['message',     'string',   '-',      '본문 메시지'],
+            ['variant',     'string',   'danger', 'danger | warning | info | success'],
+            ['confirmText', 'string',   '-',      '확인 버튼 텍스트 (기본값은 variant에 따라 결정)'],
+            ['cancelText',  'string',   '취소',   '취소 버튼 텍스트'],
+            ['onConfirm',   'function', '-',      '확인 클릭 핸들러'],
+            ['onCancel',    'function', '-',      '취소 / ESC / 오버레이 클릭 핸들러'],
+          ]}
+        >
+          <ConfirmModalFeature />
+        </SectionCard>
+
+        <SectionCard id="error-boundary" title="ErrorBoundary / Suspense"
+          propRows={[
+            ['children', 'ReactNode', '-', '감쌀 컴포넌트 (ErrorBoundary)'],
+            ['fallback', 'ReactNode', '-', '로딩 중 표시할 UI (Suspense)'],
+          ]}
+        >
+          <ErrorBoundaryFeature />
         </SectionCard>
 
       </div>

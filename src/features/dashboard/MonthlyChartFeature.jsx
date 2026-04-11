@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { Suspense } from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, eTT, useEChart } from './lib/dashboardUtils.js'
+import { LoadingState } from '@/components/feedback/QueryState.jsx'
 
 function EC_MonthlyMix() {
+  useSuspenseQuery({
+    queryKey: ['dashboard', 'monthly'],
+    queryFn:  async () => {
+      // return dashboardApi.getMonthly()
+      await new Promise(r => setTimeout(r, 800))
+      return {}
+    },
+    staleTime: 1000 * 60,
+  })
   const m = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
   const r = [42,55,38,67,71,58,82,74,63,88,76,91]
   const d = [38,48,31,60,65,54,75,68,58,80,70,84]
@@ -46,7 +57,9 @@ export default function MonthlyChartFeature() {
     <>
       <Panel style={{ flex:2 }}>
         <SectionHeader title="월별 등록/완료 현황" badge="ECharts" />
-        <EC_MonthlyMix />
+        <Suspense fallback={<LoadingState />}>
+          <EC_MonthlyMix />
+        </Suspense>
       </Panel>
       <Panel style={{ flex:1 }}>
         <SectionHeader title="요일×주차 업무 강도" badge="ECharts" />

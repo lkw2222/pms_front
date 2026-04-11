@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
+import { toast } from 'sonner'
 import Map from 'ol/Map'
 import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
@@ -11,7 +12,7 @@ import { getLength, getArea } from 'ol/sphere'
 import { unByKey } from 'ol/Observable'
 import Overlay from 'ol/Overlay'
 import { LineString, Polygon, Point } from 'ol/geom'
-import { Stroke, Fill, Style, Circle as CircleStyle, Icon as OlIcon, Text as OlText } from 'ol/style'
+import { Stroke, Fill, Style, Circle as CircleStyle, RegularShape, Icon as OlIcon, Text as OlText } from 'ol/style'
 import Feature from 'ol/Feature'
 import Select from 'ol/interaction/Select'
 import { click } from 'ol/events/condition'
@@ -119,6 +120,44 @@ const F_POINT      = '#3b82f6'   // 기본 — blue-500
 const F_POINT_SEL  = '#1d4ed8'   // 선택 — blue-700
 const GRADE_TEXT   = { A:'#16a34a', B:'#2563eb', C:'#ca8a04', D:'#ea580c', E:'#dc2626', F:'#7f1d1d' }
 
+// ── 포인트 모양 정의 ─────────────────────────────────────────────────────────
+// RegularShape: points=꼭짓점 수, radius=크기, angle=회전각(라디안)
+// radius2 지정 시 별 모양 (외곽radius, 안쪽radius2)
+const makePointImage = (type, selected) => {
+  const r  = selected ? 9 : 7
+  const r2 = selected ? 11 : 9
+  const fill   = new Fill({ color: selected ? F_POINT_SEL : F_POINT })
+  const stroke = new Stroke({ color: '#fff', width: selected ? 2.5 : 1.5 })
+
+  switch (type) {
+    case '원':      // ● 원
+      return new CircleStyle({ radius: r, fill, stroke })
+    case '사각형':  // ■ 정사각형
+      return new RegularShape({ points: 4, radius: r2, angle: Math.PI / 4, fill, stroke })
+    case '마름모':  // ◆ 마름모
+      return new RegularShape({ points: 4, radius: r2, angle: 0, fill, stroke })
+    case '삼각형':  // ▲ 삼각형
+      return new RegularShape({ points: 3, radius: r2, angle: 0, fill, stroke })
+    case '역삼각형':// ▼ 역삼각형
+      return new RegularShape({ points: 3, radius: r2, angle: Math.PI, fill, stroke })
+    case '오각형':  // ⬠ 오각형
+      return new RegularShape({ points: 5, radius: r2, angle: 0, fill, stroke })
+    case '별':      // ★ 별
+      return new RegularShape({ points: 5, radius: r2, radius2: r2 * 0.45, angle: 0, fill, stroke })
+    case '십자':    // ✛ 십자 (8각 별 변형)
+      return new RegularShape({ points: 4, radius: r2, radius2: r2 * 0.35, angle: Math.PI / 4, fill, stroke })
+    default:
+      return new CircleStyle({ radius: r, fill, stroke })
+  }
+}
+
+// 시설물 타입 → 포인트 모양 매핑 (여기서 원하는 모양으로 변경)
+const TYPE_SHAPE = {
+  '전주':   '원',
+  '변압기':  '마름모',
+  // 새 타입 추가 시: '장비명': '삼각형' 등
+}
+
 // 설비 통합 스타일
 const FACILITY_STYLE = (feature, selected = false) => {
   const geomType  = feature.getGeometry().getType()
@@ -126,12 +165,9 @@ const FACILITY_STYLE = (feature, selected = false) => {
   const gradeTextColor = GRADE_TEXT[grade] ?? '#475569'
 
   if (geomType === 'Point') {
+    const shape = TYPE_SHAPE[feature.get('type')] ?? '원'
     return new Style({
-      image: new CircleStyle({
-        radius: selected ? 9 : 7,
-        fill:   new Fill({ color: selected ? F_POINT_SEL : F_POINT }),
-        stroke: new Stroke({ color: '#fff', width: selected ? 2.5 : 1.5 }),
-      }),
+      image: makePointImage(shape, selected),
       text: grade ? new OlText({
         text:    selected ? `${grade}  ${feature.get('type')} ${feature.get('id')}` : grade,
         offsetY: -14,
@@ -655,7 +691,7 @@ export default function GisFeature() {
         link.download = `지도_${ts}.png`
         document.body.appendChild(link); link.click(); link.remove()
       } catch {
-        alert('일부 레이어가 CORS 정책으로 인해 캡처되지 않을 수 있습니다.\n위성/하이브리드 레이어는 캡처가 제한될 수 있어요.')
+        toast.warning('위성/하이브리드 레이어는 CORS 정책으로 캡처가 제한될 수 있어요.')
       }
     })
     map.renderSync()

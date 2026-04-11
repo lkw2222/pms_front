@@ -204,9 +204,9 @@ export default function TextInput({ label, value, onChange, ...props }) {
 
 ```
 서버 상태  (API 데이터)      → TanStack Query  useQuery / useMutation
-폼 상태    (입력값, 유효성)   → React Hook Form useForm
+등록·수정 폼 (유효성 검사)   → React Hook Form useForm
 전역 UI 상태 (테마, 인증)    → Zustand         useAppStore
-로컬 UI 상태 (모달 열림 등)  → useState
+검색 조건·로컬 UI 상태       → useState
 ```
 
 ### Zustand (useAppStore)
@@ -245,16 +245,42 @@ saveMutation.mutate(formData)
 saveMutation.isPending  // 저장 중 여부
 ```
 
-### React Hook Form (useForm)
+### 폼 상태 관리 — useForm vs useState
+
+> 모든 입력 폼에 `useForm`을 쓰는 게 아니다. **용도에 따라 구분한다.**
+
+| 상황 | 방식 | 이유 |
+|------|------|------|
+| 등록 / 수정 폼 | `useForm` | 유효성 검사, 에러 메시지, 제출 로딩 상태 필요 |
+| 검색 / 필터 폼 | `useState` | 유효성 검사 불필요, 단순 조건값 관리 |
+| 모달 열림·탭 선택 등 UI 상태 | `useState` | 서버·폼과 무관한 로컬 상태 |
+
+**등록·수정 폼 → useForm 사용**
 
 ```jsx
+// ✅ 유효성 검사, 에러 메시지, 제출 중 로딩이 필요한 경우
 const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm({
   defaultValues: { name: '', category: '' },
 })
 
-// TextInput 에 register 연동 (...props 로 자동 전달)
 <TextInput label="이름" {...register('name', { required: '필수 항목입니다.' })} />
 {errors.name && <span>{errors.name.message}</span>}
+
+<BasicButton label="저장" disabled={isSubmitting} onClick={handleSubmit(onSave)} />
+```
+
+**검색·필터 폼 → useState 사용**
+
+```jsx
+// ✅ 조회 조건은 유효성 검사가 없으므로 useState로 충분
+const [search, setSearch] = useState({ name: '', category: '', dateFrom: '' })
+
+<TextInput
+  label="담당자"
+  value={search.name}
+  onChange={e => setSearch(s => ({ ...s, name: e.target.value }))}
+/>
+<BasicButton label="조회" onClick={() => setApplied({ ...search })} />
 ```
 
 ---
@@ -391,6 +417,160 @@ const PANEL_COMPONENTS = { equipmentPanel: EquipmentPanel }
 // 무한 스크롤 (수천 건 이상)
 <BasicGrid mode="infinite" datasource={datasource} colDefs={colDefs} height="100%" />
 ```
+
+### Toast 알림 (sonner)
+
+> `alert()` 대신 항상 `toast`를 사용한다. alert는 UI를 차단하고 디자인이 맞지 않는다.
+
+```jsx
+import { toast } from 'sonner'
+
+toast.success('저장이 완료되었습니다.')   // ✅ 초록 — 성공
+toast.error('저장에 실패했습니다.')       // ❌ 빨강 — 오류
+toast.warning('주의가 필요합니다.')       // ⚠ 노랑 — 경고
+toast.info('엑셀 다운로드를 시작합니다.') // ℹ 파랑 — 정보
+```
+
+- `Toaster`는 `App.jsx` 최상단에 전역 등록되어 있으므로 별도 설정 불필요
+- 3초 후 자동으로 사라지며, 닫기 버튼으로 수동 닫기 가능
+
+### ConfirmModal
+
+> 삭제·초기화 등 되돌릴 수 없는 작업에는 반드시 ConfirmModal을 사용한다.
+
+```jsx
+import ConfirmModal from '@/components/modal/ConfirmModal.jsx'
+
+// 상태
+const [confirmOpen,   setConfirmOpen]   = useState(false)
+const [confirmTarget, setConfirmTarget] = useState(null)
+
+// 열기
+const handleDeleteClick = (data) => {
+  setConfirmTarget(data)
+  setConfirmOpen(true)
+}
+
+// 확인
+const handleConfirm = () => {
+  // 삭제 로직
+  toast.success(`${confirmTarget.name} 삭제 완료`)
+  setConfirmOpen(false)
+}
+
+// JSX
+<ConfirmModal
+  open={confirmOpen}
+  variant="danger"
+  title="삭제 확인"
+  message="정말 삭제하시겠습니까? 삭제된 데이터는 복구할 수 없습니다."
+  onConfirm={handleConfirm}
+  onCancel={() => setConfirmOpen(false)}
+/>
+```
+
+| variant | 색상 | 기본 확인 버튼 텍스트 | 사용 상황 |
+|---------|------|--------------------|---------|
+| `danger`  | 빨강 | 삭제 | 삭제, 초기화 |
+| `warning` | 노랑 | 확인 | 저장 전 경고 |
+| `info`    | 파랑 | 확인 | 일반 확인 |
+| `success` | 초록 | 확인 | 완료 처리 |
+
+- ESC 키 및 오버레이 클릭으로 닫기 가능
+- `confirmText` prop으로 버튼 텍스트 커스텀 가능
+
+---
+
+### ErrorBoundary (패널 레벨 에러 처리)
+
+> API 오류 발생 시 탭 전체를 에러 UI로 교체한다. 컴포넌트 단위 에러 처리는 금지.
+
+**적용 위치: Panel 컴포넌트**
+
+```jsx
+// GridPanel.jsx
+import ErrorBoundary from '@/components/feedback/ErrorBoundary.jsx'
+
+export default function GridPanel() {
+  return (
+    <ErrorBoundary>
+      <GridFeature />
+    </ErrorBoundary>
+  )
+}
+```
+
+**Feature의 useQuery에 throwOnError 추가**
+
+```jsx
+const { data, isLoading } = useQuery({
+  queryKey: ['work', 'list', applied],
+  throwOnError: true,   // 에러 발생 시 ErrorBoundary로 전파
+  queryFn: async () => { ... },
+})
+```
+
+**동작 흐름**
+```
+useQuery에서 에러 발생
+  → throwOnError: true 로 에러를 위로 던짐
+  → Panel의 ErrorBoundary가 캐치
+  → 탭 전체가 에러 UI로 교체
+  → "다시 시도" 클릭 시 컴포넌트 트리 재마운트
+```
+
+- 대시보드처럼 여러 위젯이 있어도 하나라도 에러나면 탭 전체 에러 처리
+- 새 Panel 추가 시 반드시 `ErrorBoundary`로 감쌀 것
+
+---
+
+### Suspense (위젯 단위 로딩 처리)
+
+> 차트/위젯 등 조회가 필요한 피처에서 사용한다. 그리드는 AG Grid `loading` prop을 사용한다.
+
+**패턴: Panel은 그대로, 차트 영역만 Suspense로 감싸기**
+
+```jsx
+// StatusChartFeature.jsx
+import { Suspense } from 'react'
+import { LoadingState } from '@/components/feedback/QueryState.jsx'
+
+function ChartContent() {
+  useSuspenseQuery({ ... })  // 로딩 중 Promise throw → Suspense가 캐치
+  return <MyChart />
+}
+
+export default function StatusChartFeature() {
+  return (
+    <Panel>
+      <SectionHeader title="업무 상태 현황" />
+      <Suspense fallback={<LoadingState />}>
+        <ChartContent />   {/* 이 안에서만 로딩 */}
+      </Suspense>
+    </Panel>
+  )
+}
+```
+
+**useQuery vs useSuspenseQuery**
+
+| | useQuery | useSuspenseQuery |
+|---|---|---|
+| 로딩 처리 | `isLoading` 분기 직접 작성 | Suspense fallback 자동 표시 |
+| 에러 처리 | `isError` 분기 직접 작성 | ErrorBoundary 자동 캐치 |
+| 사용 위치 | 그리드 패널 | 차트/위젯 피처 |
+
+**동작 흐름**
+```
+피처 진입
+  → Panel + SectionHeader 즉시 렌더링 (레이아웃 틀 표시)
+  → useSuspenseQuery 로딩 중 → 차트 영역만 LoadingState 표시
+  → 데이터 도착 → 차트로 교체
+  → API 에러 → ErrorBoundary가 캐치 → 패널 전체 에러 UI
+```
+
+- `useSuspenseQuery`는 반드시 `<Suspense>` 안에서 사용할 것
+- 그리드 패널에는 사용하지 않는다 (검색폼이 사라지는 UX 문제)
 
 ---
 
@@ -744,9 +924,10 @@ import GridActionButtons from '@/components/grid/GridActionButtons.jsx'
 | `delete` | 삭제 | danger |
 | `download` | 다운 | ghost |
 | `copy` | 복사 | ghost |
-| `add` | 추가 | primary |
+| `add` | 추가 | ghost |
 | `confirm` | 승인 | success |
-| `cancel` | 반려 | secondary |
+| `cancel` | 반려 | ghost |
+| `run` | 실행 | warning (ghost, 주황) |
 | `custom` | 직접 지정 | 직접 지정 |
 
 **조건부 제어**
@@ -975,10 +1156,12 @@ sudo nginx -s reload            # Nginx
 | 위치 | 내용 |
 |---|---|
 | 좌상단 (top:0, left:0) | 지역본부 / 사업소 위치 이동 셀렉트 |
-| 우상단 | 레이어 전환 · 측정 도구 · 캡처 · 전체화면 |
-| 우중앙 | 줌 컨트롤 + 줌 레벨 게이지 |
-| 좌하단 | 측정 안내 / 측정 결과 |
+| 우상단 (top:0, right:0) | 레이어 전환 드롭다운 · 측정 도구 드롭다운 · 캡처 · 전체화면 · 줌 인/아웃 · 줌 레벨 게이지 |
+| 좌하단 (bottom:36, left:12) | 측정 결과 (거리 / 각도 / 면적) |
 | 하단 | 현재 좌표 · 레이어 배지 |
+
+> 우상단 패널은 유틸리티 버튼과 줌 컨트롤이 하나의 패널로 통합되어 있습니다.
+> 레이어 전환·측정 도구는 버튼 클릭 시 드롭다운으로 펼쳐집니다.
 
 ---
 
@@ -1157,6 +1340,17 @@ const PANEL_COMPONENTS = {
 ```
 features/login/LoginFeature.jsx  →  services/auth/authService.js   // ❌ 불일치
 features/login/LoginFeature.jsx  →  services/login/loginService.js // ✅ 일치
+```
+
+### ❌ alert() / confirm() 사용
+
+```jsx
+alert('저장 완료')                    // ❌ UI 차단, 디자인 불일치
+if (confirm('삭제하시겠습니까?')) {}  // ❌
+
+// 대신
+toast.success('저장 완료')            // ✅ 토스트 알림
+<ConfirmModal variant="danger" ... /> // ✅ 컨펌 모달
 ```
 
 ### ❌ console.log 커밋

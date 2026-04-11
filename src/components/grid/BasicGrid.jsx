@@ -30,6 +30,7 @@ const BasicGrid = forwardRef(function BasicGrid({
   pageSize       = 20,
   datasource,
   cacheBlockSize = 50,
+  loading        = false,
   className      = '',
   ...props
 }, ref) {
@@ -67,6 +68,8 @@ const BasicGrid = forwardRef(function BasicGrid({
       headerHeight:               38,
       cellHorizontalPaddingScale: 1.2,
       fontFamily:                 'inherit',
+      borderRadius:               0,
+      wrapperBorderRadius:        0,
     })
   }, [appTheme])
 
@@ -96,6 +99,7 @@ const BasicGrid = forwardRef(function BasicGrid({
         onRowClicked={onRowClicked}
         rowSelection="single"
         animateRows={true}
+        loading={loading}
         {...infiniteProps}
         {...paginateProps}
         {...props}

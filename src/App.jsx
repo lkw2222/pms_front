@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useState } from 'react'
 import { DockviewReact } from 'dockview-react'
 import 'dockview-react/dist/styles/dockview.css'
+import { Toaster } from 'sonner'
 import { useAppStore } from '@/store/useAppStore.js'
 
 import DashboardPanel from '@/panels/dashboard/DashboardPanel.jsx'
@@ -9,12 +10,13 @@ import GridPanel      from '@/panels/grid/GridPanel.jsx'
 import GisPanel       from '@/panels/gis/GisPanel.jsx'
 import SamplePanel    from '@/panels/sample/SamplePanel.jsx'
 import ReadmePanel    from '@/panels/readme/ReadmePanel.jsx'
+import ArchivePanel   from '@/panels/archive/ArchivePanel.jsx'
 
 import {
   FileSpreadsheet, Map, LogIn, Menu, Sun, Moon, Bell, HelpCircle,
   ChevronLeft, ChevronRight, ChevronDown, ChevronRight as ChevRight,
   LayoutDashboard, FilePlus, BarChart2, Layers, Settings,
-  X, PanelLeftClose, Activity,
+  X, PanelLeftClose, Activity, Archive,
 } from 'lucide-react'
 
 import NotificationPanel from '@/components/notification/NotificationPanel.jsx'
@@ -32,6 +34,7 @@ const PANEL_COMPONENTS = {
   samplePanel:    SamplePanel,
   readmePanel:    ReadmePanel,
   settingPanel:   SamplePanel,
+  archivePanel:   ArchivePanel,
 }
 
 const components = Object.fromEntries(
@@ -55,10 +58,13 @@ const MENU_GROUPS = [
     { id:'gisPanel2', label:'공간 분석', icon:Layers, component:'gisPanel' },
   ]},
   { id:'sample', label:'개발 샘플', icon:LayoutDashboard, children:[
-    { id:'samplePanel', label:'컴포넌트',       icon:LayoutDashboard, component:'samplePanel' },
-    { id:'readmePanel', label:'개발 표준 문서', icon:HelpCircle,      component:'readmePanel' },
+    { id:'samplePanel',       label:'컴포넌트',       icon:LayoutDashboard, component:'samplePanel' },
+    { id:'readmePanel',       label:'개발 표준 문서', icon:HelpCircle,      component:'readmePanel' },
+    { id:'gridPanel_sample',  label:'그리드 샘플',    icon:BarChart2,       component:'gridPanel'   },
+    { id:'gisPanel_sample',   label:'지도 샘플',      icon:Map,             component:'gisPanel'    },
   ]},
   { id:'system', label:'시스템', icon:Settings, children:[
+    { id:'archivePanel', label:'자료실', icon:Archive,  component:'archivePanel' },
     { id:'loginPanel',   label:'로그인', icon:LogIn,    component:'loginPanel',  pip:false },
     { id:'settingPanel', label:'설정',   icon:Settings, component:'samplePanel', pip:false },
   ]},
@@ -174,6 +180,14 @@ export default function App() {
   const closeActivePanel = useCallback(() => apiRef.current?.activePanel?.api.close(), [])
 
   return (
+    <>
+    <Toaster
+      position="top-center"
+      theme={theme}
+      richColors
+      closeButton
+      duration={3000}
+    />
     <div className={styles.appRoot}>
 
       {/* ── 탑바 ── */}
@@ -262,5 +276,6 @@ export default function App() {
         </div>
       </div>
     </div>
+    </>
   )
 }
