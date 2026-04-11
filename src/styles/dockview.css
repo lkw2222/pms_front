@@ -2,8 +2,8 @@
 .dv-theme-light {
   --dv-background-color:                                var(--color-bg-primary);
   --dv-separator-border:                                var(--color-border);
-  --dv-tabs-and-actions-container-height:               38px;
-  --dv-tabs-and-actions-container-background-color:     var(--color-bg-tertiary);
+  --dv-tabs-and-actions-container-height:               48px;
+  --dv-tabs-and-actions-container-background-color:     var(--color-bg-tabsbody);
   --dv-activegroup-visiblepanel-tab-background-color:   var(--color-bg-secondary);
   --dv-activegroup-hiddenpanel-tab-background-color:    var(--color-bg-tertiary);
   --dv-inactivegroup-visiblepanel-tab-background-color: var(--color-bg-secondary);
@@ -54,4 +54,72 @@
 .dv-drop-target-anchor {
   background: rgba(88,166,255,0.1) !important;
   border: 2px solid var(--color-accent) !important;
+}
+
+/* 탭, 바디 공통 */
+.grid-wrap {
+  padding: 10px;
+  background: var(--color-grid-wrap);
+  border: 1px solid var(--color-grid-wrap-line);
+  border-radius: 6px;
+}
+
+/* 탭 영역 상위 */
+.dv-tabs-and-actions-container {
+  border-bottom: 1px solid var(--color-tabs-body);
+  padding-top: 10px;
+  padding-left: 20px;
+}
+.grid-tabs-header {
+
+}
+.dv-tab.dv-inactive-tab {
+  margin-right: 5px;
+  border: 1px solid var(--color-tabs-body);
+  background: var(--color-bg-tabsheader) !important;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  min-width: 120px;
+}
+.dv-tab.dv-active-tab {
+  margin-right: 5px;
+  border: 1px solid var(--color-accent);
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  min-width: 120px;
+  background-color: var(--color-accent) !important;
+}
+.dv-tab.dv-active-tab::after {
+  display: none !important;
+  content: none !important;
+}
+.dv-default-tab::after {
+  display: none !important;
+  content: none !important;
+}
+.dv-tab.dv-active-tab .dv-default-tab-content {
+  color: #ffffff;
+}
+.dv-tab.dv-active-tab .dv-default-tab-action {
+  color: #ffffff;
+}
+.btn-search-custom {
+  background: var(--color-seablue) !important;
+  border: 1px solid var(--color-seablue) !important;
+}
+.btn-search-custom:hover {
+  background: var(--color-seablue-hover) !important;
+  border: 1px solid var(--color-seablue-line) !important;
+}
+
+  /* 바디 영역 상위 */
+.dv-content-container {
+  padding: 20px 20px 20px 20px;
+  background: var(--color-content-body);
+}
+.grid-tabs-content {
+
+}
+.dv-content-container:has(.dashboard-panel-wrap) {
+  background: var(--color-bg-dashboard) !important;
 }

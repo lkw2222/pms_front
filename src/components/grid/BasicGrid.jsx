@@ -21,6 +21,18 @@ ModuleRegistry.registerModules([AllCommunityModule])
  * @param {number}   cacheBlockSize
  * @param {...any}   props
  */
+const localeText = {
+  pageSizeSelectorLabel: '페이지당 건수',
+  ariaPageSizeSelectorLabel: '페이지당 건수',
+  page: '페이지',
+  more: '더보기',
+  to: '~',
+  of: '/',
+  firstPage: '첫 페이지',
+  previousPage: '이전 페이지',
+  nextPage: '다음 페이지',
+  lastPage: '마지막 페이지',
+}
 const BasicGrid = forwardRef(function BasicGrid({
   mode           = 'paginate',
   rowData        = [],
@@ -90,6 +102,7 @@ const BasicGrid = forwardRef(function BasicGrid({
       <AgGridReact
         ref={ref}
         theme={theme}
+        localeText={localeText}
         rowData={mode !== 'infinite' ? rowData : undefined}
         columnDefs={colDefs}
         defaultColDef={defaultColDef}

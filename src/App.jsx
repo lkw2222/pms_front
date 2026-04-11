@@ -13,13 +13,15 @@ import ReadmePanel    from '@/panels/readme/ReadmePanel.jsx'
 import {
   FileSpreadsheet, Map, LogIn, Menu, Sun, Moon, Bell, HelpCircle,
   ChevronLeft, ChevronRight, ChevronDown, ChevronRight as ChevRight,
-  LayoutDashboard, FilePlus, BarChart2, Layers, Settings,
-  X, PanelLeftClose, Activity,
+  LayoutDashboard, FilePlus, BarChart2, Layers, Settings, MonitorCog,
+  X, PanelLeftClose, Activity, User, LogOut,
 } from 'lucide-react'
 
 import NotificationPanel from '@/components/notification/NotificationPanel.jsx'
 import JobProgressPanel  from '@/components/job/JobProgressPanel.jsx'
 import styles from '@/styles/layout.module.css'
+import logoImg from '@/styles/logo.png'
+import logoDarkImg from '@/styles/logo-dark.png'
 
 // ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
 const PANEL_COMPONENTS = {
@@ -33,12 +35,21 @@ const PANEL_COMPONENTS = {
   readmePanel:    ReadmePanel,
   settingPanel:   SamplePanel,
 }
-
+/*
 const components = Object.fromEntries(
   Object.entries(PANEL_COMPONENTS).map(([key, Comp]) => [
     key,
     ({ params }) => <div style={{ height:'100%', overflow:'auto', background:'var(--color-bg-primary)' }}><Comp params={params} /></div>,
   ])
+)
+*/
+const components = Object.fromEntries(
+    Object.entries(PANEL_COMPONENTS).map(([key, Comp]) => [
+      key,
+      ({ params }) => (
+          <div className={`${key === 'dashboardPanel' ? styles.dashboardPanelWrap : styles.panelContentWrap} ${key === 'dashboardPanel' ? 'dashboard-panel-wrap' : ''}`}><Comp params={params} /></div>
+      ),
+    ])
 )
 
 // ── 사이드바 메뉴 ──────────────────────────────────────────────────────────────
@@ -54,8 +65,8 @@ const MENU_GROUPS = [
     { id:'gisPanel',  label:'지도',      icon:Map,    component:'gisPanel' },
     { id:'gisPanel2', label:'공간 분석', icon:Layers, component:'gisPanel' },
   ]},
-  { id:'sample', label:'개발 샘플', icon:LayoutDashboard, children:[
-    { id:'samplePanel', label:'컴포넌트',       icon:LayoutDashboard, component:'samplePanel' },
+  { id:'sample', label:'개발 샘플', icon:MonitorCog, children:[
+    { id:'samplePanel', label:'컴포넌트',       icon:MonitorCog, component:'samplePanel' },
     { id:'readmePanel', label:'개발 표준 문서', icon:HelpCircle,      component:'readmePanel' },
   ]},
   { id:'system', label:'시스템', icon:Settings, children:[
@@ -81,8 +92,8 @@ function SidebarGroup({ group, sidebarOpen, openPanels, onOpen, onPip, expandedG
           <>
             <span className={styles.menuGroupLabel}>{group.label}</span>
             {isExpanded
-              ? <ChevronDown size={12} style={{ flexShrink:0, opacity:0.6 }} />
-              : <ChevRight   size={12} style={{ flexShrink:0, opacity:0.6 }} />
+              ? <ChevronDown size={14} style={{ flexShrink:0, opacity:0.8 }} />
+              : <ChevRight   size={14} style={{ flexShrink:0, opacity:0.8 }} />
             }
           </>
         )}
@@ -178,15 +189,18 @@ export default function App() {
 
       {/* ── 탑바 ── */}
       <header className={styles.topbar}>
-        <button className={styles.iconBtn} onClick={toggleSidebar}>
+        <button className={styles.iconBtnCustom} onClick={toggleSidebar}>
           <Menu size={16} />
         </button>
 
         <div className={styles.topbarLogo}>
-          <div className={styles.topbarLogoIcon}>P</div>
+          {/* ── <div className={styles.topbarLogoIcon}>P</div> ── */}
+          <div className={styles.topbarLogoIcon}>
+            <img src={theme === 'dark' ? logoDarkImg : logoImg} alt="전력연구원 로고" className={styles.topbarLogoImage} />
+          </div>
           <div>
-            <div className={styles.topbarLogoTitle}>PMS SYSTEM</div>
-            <div className={styles.topbarLogoSub}>Integrated Platform</div>
+            <div className={styles.topbarLogoTitle}>전력연구원</div>
+            <div className={styles.topbarLogoSub}>전주 진단 우선순위 시스템</div>
           </div>
         </div>
 
@@ -203,6 +217,18 @@ export default function App() {
               <div className={styles.divider} />
             </>
           )}
+          <div className={styles.userInfoBox}>
+            <div className={styles.userInfoIcon}>
+              <User size={16} />
+            </div>
+            <div className={styles.userInfoText}>
+              <div className={styles.userInfoTop}>
+                <span className={styles.userInfoRole}>시스템관리자</span>
+                <span className={styles.userInfoName}>김담당</span>
+              </div>
+              <div className={styles.userInfoId}>hongildong123</div>
+            </div>
+          </div>
           <button className={styles.iconBtn} onClick={toggleTheme} title={theme==='dark'?'라이트 모드':'다크 모드'}>
             {theme==='dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
@@ -216,7 +242,10 @@ export default function App() {
           </button>
           <JobProgressPanel  open={jobOpen}  onClose={() => setJobOpen(false)}  />
           <NotificationPanel open={notiOpen} onClose={() => setNotiOpen(false)} />
-          <div className={styles.avatar}>A</div>
+          {/* <div className={styles.avatar}>A</div> */}
+          <button className={styles.logoutBtn} title="로그아웃" onClick={() => alert('로그아웃')}>
+            <LogOut size={15} />
+          </button>
         </div>
       </header>
 
@@ -226,7 +255,7 @@ export default function App() {
         <aside className={styles.sidebar}
           style={{ width: sidebarOpen ? 'var(--sidebar-width)' : 'var(--sidebar-collapsed-width)' }}>
           <nav className={styles.sidebarNav}>
-            {sidebarOpen && <div className={styles.sidebarNavLabel}>Navigation</div>}
+            {sidebarOpen && <div className={styles.sidebarNavLabel}>KEPRI PMS SYSTEM</div>}
             {MENU_GROUPS.map(group => (
               <SidebarGroup key={group.id} group={group} sidebarOpen={sidebarOpen}
                 openPanels={openPanels} onOpen={openPanel} onPip={openPip}

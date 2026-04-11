@@ -3,6 +3,7 @@ import { ResponsivePie } from '@nivo/pie'
 import * as echarts from 'echarts'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, useNivoTheme } from './lib/dashboardUtils.js'
+import {PieChart, Gauge} from "lucide-react";
 
 function NV_StatusPie() {
   const theme = useNivoTheme()
@@ -71,11 +72,11 @@ export default function StatusChartFeature() {
   return (
     <>
       <Panel style={{ flex:1 }}>
-        <SectionHeader title="업무 상태 현황" badge="Nivo" />
+        <SectionHeader title="업무 상태 현황" badge="Nivo" icon={PieChart} />
         <NV_StatusPie />
       </Panel>
       <Panel style={{ flex:1 }}>
-        <SectionHeader title="완료율 게이지" badge="ECharts" />
+        <SectionHeader title="완료율 게이지" badge="ECharts" icon={Gauge}/>
         <EC_GaugeSet />
       </Panel>
     </>

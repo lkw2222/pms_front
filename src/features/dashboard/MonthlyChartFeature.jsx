@@ -1,19 +1,32 @@
 import React from 'react'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, eTT, useEChart } from './lib/dashboardUtils.js'
+import {BarChart3, CalendarDays} from "lucide-react";
+
+function getChartColors() {
+  const css = getComputedStyle(document.documentElement)
+  return {
+    textPrimary: css.getPropertyValue('--color-text-primary').trim(),
+    textSecondary: css.getPropertyValue('--color-text-secondary').trim(),
+    textMuted: css.getPropertyValue('--color-text-muted').trim(),
+    border: css.getPropertyValue('--color-border').trim(),
+    bgSecondary: css.getPropertyValue('--color-bg-secondary').trim(),
+  }
+}
 
 function EC_MonthlyMix() {
+  const { textSecondary, textMuted, border } = getChartColors()
   const m = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
   const r = [42,55,38,67,71,58,82,74,63,88,76,91]
   const d = [38,48,31,60,65,54,75,68,58,80,70,84]
   const ref = useEChart(() => ({
     tooltip:{ ...eTT, trigger:'axis' },
-    legend:{ data:['등록','완료','완료율'], bottom:0, textStyle:{ color:'var(--color-text-secondary)', fontSize:10 }, itemWidth:10, itemHeight:10 },
+    legend:{ data:['등록','완료','완료율'], bottom:0, textStyle:{ color:textSecondary, fontSize:10 }, itemWidth:10, itemHeight:10 },
     grid:{ top:8, bottom:36, left:36, right:44 },
-    xAxis:{ type:'category', data:m, axisLabel:{ color:'var(--color-text-muted)', fontSize:9 }, axisLine:{ lineStyle:{ color:'var(--color-border)' } }, splitLine:{ show:false } },
+    xAxis:{ type:'category', data:m, axisLabel:{ color:textMuted, fontSize:9 }, axisLine:{ lineStyle:{ color:border } }, splitLine:{ show:false } },
     yAxis:[
-      { type:'value', axisLabel:{ color:'var(--color-text-muted)', fontSize:9 }, splitLine:{ lineStyle:{ color:'var(--color-border)', type:'dashed' } } },
-      { type:'value', min:0, max:120, axisLabel:{ color:'var(--color-text-muted)', fontSize:9, formatter:'{value}%' }, splitLine:{ show:false } },
+      { type:'value', axisLabel:{ color:textMuted, fontSize:9 }, splitLine:{ lineStyle:{ color:border, type:'dashed' } } },
+      { type:'value', min:0, max:120, axisLabel:{ color:textMuted, fontSize:9, formatter:'{value}%' }, splitLine:{ show:false } },
     ],
     series:[
       { name:'등록', type:'bar', data:r, barMaxWidth:10, itemStyle:{ color:C.blue, borderRadius:[3,3,0,0] } },
@@ -45,11 +58,11 @@ export default function MonthlyChartFeature() {
   return (
     <>
       <Panel style={{ flex:2 }}>
-        <SectionHeader title="월별 등록/완료 현황" badge="ECharts" />
+        <SectionHeader title="월별 등록/완료 현황" badge="ECharts" icon={BarChart3} />
         <EC_MonthlyMix />
       </Panel>
       <Panel style={{ flex:1 }}>
-        <SectionHeader title="요일×주차 업무 강도" badge="ECharts" />
+        <SectionHeader title="요일 × 주차 업무 강도" badge="ECharts" icon={CalendarDays} />
         <EC_Heatmap />
       </Panel>
     </>

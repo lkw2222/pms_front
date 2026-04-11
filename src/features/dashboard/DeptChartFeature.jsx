@@ -3,6 +3,7 @@ import { ResponsiveBar } from '@nivo/bar'
 import { ResponsiveScatterPlot } from '@nivo/scatterplot'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, useNivoTheme } from './lib/dashboardUtils.js'
+import {Building2, Waypoints} from "lucide-react";
 
 function NV_DeptBar() {
   const theme = useNivoTheme()
@@ -72,11 +73,11 @@ export default function DeptChartFeature() {
   return (
     <>
       <Panel style={{ flex:1 }}>
-        <SectionHeader title="부서별 처리 현황" badge="Nivo" />
+        <SectionHeader title="부서별 처리 현황" badge="Nivo" icon={Building2} />
         <NV_DeptBar />
       </Panel>
       <Panel style={{ flex:1.5 }}>
-        <SectionHeader title="업무 복잡도 × 우선순위 분포" badge="Nivo" />
+        <SectionHeader title="업무 복잡도 × 우선순위 분포" badge="Nivo" icon={Waypoints} />
         <NV_BubbleScatter />
       </Panel>
     </>

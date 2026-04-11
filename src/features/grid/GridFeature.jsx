@@ -25,26 +25,26 @@ const STATUS_VARIANT   = { 정상:'success', 점검중:'warning', 이상:'danger
 const PRIORITY_VARIANT = { 높음:'danger', 중간:'warning', 낮음:'default' }
 
 const COL_DEFS = [
-  { field:'id',       headerName:'No',     width:65,  flex:0 },
-  { field:'name',     headerName:'담당자', width:100, flex:0 },
-  { field:'category', headerName:'분류',   width:90,  flex:0 },
+  { field:'id',       headerName:'No',     /* width:65,  flex:0 */ width:70, flex:0 },
+  { field:'name',     headerName:'담당자', /* width:100, flex:0 */ minWidth:110, flex:0.5 },
+  { field:'category', headerName:'분류',   /* width:90,  flex:0 */ minWidth:80, flex:0.5 },
   {
-    field:'status', headerName:'상태', width:100, flex:0,
+    field:'status', headerName:'상태', /* width:100, flex:0, */ minWidth:90, flex:0.5,
     cellRenderer: ({ value }) => <BasicLabel text={value} variant={STATUS_VARIANT[value] || 'default'} />,
   },
   {
-    field:'priority', headerName:'우선순위', width:100, flex:0,
+    field:'priority', headerName:'우선순위', /* width:100, flex:0, */ minWidth:90, flex:0.5,
     cellRenderer: ({ value }) => <BasicLabel text={value} variant={PRIORITY_VARIANT[value] || 'default'} />,
   },
-  { field:'date',   headerName:'등록일', width:110, flex:0 },
-  { field:'remark', headerName:'비고',   flex:1 },
+  { field:'date',   headerName:'등록일', /* width:110, flex:0 */ minWidth:120, flex:0.7 },
+  { field:'remark', headerName:'비고', /* flex:1, */ minWidth:140, flex:2 },
 ]
 
 // ── 검색 폼 ──────────────────────────────────────────────────────────────────
 function SearchForm({ search, setSearch, onSearch, onReset, totalCount, isLoading }) {
   return (
     <div className="panel-toolbar" style={{ flexDirection:'column', alignItems:'flex-start', gap:10 }}>
-      <div style={{ display:'grid', gridTemplateColumns:'140px 120px 120px 160px 160px', gap:10, alignItems:'end' }}>
+      <div className="panel-search-value" style={{ display:'grid', gridTemplateColumns:'140px 120px 120px 160px 160px', gap:10, alignItems:'end' }}>
         <TextInput
           label="담당자" placeholder="담당자명"
           value={search.name}
@@ -70,22 +70,28 @@ function SearchForm({ search, setSearch, onSearch, onReset, totalCount, isLoadin
           onChange={v => setSearch(s => ({ ...s, dateTo: v }))}
         />
       </div>
-      <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-        <BasicButton label="조회"   icon={isLoading ? Loader2 : Search} variant="primary"   onClick={onSearch} disabled={isLoading} />
-        <BasicButton label="초기화" icon={RotateCcw}                    variant="secondary" onClick={onReset} />
-        <BasicButton label="엑셀"   icon={Download}                     variant="ghost"
-          onClick={() => {
-            // import { workApi } from '@/services/grid/gridService.js'
-            // gridApi.downloadExcel(search)
-            alert('엑셀 다운로드')
-          }}
-        />
-        <span style={{ fontSize:12, color:'var(--color-text-muted)', marginLeft:4 }}>
+      <div className="panel-search-function" style={{ display:'grid', gridTemplateColumns:'1fr auto 1fr', alignItems:'center', gap:8, width:'100%' }}>
+        <div style={{ justifySelf:'start', fontSize:13, color:'var(--color-text-muted)', position:'relative', top:5 }}>
           {isLoading
-            ? <span style={{ color:'var(--color-accent)' }}>조회 중...</span>
-            : <>총 <strong style={{ color:'var(--color-accent)' }}>{totalCount.toLocaleString()}</strong>건</>
+              ? <span style={{ color:'var(--color-danger-total)' }}>조회 중...</span>
+              : <>총 <strong style={{ color:'var(--color-danger-total)' }}>{totalCount.toLocaleString()}</strong>건</>
           }
-        </span>
+        </div>
+
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+          <BasicButton label="초기화" icon={RotateCcw}                    variant="secondary" onClick={onReset} />
+          <BasicButton label="조회"   icon={isLoading ? Loader2 : Search} variant="primary" onClick={onSearch} disabled={isLoading} className="btn-search-custom" />
+        </div>
+
+        <div className="panel-search-excel" style={{ display:'flex', justifyContent:'flex-end' }}>
+          <BasicButton label="엑셀"   icon={Download}                     variant="ghost"
+             onClick={() => {
+               // import { workApi } from '@/services/grid/gridService.js'
+               // gridApi.downloadExcel(search)
+               alert('엑셀 다운로드')
+             }}
+          />
+        </div>
       </div>
     </div>
   )
@@ -261,8 +267,8 @@ export default function GridFeature() {
     { key:'infinite', label:'무한 스크롤 그리드' },
   ]
   return (
-    <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
-      <div style={{ display:'flex', borderBottom:'1px solid var(--color-border)', background:'var(--color-bg-secondary)', flexShrink:0 }}>
+    <div className="grid-wrap" style={{ display:'flex', flexDirection:'column', height:'100%' }}>
+      <div className="grid-tabs-header" style={{ display:'flex', borderBottom:'1px solid var(--color-border)', background:'var(--color-bg-secondary)', flexShrink:0 }}>
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
             style={{ padding:'10px 20px', fontSize:13, border:'none', cursor:'pointer', background:'transparent', transition:'all .15s', marginBottom:-1,
@@ -275,7 +281,7 @@ export default function GridFeature() {
           >{t.label}</button>
         ))}
       </div>
-      <div style={{ flex:1, overflow:'hidden' }}>
+      <div className="grid-tabs-content" style={{ flex:1, overflow:'hidden' }}>
         {tab === 'paginate' ? <PaginateGrid /> : <InfiniteGrid />}
       </div>
     </div>

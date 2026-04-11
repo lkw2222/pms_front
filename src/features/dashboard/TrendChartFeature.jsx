@@ -3,6 +3,7 @@ import { ResponsiveLine }  from '@nivo/line'
 import { ResponsiveRadar } from '@nivo/radar'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, useNivoTheme } from './lib/dashboardUtils.js'
+import {TrendingUp, Activity} from "lucide-react";
 
 function NV_WeeklyLine() {
   const theme = useNivoTheme()
@@ -63,11 +64,11 @@ export default function TrendChartFeature() {
   return (
     <>
       <Panel style={{ flex:1.5 }}>
-        <SectionHeader title="주간 처리 추이" badge="Nivo" />
+        <SectionHeader title="주간 처리 추이" badge="Nivo" icon={TrendingUp} />
         <NV_WeeklyLine />
       </Panel>
       <Panel style={{ flex:1 }}>
-        <SectionHeader title="우선순위별 분포" badge="Nivo" />
+        <SectionHeader title="우선순위별 분포" badge="Nivo" icon={Activity} />
         <NV_PriorityRadar />
       </Panel>
     </>

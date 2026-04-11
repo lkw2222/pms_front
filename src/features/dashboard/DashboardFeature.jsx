@@ -11,13 +11,13 @@ export default function DashboardFeature() {
   const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`
 
   return (
-    <div style={{ width:'100%', height:'100%', overflow:'auto', background:'var(--color-bg-primary)', padding:'12px 14px', boxSizing:'border-box', display:'flex', flexDirection:'column', gap:10 }}>
+    <div style={{ width:'100%', height:'100%', overflow:'auto', padding:'0px', boxSizing:'border-box', display:'flex', flexDirection:'column', gap:10 }}>
 
       {/* 헤더 */}
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
           <div style={{ width:4, height:18, background:C.blue, borderRadius:2 }} />
-          <span style={{ fontSize:15, fontWeight:800, color:'var(--color-text-primary)' }}>통합 대시보드</span>
+          <span style={{ fontSize:15, fontWeight:600, color:'var(--color-text-primary)' }}>통합 대시보드</span>
           <span style={{ fontSize:11, color:'var(--color-text-muted)' }}>업무현황 종합</span>
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
@@ -33,13 +33,13 @@ export default function DashboardFeature() {
       </div>
 
       {/* 1행: 상태 도넛 + 완료율 게이지 + 월별 혼합 + 히트맵 */}
-      <div style={{ display:'flex', gap:8, height:210, flexShrink:0 }}>
+      <div style={{ display:'flex', gap:8, height:205, flexShrink:0 }}>
         <StatusChartFeature />
         <MonthlyChartFeature />
       </div>
 
       {/* 2행: 부서별 바 + 산점도 */}
-      <div style={{ display:'flex', gap:8, height:220, flexShrink:0 }}>
+      <div style={{ display:'flex', gap:8, height:210, flexShrink:0 }}>
         <DeptChartFeature />
       </div>
 
