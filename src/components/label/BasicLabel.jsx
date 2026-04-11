@@ -3,7 +3,7 @@ import styles from '../styles/BasicLabel.module.css'
 
 export default function BasicLabel({ text, variant = 'default', className = '' }) {
   return (
-    <span className={[styles.badge, styles[variant] ?? styles.default, className].join(' ')}>
+    <span className={[styles.badgeHeight, styles[variant] ?? styles.default, className].join(' ')}>
       {text}
     </span>
   )
