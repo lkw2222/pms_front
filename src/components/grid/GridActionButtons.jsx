@@ -1,5 +1,5 @@
 import React from 'react'
-import { Eye, Pencil, Trash2, Download, Copy, Plus, Check, X } from 'lucide-react'
+import { Eye, Pencil, Trash2, Download, Copy, Plus, Check, X, Play } from 'lucide-react'
 
 /**
  * GridActionButtons
@@ -37,9 +37,10 @@ const TYPE_PRESET = {
   delete:   { label:'삭제', icon:Trash2,   variant:'danger'    },
   download: { label:'다운', icon:Download, variant:'ghost'     },
   copy:     { label:'복사', icon:Copy,     variant:'ghost'     },
-  add:      { label:'추가', icon:Plus,     variant:'primary'   },
-  confirm:  { label:'승인', icon:Check,    variant:'success'   },
-  cancel:   { label:'반려', icon:X,        variant:'secondary' },
+  add:      { label:'추가', icon:Plus,     variant:'ghost'   },
+  confirm:  { label:'승인', icon:Check,    variant:'success' },
+  cancel:   { label:'반려', icon:X,        variant:'ghost'   },
+  run:      { label:'실행', icon:Play,     variant:'warning' },
 }
 
 const VARIANT_STYLE = {

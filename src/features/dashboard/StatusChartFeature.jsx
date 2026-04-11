@@ -1,11 +1,22 @@
-import React, { useEffect, useRef } from 'react'
+import React, { Suspense, useEffect, useRef } from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { ResponsivePie } from '@nivo/pie'
 import * as echarts from 'echarts'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, useNivoTheme } from './lib/dashboardUtils.js'
-import {PieChart, Gauge} from "lucide-react";
+import { LoadingState } from '@/components/feedback/QueryState.jsx'
+import { PieChart, Gauge } from 'lucide-react'
 
 function NV_StatusPie() {
+  useSuspenseQuery({
+    queryKey: ['dashboard', 'status'],
+    queryFn:  async () => {
+      // return dashboardApi.getStatus()
+      await new Promise(r => setTimeout(r, 600))
+      return {}
+    },
+    staleTime: 1000 * 60,
+  })
   const theme = useNivoTheme()
   const data = [
     { id:'완료',   label:'완료',   value:234, color:C.blue   },
@@ -73,10 +84,12 @@ export default function StatusChartFeature() {
     <>
       <Panel style={{ flex:1 }}>
         <SectionHeader title="업무 상태 현황" badge="Nivo" icon={PieChart} />
-        <NV_StatusPie />
+        <Suspense fallback={<LoadingState />}>
+          <NV_StatusPie />
+        </Suspense>
       </Panel>
       <Panel style={{ flex:1 }}>
-        <SectionHeader title="완료율 게이지" badge="ECharts" icon={Gauge}/>
+        <SectionHeader title="완료율 게이지" badge="ECharts" icon={Gauge} />
         <EC_GaugeSet />
       </Panel>
     </>

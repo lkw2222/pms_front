@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import LoginFeature from '@/features/login/LoginFeature.jsx'
 import { loginApi } from '@/services/login/loginService.js'
 import { useAppStore } from '@/store/useAppStore.js'
+import { toast } from 'sonner'
 
 export default function LoginPanel() {
   const { setAuth } = useAppStore()
@@ -13,11 +14,11 @@ export default function LoginPanel() {
     onSuccess: (result) => {
       // 로그인 성공 → Zustand에 유저 정보 저장
       setAuth(result.user, result.token)
-      alert('로그인 성공!')
+      toast.success('로그인 성공!')
       // localStorage.setItem('token', result.token)  // api.js interceptor가 자동 처리
     },
     onError: (error) => {
-      alert(error.message || '로그인에 실패했습니다.')
+      toast.error(error.message || '로그인에 실패했습니다.')
     },
   })
 

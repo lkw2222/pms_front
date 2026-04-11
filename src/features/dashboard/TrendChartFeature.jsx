@@ -1,11 +1,22 @@
-import React from 'react'
+import React, { Suspense } from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { ResponsiveLine }  from '@nivo/line'
 import { ResponsiveRadar } from '@nivo/radar'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, useNivoTheme } from './lib/dashboardUtils.js'
-import {TrendingUp, Activity} from "lucide-react";
+import { TrendingUp, Activity } from 'lucide-react'
+import { LoadingState } from '@/components/feedback/QueryState.jsx'
 
 function NV_WeeklyLine() {
+  useSuspenseQuery({
+    queryKey: ['dashboard', 'trend'],
+    queryFn:  async () => {
+      // return dashboardApi.getTrend()
+      await new Promise(r => setTimeout(r, 700))
+      return {}
+    },
+    staleTime: 1000 * 60,
+  })
   const theme = useNivoTheme()
   const data = [
     { id:'이번주', color:C.blue, data:[{x:'월',y:12},{x:'화',y:18},{x:'수',y:15},{x:'목',y:22},{x:'금',y:19}] },
@@ -65,7 +76,9 @@ export default function TrendChartFeature() {
     <>
       <Panel style={{ flex:1.5 }}>
         <SectionHeader title="주간 처리 추이" badge="Nivo" icon={TrendingUp} />
-        <NV_WeeklyLine />
+        <Suspense fallback={<LoadingState />}>
+          <NV_WeeklyLine />
+        </Suspense>
       </Panel>
       <Panel style={{ flex:1 }}>
         <SectionHeader title="우선순위별 분포" badge="Nivo" icon={Activity} />

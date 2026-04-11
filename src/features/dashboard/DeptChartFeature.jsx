@@ -1,11 +1,22 @@
-import React from 'react'
+import React, { Suspense } from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { ResponsiveBar } from '@nivo/bar'
 import { ResponsiveScatterPlot } from '@nivo/scatterplot'
 import { Panel, SectionHeader } from './lib/DashboardComponents.jsx'
 import { C, useNivoTheme } from './lib/dashboardUtils.js'
+import { LoadingState } from '@/components/feedback/QueryState.jsx'
 import {Building2, Waypoints} from "lucide-react";
 
 function NV_DeptBar() {
+  useSuspenseQuery({
+    queryKey: ['dashboard', 'dept'],
+    queryFn:  async () => {
+      // return dashboardApi.getDept()
+      await new Promise(r => setTimeout(r, 500))
+      return {}
+    },
+    staleTime: 1000 * 60,
+  })
   const theme = useNivoTheme()
   const data = [
     { dept:'기획', 등록:45, 완료:40 },
@@ -74,7 +85,9 @@ export default function DeptChartFeature() {
     <>
       <Panel style={{ flex:1 }}>
         <SectionHeader title="부서별 처리 현황" badge="Nivo" icon={Building2} />
-        <NV_DeptBar />
+        <Suspense fallback={<LoadingState />}>
+          <NV_DeptBar />
+        </Suspense>
       </Panel>
       <Panel style={{ flex:1.5 }}>
         <SectionHeader title="업무 복잡도 × 우선순위 분포" badge="Nivo" icon={Waypoints} />

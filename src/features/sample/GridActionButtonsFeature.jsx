@@ -25,6 +25,7 @@ export default function GridActionButtonsFeature() {
             { type:'add',      onClick: d => emit(`추가: ${d.name}`) },
             { type:'confirm',  onClick: d => emit(`승인: ${d.name}`) },
             { type:'cancel',   onClick: d => emit(`반려: ${d.name}`) },
+            { type:'run',      onClick: d => emit(`실행: ${d.name}`) },
           ]}
         />
       </div>
