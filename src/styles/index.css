@@ -263,7 +263,14 @@ html, body, #root {
   order: 3;
 }
 
-/* 검색조건 박스 */
+/* ── panel-toolbar 컬럼형 변형 ── */
+.panel-toolbar-col {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* ── 검색조건 박스 ── */
 .panel-search-value {
   width: 100%;
   background: var(--color-bg-searchbox);
@@ -273,8 +280,212 @@ html, body, #root {
   box-sizing: border-box;
   margin-top: 10px;
 }
+
+/* ── 검색 버튼 행 ── */
 .panel-search-function {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
   margin-bottom: 10px;
+}
+
+/* ── 총 건수 표시 ── */
+.total-count {
+  justify-self: start;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  position: relative;
+  top: 5px;
+}
+
+/* ── grid-wrap / 탭 ── */
+.grid-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.grid-tabs-header {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  flex-shrink: 0;
+}
+.grid-tabs-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── 그리드 미니 툴바 (마스터-디테일용) ── */
+.grid-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  flex-shrink: 0;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  box-sizing: border-box;
+}
+.grid-toolbar-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.grid-toolbar-badge {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background: var(--color-bg-tertiary);
+  padding: 1px 7px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+}
+.grid-accent-bar {
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ── SectionDivider (상하 분할 구분선) ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  flex-shrink: 0;
+  background: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+.section-divider-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 12px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── 상세보기 ── */
+.detail-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+  gap: 12px;
+}
+.detail-label {
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-size: 12px;
+}
+.detail-value {
+  color: var(--color-text-primary);
+  word-break: break-all;
+}
+.detail-section {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.detail-section-last {
+  padding: 10px 0;
+}
+.detail-section-label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.detail-content {
+  font-size: 13px;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  white-space: pre-wrap;
+}
+
+/* ── 파일 아이템 ── */
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+}
+.file-item-name {
+  flex: 1;
+  font-size: 12px;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.file-item-size {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+.download-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  transition: border-color .12s, color .12s;
+  flex-shrink: 0;
+}
+.download-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ── 폼 공통 ── */
+.form-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+.form-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+  transition: border-color .15s;
+}
+.form-textarea:focus {
+  border-color: var(--color-accent);
 }
 
 /* 엑셀 버튼 */
