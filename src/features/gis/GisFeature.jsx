@@ -796,17 +796,14 @@ export default function GisFeature() {
 
 
 
-      {/* ── 상단 좌측 — 위치 이동 패널 (여백 없이 맵 상단에 붙임) ── */}
+      {/* ── 상단 좌측 — 위치 이동 패널 ── */}
       <div style={{
-        position:'absolute', top:0, left:0, zIndex:10,
+        position:'absolute', top:10, left:10, zIndex:10,
         ...CTRL_PANEL,
         flexDirection:'row',
         alignItems:'center',
         gap:6,
         padding:'6px 8px',
-        borderTop:'none',
-        borderLeft:'none',
-        borderTopLeftRadius:0,
       }}>
         <select
           value={selectedHub}
@@ -844,11 +841,10 @@ export default function GisFeature() {
         </select>
       </div>
 
-      {/* ── 우상단 — 통합 패널 (유틸 + 줌, 여백 없이 맵 상단에 붙임) ── */}
+      {/* ── 우상단 — 통합 패널 (유틸 + 줌) ── */}
       <div style={{
-        position:'absolute', top:0, right:0, zIndex:10,
+        position:'absolute', top:10, right:10, zIndex:10,
         ...CTRL_PANEL,
-        borderTop:'none', borderRight:'none', borderTopRightRadius:0,
         padding:'5px 6px', gap:3,
       }}>
         {/* 레이어 전환 */}

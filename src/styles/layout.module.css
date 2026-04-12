@@ -120,7 +120,7 @@
   flex-shrink:   0;
 }
 .sidebarNav    { flex: 1; padding: 10px 8px; overflow-y: auto; }
-.sidebarNavLabel { font-size: 10px; font-weight: 700; color: var(--color-text-muted); letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 6px 10px; }
+.sidebarNavLabel { font-size: 10px; font-weight: 700; color: var(--color-text-large-d); letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 6px 10px; }
 .sidebarFoot   { padding: 8px; border-top: 1px solid var(--color-large-m); }
 
 .collapseBtn {
@@ -132,9 +132,9 @@
   border-radius: var(--radius-md);
   border:        1px solid transparent;
   background:    transparent;
-  color:         var(--color-text-muted);
+  color:         var(--color-text-large-d);
   cursor:        pointer;
-  transition:    all 0.15s;
+  transition:    background 0.15s, color 0.15s, border-color 0.15s;
   font-size:     11px;
 }
 .collapseBtn:hover { background: var(--color-bg-large-m); border-color: var(--color-large-m); color: var(--color-text-large-m); }
@@ -154,7 +154,7 @@
   cursor:        pointer;
   font-size:     15px;
   font-weight:   400;
-  transition:    all 0.12s;
+  transition:    background 0.12s, color 0.12s;
 }
 .menuGroupHeader:hover { background: var(--color-bg-large-m); color: var(--color-text-large-m); }
 .menuGroupHeader.active { color: var(--color-text-large-m); }
@@ -177,25 +177,25 @@
   border-radius: var(--radius-md);
   border:        none;
   cursor:        pointer;
-  transition:    all 0.12s;
+  transition:    background 0.12s, color 0.12s;
   font-size:     12px;
   text-align:    left;
   background:    transparent;
   color:         var(--color-text-large-d);
   margin-bottom: 1px;
-  font-weight:   300;
+  font-weight:   400;
 }
 .menuItem:hover          { background: var(--color-bg-large-m); color: var(--color-text-large-m); }
-.menuItem.active         { background: rgba(var(--color-accent-rgb, 255,255,255), 0.05); color: var(--color-accents); }
+.menuItem.active         { background: rgba(255,255,255,0.10); color: var(--color-text-large-m); font-weight: 600; }
 
 .menuDot {
   width:         6px; height: 6px;
   border-radius: 50%; flex-shrink: 0;
   border:        1px solid var(--color-large-d);
   background:    var(--color-bg-large-d);
-  transition:    all 0.15s;
+  transition:    background 0.15s, border-color 0.15s;
 }
-.menuDot.active { background: var(--color-accents); border-color: transparent; }
+.menuDot.active { background: var(--color-text-large-m); border-color: transparent; }
 
 .pipBtn {
   opacity:       0;
@@ -203,9 +203,9 @@
   padding:       1px 5px;
   border-radius: 3px;
   border:        1px solid var(--color-large-m);
-  color:         var(--color-text-muted);
+  color:         var(--color-text-large-d);
   flex-shrink:   0;
-  transition:    opacity 0.12s;
+  transition:    opacity 0.12s, border-color 0.12s, color 0.12s;
   background:    transparent;
   cursor:        pointer;
 }

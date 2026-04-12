@@ -1,33 +1,33 @@
 @import "tailwindcss";
 
-/* ── 다크 테마 (기본) ── */
+/* ── 다크 테마 (기본) — Navy Dark ── */
 :root {
-  --color-bg-body:       #0d1117;
-  --color-bg-sodomy:     #161b22;
-  --color-bg-primary:    #0d1117;
-  --color-bg-secondary:  #161b22;
-  --color-bg-large-m:    #21262d;
-  --color-bg-tabsbody:   #21262d;
-  --color-bg-tertiary:   #21262d;
-  --color-bg-large-d:    #30363d;
-  --color-bg-hover:      #30363d;
-  --color-bg-searchbox:  #191f27;
-  --color-bg-tabsheader: #2e343d;
-  --color-bg-dashboard:  #0d1117;
+  --color-bg-body:       #0d1520;
+  --color-bg-sodomy:     #0a1628;
+  --color-bg-primary:    #0d1520;
+  --color-bg-secondary:  #131f30;
+  --color-bg-large-m:    #1a2840;
+  --color-bg-tabsbody:   #1a2840;
+  --color-bg-tertiary:   #1a2840;
+  --color-bg-large-d:    #1f3050;
+  --color-bg-hover:      #1f3050;
+  --color-bg-searchbox:  #0e1b2e;
+  --color-bg-tabsheader: #182338;
+  --color-bg-dashboard:  #0d1520;
 
-  --color-large-m:       #30363d;
-  --color-large-d:       #30363d;
-  --color-border:        #30363d;
+  --color-large-m:       #1f3050;
+  --color-large-d:       #1f3050;
+  --color-border:        #1e2d45;
   --color-border-focus:  #58a6ff;
-  --color-border-box:    #30363d;
+  --color-border-box:    #1e2d45;
 
-  --color-text-large-m:  #e6edf3;
-  --color-text-primary:  #e6edf3;
-  --color-text-large-d:  #8b949e;
-  --color-text-secondary:#8b949e;
-  --color-text-muted:    #6e7681;
-  --color-text-muteds:   #a3acb9;
-  --color-text-disabled: #484f58;
+  --color-text-large-m:  #dce8f5;
+  --color-text-primary:  #dce8f5;
+  --color-text-large-d:  #7d9bb8;
+  --color-text-secondary:#7d9bb8;
+  --color-text-muted:    #4d6880;
+  --color-text-muteds:   #9ab3cc;
+  --color-text-disabled: #2d4560;
 
   --color-accents:       #58a6ff;
   --color-accents-hover: #388bfd;
@@ -38,26 +38,26 @@
   --color-danger:        #f85149;
   --color-danger-total:  #df5e58;
   --color-purple:        #bc8cff;
-  --color-seablue:       #394c85;
-  --color-seablue-hover: #4c61a1;
-  --color-seablue-line:  #869ad9;
+  --color-seablue:       #2d4a7a;
+  --color-seablue-hover: #3d5f96;
+  --color-seablue-line:  #6b8ec4;
 
-  --color-grid-wrap:     #161b22;
-  --color-grid-wrap-line:#30363d;
+  --color-grid-wrap:     #131f30;
+  --color-grid-wrap-line:#1e2d45;
 
-  --color-tabs-body:     #30363d;
-  --color-tabs-active:   #30363d;
+  --color-tabs-body:     #1f3050;
+  --color-tabs-active:   #1f3050;
 
-  --color-content-body:  #0d1117;
+  --color-content-body:  #0d1520;
 
   --radius-sm:  4px;
   --radius-md:  6px;
   --radius-lg:  10px;
   --radius-100:  100%;
 
-  --shadow-sm: 0 1px 4px rgba(0,0,0,0.4);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.7);
+  --shadow-sm: 0 1px 4px rgba(0,10,30,0.5);
+  --shadow-md: 0 4px 16px rgba(0,10,30,0.6);
+  --shadow-lg: 0 8px 32px rgba(0,10,30,0.8);
 
   --topbar-height: 52px;
   --sidebar-width: 240px;
