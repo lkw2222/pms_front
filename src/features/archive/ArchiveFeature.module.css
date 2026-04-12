@@ -1,0 +1,8 @@
+/* ── 총 건수 표시 ─────────────────────────────────────────────────────────────── */
+.totalCount {
+  justify-self: start;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  position: relative;
+  top: 5px;
+}

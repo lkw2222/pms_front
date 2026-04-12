@@ -1,0 +1,43 @@
+/* ── 무한 스크롤 안내 바 ─────────────────────────────────────────────────────── */
+.noteBar {
+  padding: 6px 16px;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  background: var(--color-bg-secondary);
+}
+
+/* ── 탭 버튼 ─────────────────────────────────────────────────────────────────── */
+.tabBtn {
+  padding: 10px 20px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  transition: all .15s;
+  margin-bottom: -1px;
+  font-weight: 400;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-secondary);
+}
+.tabBtn:hover { color: var(--color-text-primary); }
+.tabBtnActive {
+  font-weight: 600;
+  border-bottom-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.tabBtnActive:hover { color: var(--color-accent); }
+
+/* ── 마스터-디테일: 상위 그리드 (50% 고정) ──────────────────────────────────── */
+.gridHalf {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ── 선택된 행 정보 표시 (툴바 우측) ────────────────────────────────────────── */
+.selectedInfo {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--color-accent);
+}
