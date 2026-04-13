@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import TextInput from '@/components/input/TextInput.jsx'
+import EditorTextarea from "../../components/input/EditorTextarea";
+import Textarea from "../../components/input/Textarea.jsx";
 
 export default function TextInputFeature() {
   const [text, setText] = useState('')
@@ -30,6 +32,9 @@ export default function TextInputFeature() {
         placeholder="입력 불가"
         disabled
       />
+
+        <EditorTextarea label="에디터 텍스트 영역" placeholder="내용을 입력해주세요." />
+        <Textarea label="일반 에디터 텍스트 영역" placeholder="내용을 입력해주세요." rows={5} />
     </div>
   )
 }

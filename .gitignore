@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.claude
 *.local
 
 # Claude Code 작업 디렉토리

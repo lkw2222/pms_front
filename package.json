@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@mdxeditor/editor": "^3.54.0",
     "@nivo/bar": "^0.99.0",
     "@nivo/boxplot": "^0.99.0",
     "@nivo/bump": "^0.99.0",
@@ -27,6 +28,7 @@
     "@nivo/stream": "^0.99.0",
     "@nivo/treemap": "^0.99.0",
     "@nivo/waffle": "^0.99.0",
+    "@stomp/stompjs": "^7.3.0",
     "@tanstack/react-query": "^5.62.0",
     "@tanstack/react-query-devtools": "^5.62.0",
     "ag-grid-community": "^35.1.0",
@@ -41,6 +43,7 @@
     "react-dom": "^19.2.0",
     "react-flatpickr": "^4.0.11",
     "react-hook-form": "^7.54.0",
+    "sockjs-client": "^1.6.1",
     "sonner": "^2.0.7",
     "zustand": "^5.0.3"
   },
