@@ -10,9 +10,8 @@ import styles from '@/styles/layout.module.css'
 import logoImg from '@/styles/logo.png'
 import logoDarkImg from '@/styles/logo-dark.png'
 
-export default function TopArea() {
-    const { theme, toggleTheme, toggleSidebar } = useAppStore();
-    const [openPanels, setOpenPanels] = useState(new Set());
+export default function TopArea({apiRef}) {
+    const { theme, toggleTheme, toggleSidebar, openPanels } = useAppStore();
     const closeAllPanels = useCallback(() => [...(apiRef.current?.panels??[])].forEach(p => p.api.close()), []);
     const closeActivePanel = useCallback(() => apiRef.current?.activePanel?.api.close(), []);
     const [notiOpen, setNotiOpen] = useState(false);

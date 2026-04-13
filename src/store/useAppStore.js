@@ -32,19 +32,23 @@ export const useAppStore = create(
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
 
 
-      // ── 인증 ──────────────────────────────────────────────────────────────
-      // JWT는 httpOnly 쿠키로 관리 (프론트에서 토큰 직접 보관 안 함)
-      // 로그인 성공 시 백엔드가 쿠키 발급, 로그아웃 시 백엔드가 쿠키 만료 처리
-      user:       null,
-      setAuth:    (user) => set({ user }),
-      clearAuth:  () => set({ user: null }),
-      isLoggedIn: () => !!get().user,
+        // ── 인증 ──────────────────────────────────────────────────────────────
+        // JWT는 httpOnly 쿠키로 관리 (프론트에서 토큰 직접 보관 안 함)
+        // 로그인 성공 시 백엔드가 쿠키 발급, 로그아웃 시 백엔드가 쿠키 만료 처리
+        user:       null,
+        setAuth:    (user) => set({ user }),
+        clearAuth:  () => set({ user: null }),
+        isLoggedIn: () => !!get().user,
 
-      // ── 세션 만료 ─────────────────────────────────────────────────────────
-      // API 401 응답 시 setSessionExpired(true) → 로그인 오버레이 표시
-      // 실제 연동: axios interceptor response error 에서 호출
-      sessionExpired:    false,
-      setSessionExpired: (v) => set({ sessionExpired: v }),
+        // ── 세션 만료 ─────────────────────────────────────────────────────────
+        // API 401 응답 시 setSessionExpired(true) → 로그인 오버레이 표시
+        // 실제 연동: axios interceptor response error 에서 호출
+        sessionExpired:    false,
+        setSessionExpired: (v) => set({ sessionExpired: v }),
+        openPanels: new Set(),
+        setOpenPanels: (updater) => set((state) => ({
+            openPanels: typeof updater === 'function' ? updater(state.openPanels) : updater
+        })),
     }),
     {
       name: 'pms-app-store',

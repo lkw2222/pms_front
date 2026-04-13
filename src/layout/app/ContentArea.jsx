@@ -1,7 +1,7 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import { useAppStore } from '@/store/useAppStore.js';
 import {DockviewReact} from "dockview-react";
-
+import 'dockview-react/dist/styles/dockview.css'
 import styles from '@/styles/layout.module.css';
 
 import DashboardPanel from '@/panels/dashboard/DashboardPanel.jsx';
@@ -58,8 +58,7 @@ function loadLayout() {
 }
 
 export default function ContentArea({ apiRef }) {
-    const { theme } = useAppStore();
-    const [openPanels, setOpenPanels] = useState(new Set());
+    const { theme, setOpenPanels } = useAppStore();
 
     // ── Dockview 준비 → 레이아웃 복원 ───────────────────────────────────────
     const onReady = useCallback((event) => {

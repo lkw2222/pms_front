@@ -91,8 +91,7 @@ function SidebarGroup({ group, sidebarOpen, openPanels, onOpen, onPip, expandedG
 }
 
 export default function LeftArea({ apiRef }) {
-    const {sidebarOpen, toggleSidebar} = useAppStore();
-    const [openPanels, setOpenPanels]     = useState(new Set());
+    const {sidebarOpen, toggleSidebar, openPanels, setOpenPanels} = useAppStore();
     const [pipBlocked,     setPipBlocked]     = useState(false);
     const [expandedGroups, setExpandedGroups] = useState(new Set(['work','gis','sample','system']));
 
