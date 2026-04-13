@@ -20,13 +20,9 @@ import {
   X, PanelLeftClose, Activity, Archive,
 } from 'lucide-react'
 
-import NotificationWidget     from '@/widgets/notification/NotificationWidget.jsx'
-import JobProgressWidget      from '@/widgets/job/JobProgressWidget.jsx'
 import SessionExpiredOverlay  from '@/widgets/auth/SessionExpiredOverlay.jsx'
-import ProfileDropdown        from '@/widgets/auth/ProfileDropdown.jsx'
 import styles from '@/styles/layout.module.css'
-import logoImg from '@/styles/logo.png'
-import logoDarkImg from '@/styles/logo-dark.png'
+import TopArea from "./layout/app/TopArea";
 
 // ── 레이아웃 localStorage 저장/복원 (Dockview toJSON/fromJSON) ───────────────
 const LAYOUT_STORAGE_KEY = 'pms-layout'
@@ -279,51 +275,7 @@ export default function App() {
     <div className={styles.appRoot}>
 
       {/* ── 탑바 ── */}
-      <header className={styles.topbar}>
-        <button className={styles.iconBtnCustom} onClick={toggleSidebar}>
-          <Menu size={16} />
-        </button>
-
-        <div className={styles.topbarLogo}>
-          {/* ── <div className={styles.topbarLogoIcon}>P</div> ── */}
-          <div className={styles.topbarLogoIcon}>
-            <img src={theme === 'dark' ? logoDarkImg : logoImg} alt="전력연구원 로고" className={styles.topbarLogoImage} />
-          </div>
-          <div>
-            <div className={styles.topbarLogoTitle}>전력연구원</div>
-            <div className={styles.topbarLogoSub}>전주 진단 우선순위 시스템</div>
-          </div>
-        </div>
-
-        <div className={styles.topbarRight}>
-          {openPanels.size > 0 && (
-            <>
-              <div className={styles.divider} />
-              <button className={styles.tabCloseBtn} onClick={closeActivePanel} title="현재 탭 닫기">
-                <X size={12} /><span>현재 탭</span>
-              </button>
-              <button className={[styles.tabCloseBtn, styles.danger].join(' ')} onClick={closeAllPanels} title="전체 탭 닫기">
-                <PanelLeftClose size={12} /><span>전체 닫기</span>
-              </button>
-              <div className={styles.divider} />
-            </>
-          )}
-          <button className={styles.iconBtn} onClick={toggleTheme} title={theme==='dark'?'라이트 모드':'다크 모드'}>
-            {theme==='dark' ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
-          <button className={styles.iconBtn} onClick={() => { setJobOpen(o => !o); setNotiOpen(false) }} title="작업 현황" style={{ position:'relative' }}>
-            <Activity size={15} />
-            <span className={styles.notiBadge} />
-          </button>
-          <button className={styles.iconBtn} onClick={() => { setNotiOpen(o => !o); setJobOpen(false) }} title="알림">
-            <Bell size={15} />
-            <span className={styles.notiBadge} />
-          </button>
-          <JobProgressWidget  open={jobOpen}  onClose={() => setJobOpen(false)}  />
-          <NotificationWidget open={notiOpen} onClose={() => setNotiOpen(false)} />
-          <ProfileDropdown />
-        </div>
-      </header>
+      <TopArea />
 
       <div className={styles.body}>
 
