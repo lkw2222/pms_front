@@ -11,9 +11,11 @@ import FileInput         from '@/components/input/FileInput.jsx'
 import BasicButton       from '@/components/button/BasicButton.jsx'
 import BasicLabel        from '@/components/label/BasicLabel.jsx'
 import ConfirmModal      from '@/components/modal/ConfirmModal.jsx'
+import EditorTextarea    from '@/components/input/EditorTextarea.jsx'
 import { Search, RotateCcw, Plus, Download, FileText, Loader2, Paperclip, Pencil, Trash2, X, Save } from 'lucide-react'
 import { toast } from 'sonner'
 import styles from './ArchiveFeature.module.css'
+
 
 // ── 샘플 데이터 ────────────────────────────────────────────────────────────────
 const ARCHIVE_DATA = [
@@ -190,17 +192,9 @@ function ArchiveForm({ control, files, onFilesChange }) {
       />
       <Controller name="content" control={control}
         render={({ field }) => (
-          <div>
-            <div className="form-label">내용</div>
-            <textarea
-              className="form-textarea"
-              value={field.value ?? ''}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-              placeholder="내용을 입력하세요"
-              rows={5}
-            />
-          </div>
+            <div>
+                <EditorTextarea label="내용" value={field.value ?? ''} onChange={field.onChange} onBlur={field.onBlur}/>
+            </div>
         )}
       />
       <FileInput
