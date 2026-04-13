@@ -10,7 +10,8 @@ import GridPanel      from '@/panels/grid/GridPanel.jsx'
 import GisPanel       from '@/panels/gis/GisPanel.jsx'
 import SamplePanel    from '@/panels/sample/SamplePanel.jsx'
 import ReadmePanel    from '@/panels/readme/ReadmePanel.jsx'
-import ArchivePanel   from '@/panels/archive/ArchivePanel.jsx'
+import ArchivePanel        from '@/panels/archive/ArchivePanel.jsx'
+import WindPressurePanel   from '@/panels/windPressure/WindPressurePanel.jsx'
 
 import {
   FileSpreadsheet, Map, LogIn, Menu, Sun, Moon, Bell, HelpCircle,
@@ -58,7 +59,8 @@ const PANEL_COMPONENTS = {
   samplePanel:      SamplePanel,
   readmePanel:      ReadmePanel,
   settingPanel:     SamplePanel,
-  archivePanel:     ArchivePanel,
+  archivePanel:        ArchivePanel,
+  windPressurePanel:   WindPressurePanel,
 }
 /*
 const components = Object.fromEntries(
@@ -97,9 +99,10 @@ const MENU_GROUPS = [
     { id:'gisPanel_sample',   label:'지도 샘플',      icon:Map,             component:'gisPanel'    },
   ]},
   { id:'system', label:'시스템', icon:Settings, children:[
-    { id:'archivePanel', label:'자료실', icon:Archive,  component:'archivePanel' },
-    { id:'loginPanel',   label:'로그인', icon:LogIn,    component:'loginPanel',  pip:false },
-    { id:'settingPanel', label:'설정',   icon:Settings, component:'samplePanel', pip:false },
+    { id:'archivePanel',      label:'자료실',     icon:Archive,      component:'archivePanel'      },
+    { id:'windPressurePanel', label:'전주 풍하중', icon:FileSpreadsheet, component:'windPressurePanel' },
+    { id:'loginPanel',        label:'로그인',     icon:LogIn,        component:'loginPanel',  pip:false },
+    { id:'settingPanel',      label:'설정',       icon:Settings,     component:'samplePanel', pip:false },
   ]},
 ]
 
