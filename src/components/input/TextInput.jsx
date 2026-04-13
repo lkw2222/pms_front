@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from '../styles/TextInput.module.css'
 
 export default function TextInput({
-  label, placeholder = '', value = '', onChange,
+  label, placeholder = '', value = '', onChange = () => {},
   type = 'text', isNotNull = false, regex, errorMessage,
   disabled = false, icon: Icon, className = '', ...props
 }) {

@@ -180,16 +180,22 @@ function ArchiveForm({ control, files, onFilesChange }) {
         placeholder="제목을 입력하세요"
         rules={{ required: '제목을 입력하세요' }}
       />
-      <CtrlSelect
-        name="category" control={control} label="분류"
-        options={CATEGORY_OPTIONS}
-        rules={{ required: '분류를 선택하세요' }}
-      />
-      <CtrlText
-        name="author" control={control} label="작성자"
-        placeholder="작성자명을 입력하세요"
-        rules={{ required: '작성자를 입력하세요' }}
-      />
+      <div style={{ display:'flex', gap:16 }}>
+        <div style={{ flex:1 }}>
+          <CtrlSelect
+            name="category" control={control} label="분류"
+            options={CATEGORY_OPTIONS}
+            rules={{ required: '분류를 선택하세요' }}
+          />
+        </div>
+        <div style={{ flex:1 }}>
+          <CtrlText
+            name="author" control={control} label="작성자"
+            placeholder="작성자명을 입력하세요"
+            rules={{ required: '작성자를 입력하세요' }}
+          />
+        </div>
+      </div>
       <Controller name="content" control={control}
         render={({ field }) => (
             <div>

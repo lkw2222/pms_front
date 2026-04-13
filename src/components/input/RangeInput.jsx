@@ -16,7 +16,7 @@ import React from 'react'
 export default function RangeInput({
   label,
   value = 0,
-  onChange,
+  onChange = () => {},
   min = 0,
   max = 100,
   step = 1,

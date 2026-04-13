@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styles from "../styles/TextInput.module.css";
 
-export default function Textarea({label, placeholder = '', value, onChange, isNotNull = false
+export default function Textarea({label, placeholder = '', value, onChange = () => {}, isNotNull = false
                                            , errorMessage, disabled = false, icon: Icon
                                            , className = '', regex, rows, ...props}) {
     const [touched, setTouched] = useState(false);

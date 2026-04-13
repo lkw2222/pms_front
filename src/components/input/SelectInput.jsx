@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react'
 import styles from '../styles/SelectInput.module.css'
 
 export default function SelectInput({
-  label, value = '', onChange, options = [],
+  label, value = '', onChange = () => {}, options = [],
   placeholder = '선택하세요', isNotNull = false,
   disabled = false, className = '', ...props
 }) {
