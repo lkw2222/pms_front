@@ -54,7 +54,7 @@
 .grid-wrap {
   padding: 10px;
   background: var(--color-grid-wrap);
-  border: 1px solid var(--color-grid-wrap-line);
+  /*border: 1px solid var(--color-grid-wrap-line);*/
   border-radius: 6px;
 }
 
@@ -116,12 +116,13 @@
 
   /* 바디 영역 상위 */
 .dv-content-container {
-  padding: 20px 20px 20px 20px;
+  padding: 0px;
   background: var(--color-content-body);
 }
 .grid-tabs-content {
 
 }
 .dv-content-container:has(.dashboard-panel-wrap) {
+  padding: 20px 20px 20px 20px;
   background: var(--color-bg-dashboard) !important;
 }
