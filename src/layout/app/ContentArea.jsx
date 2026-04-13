@@ -57,7 +57,25 @@ function loadLayout() {
     }
 }
 
+// ── PiP 단독 창 ────────────────────────────────────────────────────────────────
+function PanelOnlyApp() {
+    const panelId   = new URLSearchParams(window.location.search).get('panel')
+    const Component = PANEL_COMPONENTS[panelId]
+    if (!Component) return (
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:'var(--color-danger)' }}>
+            패널을 찾을 수 없습니다: {panelId}
+        </div>
+    )
+    return (
+        <div style={{ width:'100vw', height:'100vh', overflow:'hidden', background:'var(--color-bg-primary)' }}>
+            <Component />
+        </div>
+    )
+}
+
 export default function ContentArea({ apiRef }) {
+    if (new URLSearchParams(window.location.search).get('panel')) return <PanelOnlyApp />
+
     const { theme, setOpenPanels } = useAppStore();
 
     // ── Dockview 준비 → 레이아웃 복원 ───────────────────────────────────────
