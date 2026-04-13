@@ -9,7 +9,7 @@ import SelectInput from '@/components/input/SelectInput.jsx'
 import DateInput   from '@/components/input/DateInput.jsx'
 import BasicButton from '@/components/button/BasicButton.jsx'
 import BasicLabel  from '@/components/label/BasicLabel.jsx'
-import { Search, RotateCcw, Download, Loader2 } from 'lucide-react'
+import { Search, RotateCcw, FileDown, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import ConfirmModal from '@/components/modal/ConfirmModal.jsx'
 import styles from './GridFeature.module.css'
@@ -91,7 +91,7 @@ function SearchForm({ search, setSearch, onSearch, onReset, totalCount, isLoadin
           <BasicButton label="조회"   icon={isLoading ? Loader2 : Search} variant="primary"   onClick={onSearch} disabled={isLoading} />
         </div>
         <div className="panel-search-excel" style={{ display:'flex', justifyContent:'flex-end' }}>
-          <BasicButton label="엑셀" icon={Download} variant="ghost"
+          <BasicButton label="엑셀" icon={FileDown} variant="excel"
             onClick={() => toast.info('엑셀 다운로드를 시작합니다.')}
           />
         </div>

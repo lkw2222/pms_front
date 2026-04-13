@@ -482,7 +482,7 @@ export default function WindPressureFeature() {
           <div style={S.pageTitle}>전주 풍하중 산정표</div>
           <div style={S.pageSub}>KBC 2016 기준 · 기준 풍속 40m/s · 지표면 조도구분 B</div>
         </div>
-        <BasicButton label="엑셀 다운로드" icon={FileDown} variant="primary" size="sm" onClick={exportToExcel} />
+        <BasicButton label="엑셀" icon={FileDown} variant="excel" size="sm" onClick={exportToExcel} />
       </div>
 
       {/* ── 표 1: 전주 제원 ─────────────────────────────────────────────── */}
