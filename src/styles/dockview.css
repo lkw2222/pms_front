@@ -18,24 +18,18 @@
   --dv-tabs-and-actions-container-font-size:            13px;
 }
 
-/* 탭 기본 - 비활성 탭은 배경색으로 명확히 구분 */
+/* 탭 기본 */
 .dockview-react .dv-tab {
   font-size: 13px !important;
-  font-weight: 500 !important;
+  font-weight: 400 !important;
   border-right: 1px solid var(--color-border) !important;
-}
-
-/* 활성 탭 - 밝게 + 상단 액센트 라인 */
-.dockview-react .dv-tab.dv-active-tab {
-  font-weight: 600 !important;
-  border-top: 2px solid var(--color-accent) !important;
-  border-bottom: 1px solid var(--color-bg-secondary) !important;
+  transition: background .12s, color .12s !important;
 }
 
 /* 탭 호버 */
 .dockview-react .dv-tab:not(.dv-active-tab):hover {
   background: var(--color-bg-hover) !important;
-  color: var(--color-text-secondary) !important;
+  color: var(--color-text-primary) !important;
 }
 
 /* 탭바 컨테이너 배경 */
@@ -73,22 +67,30 @@
 .grid-tabs-header {
 
 }
+/* 비활성 탭 */
 .dv-tab.dv-inactive-tab {
-  margin-right: 5px;
-  border: 1px solid var(--color-tabs-body);
+  margin-right: 4px;
+  border: 1px solid var(--color-border);
   background: var(--color-bg-tabsheader) !important;
   border-bottom: none;
   border-radius: 5px 5px 0 0;
   min-width: 120px;
+  color: var(--color-text-secondary);
 }
+
+/* 활성 탭 — 컨텐츠 배경과 동일 + 상단 2px 액센트 바 */
 .dv-tab.dv-active-tab {
-  margin-right: 5px;
-  border: 1px solid var(--color-accent);
-  border-bottom: none;
+  margin-right: 4px;
+  background: var(--color-bg-secondary) !important;
+  border: 1px solid var(--color-border);
+  border-top: 2px solid var(--color-accent) !important;
+  border-bottom: 1px solid var(--color-bg-secondary) !important;
   border-radius: 5px 5px 0 0;
   min-width: 120px;
-  background-color: var(--color-accent) !important;
+  font-weight: 600 !important;
+  color: var(--color-text-primary) !important;
 }
+
 .dv-tab.dv-active-tab::after {
   display: none !important;
   content: none !important;
@@ -98,10 +100,10 @@
   content: none !important;
 }
 .dv-tab.dv-active-tab .dv-default-tab-content {
-  color: #ffffff;
+  color: var(--color-text-primary);
 }
 .dv-tab.dv-active-tab .dv-default-tab-action {
-  color: #ffffff;
+  color: var(--color-text-secondary);
 }
 .btn-search-custom {
   background: var(--color-seablue) !important;
