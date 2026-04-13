@@ -28,7 +28,7 @@
 .topbarLogo      { display: flex; align-items: center; gap: 10px; }
 .topbarLogoIcon  { width: 30px; height: 30px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--color-accent), var(--color-purple)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; }
 .topbarLogoTitle { font-size: 13px; font-weight: 700; color: var(--color-text-primary); letter-spacing: 0.04em; }
-.topbarLogoSub   { font-size: 10px; color: var(--color-text-muteds); margin-top: 1px; }
+.topbarLogoSub   { font-size: 11px; font-weight: 500; color: var(--color-text-muteds); margin-top: 2px; letter-spacing: 0.06em; white-space: nowrap; }
 
 .topbarRight     { margin-left: auto; display: flex; align-items: center; gap: 6px; }
 

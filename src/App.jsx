@@ -17,7 +17,7 @@ import {
   FileSpreadsheet, Map, LogIn, Menu, Sun, Moon, Bell, HelpCircle,
   ChevronLeft, ChevronRight, ChevronDown, ChevronRight as ChevRight,
   LayoutDashboard, FilePlus, BarChart2, Layers, Settings, MonitorCog,
-  X, PanelLeftClose, Activity, Archive, User, LogOut,
+  X, PanelLeftClose, Activity, Archive,
 } from 'lucide-react'
 
 import NotificationWidget     from '@/widgets/notification/NotificationWidget.jsx'
@@ -308,18 +308,6 @@ export default function App() {
               <div className={styles.divider} />
             </>
           )}
-          <div className={styles.userInfoBox}>
-            <div className={styles.userInfoIcon}>
-              <User size={16} />
-            </div>
-            <div className={styles.userInfoText}>
-              <div className={styles.userInfoTop}>
-                <span className={styles.userInfoRole}>시스템관리자</span>
-                <span className={styles.userInfoName}>김담당</span>
-              </div>
-              <div className={styles.userInfoId}>hongildong123</div>
-            </div>
-          </div>
           <button className={styles.iconBtn} onClick={toggleTheme} title={theme==='dark'?'라이트 모드':'다크 모드'}>
             {theme==='dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
@@ -334,10 +322,6 @@ export default function App() {
           <JobProgressWidget  open={jobOpen}  onClose={() => setJobOpen(false)}  />
           <NotificationWidget open={notiOpen} onClose={() => setNotiOpen(false)} />
           <ProfileDropdown />
-          {/* <div className={styles.avatar}>A</div> */}
-          <button className={styles.logoutBtn} title="로그아웃" onClick={() => alert('로그아웃')}>
-            <LogOut size={15} />
-          </button>
         </div>
       </header>
 

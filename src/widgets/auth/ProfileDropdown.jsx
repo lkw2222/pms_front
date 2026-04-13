@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { LogOut } from 'lucide-react'
+import { LogOut, User } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore.js'
 
 export default function ProfileDropdown() {
@@ -8,7 +8,6 @@ export default function ProfileDropdown() {
 
   const { user, clearAuth, setSessionExpired } = useAppStore()
 
-  // 외부 클릭 시 닫기
   useEffect(() => {
     const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
     document.addEventListener('mousedown', handler)
@@ -21,32 +20,34 @@ export default function ProfileDropdown() {
     setSessionExpired(true)
   }
 
-  const initial = user?.name?.charAt(0) ?? 'A'
+  const initial  = user?.name?.charAt(0) ?? 'A'
+  const name     = user?.name     ?? '김담당'
+  const subInfo  = [user?.bonbu, user?.sabupso].filter(Boolean).join(' · ') || user?.id || 'hongildong123'
+  const role     = user?.role     ?? '시스템관리자'
 
   return (
     <div ref={ref} style={{ position:'relative' }}>
 
-      {/* 아바타 버튼 */}
+      {/* 트리거: 아바타만 */}
       <div
         onClick={() => setOpen(o => !o)}
         style={{
-          width:36, height:36, borderRadius:'50%', cursor:'pointer',
+          width:32, height:32, borderRadius:'50%', flexShrink:0,
           background:'linear-gradient(135deg, var(--color-accent), var(--color-purple))',
           display:'flex', alignItems:'center', justifyContent:'center',
-          color:'#fff', fontSize:13, fontWeight:700,
-          border: open ? '2px solid var(--color-accent)' : '2px solid transparent',
+          color:'#fff', cursor:'pointer',
+          border: open ? '2px solid var(--color-border-focus)' : '2px solid transparent',
           transition:'border-color .15s',
-          flexShrink:0,
         }}
       >
-        {initial}
+        <User size={15} strokeWidth={2} />
       </div>
 
       {/* 드롭다운 */}
       {open && (
         <div style={{
           position:'absolute', top:'calc(100% + 8px)', right:0,
-          width:210, zIndex:1000,
+          minWidth:220, width:'max-content', zIndex:1000,
           background:'var(--color-bg-secondary)',
           border:'1px solid var(--color-border)',
           borderRadius:'var(--radius-lg)',
@@ -56,22 +57,21 @@ export default function ProfileDropdown() {
         }}>
 
           {/* 사용자 정보 */}
-          <div style={{ padding:'14px 16px', display:'flex', alignItems:'center', gap:10 }}>
+          <div style={{ padding:'14px 16px', display:'flex', alignItems:'center', gap:12 }}>
             <div style={{
-              width:36, height:36, borderRadius:'50%', flexShrink:0,
+              width:40, height:40, borderRadius:'50%', flexShrink:0,
               background:'linear-gradient(135deg, var(--color-accent), var(--color-purple))',
               display:'flex', alignItems:'center', justifyContent:'center',
-              color:'#fff', fontSize:13, fontWeight:700,
+              color:'#fff',
             }}>
-              {initial}
+              <User size={20} strokeWidth={2} />
             </div>
             <div style={{ minWidth:0 }}>
-              <div style={{ fontSize:13, fontWeight:700, color:'var(--color-text-primary)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
-                {user?.name ?? '사용자'}
+              <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:2 }}>
+                <span style={{ fontSize:11, color:'var(--color-text-muted)' }}>{role}</span>
+                <span style={{ fontSize:13, fontWeight:700, color:'var(--color-text-primary)', whiteSpace:'nowrap' }}>{name}</span>
               </div>
-              <div style={{ fontSize:11, color:'var(--color-text-muted)', marginTop:2, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
-                {[user?.bonbu, user?.sabupso].filter(Boolean).join(' · ') || '소속 정보 없음'}
-              </div>
+              <div style={{ fontSize:11, color:'var(--color-text-muted)', whiteSpace:'nowrap' }}>{subInfo}</div>
             </div>
           </div>
 
