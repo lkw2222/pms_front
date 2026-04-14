@@ -8,8 +8,61 @@ import { useAppStore } from '@/store/useAppStore.js'
 import SessionExpiredOverlay  from '@/widgets/auth/SessionExpiredOverlay.jsx'
 import styles from '@/styles/layout.module.css'
 
+import DashboardPanel from '@/panels/dashboard/DashboardPanel.jsx';
+import LoginPanel     from '@/panels/login/LoginPanel.jsx';
+import GridPanel      from '@/panels/grid/GridPanel.jsx';
+import GisPanel       from '@/panels/gis/GisPanel.jsx';
+import SamplePanel    from '@/panels/sample/SamplePanel.jsx';
+import ReadmePanel    from '@/panels/readme/ReadmePanel.jsx';
+import ArchivePanel        from '@/panels/archive/ArchivePanel.jsx';
+import WindPressurePanel   from '@/panels/windPressure/WindPressurePanel.jsx';
+
+// ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
+const PANEL_COMPONENTS = {
+    dashboardPanel:   DashboardPanel,
+    loginPanel:       LoginPanel,
+    gridPanel:        GridPanel,
+    gridPanel2:       GridPanel,
+    gridPanel_sample: GridPanel,
+    gisPanel:         GisPanel,
+    gisPanel2:        GisPanel,
+    gisPanel_sample:  GisPanel,
+    samplePanel:      SamplePanel,
+    readmePanel:      ReadmePanel,
+    settingPanel:     SamplePanel,
+    archivePanel:        ArchivePanel,
+    windPressurePanel:   WindPressurePanel,
+}
+
+const components = Object.fromEntries(
+    Object.entries(PANEL_COMPONENTS).map(([key, Comp]) => [
+        key,
+        ({ params }) => (
+            <div className={`${key === 'dashboardPanel' ? styles.dashboardPanelWrap : styles.panelContentWrap} ${key === 'dashboardPanel' ? 'dashboard-panel-wrap' : ''}`}><Comp params={params} /></div>
+        ),
+    ])
+)
+
+// ── PiP 단독 창 ────────────────────────────────────────────────────────────────
+function PanelOnlyApp() {
+    const panelId   = new URLSearchParams(window.location.search).get('panel')
+    const Component = PANEL_COMPONENTS[panelId]
+    if (!Component) return (
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:'var(--color-danger)' }}>
+            패널을 찾을 수 없습니다: {panelId}
+        </div>
+    )
+    return (
+        <div style={{ width:'100vw', height:'100vh', overflow:'hidden', background:'var(--color-bg-primary)' }}>
+            <Component />
+        </div>
+    )
+}
+
 // ── App ────────────────────────────────────────────────────────────────────────
 export default function AppLayout() {
+    if (new URLSearchParams(window.location.search).get('panel')) return <PanelOnlyApp />
+
     const apiRef = useRef(null)
     const { theme } = useAppStore()
     const [pipBlocked,     setPipBlocked]     = useState(false)
@@ -44,7 +97,7 @@ export default function AppLayout() {
                     )}
 
                     {/* ── Dockview ── */}
-                    <ContentArea apiRef={apiRef} />
+                    <ContentArea apiRef={apiRef} components={components} />
                 </div>
             </div>
         </>
