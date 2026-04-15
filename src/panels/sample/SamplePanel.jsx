@@ -16,6 +16,7 @@ import ConfirmModalFeature    from '@/features/sample/ConfirmModalFeature.jsx'
 import ErrorBoundaryFeature   from '@/features/sample/ErrorBoundaryFeature.jsx'
 import FormDrawerFeature          from '@/features/sample/FormDrawerFeature.jsx'
 import GridDetailDrawerFeature    from '@/features/sample/GridDetailDrawerFeature.jsx'
+import GridDetailModalFeature    from '@/features/sample/GridDetailModalFeature.jsx'
 import { useAppStore }        from '@/store/useAppStore.js'
 
 // ── Props 테이블 ──────────────────────────────────────────────────────────────
@@ -70,6 +71,7 @@ const SECTIONS = [
   { id:'basic-grid',          label:'BasicGrid'         },
   { id:'grid-action-buttons',  label:'GridActionButtons'  },
   { id:'grid-detail-drawer',  label:'GridDetailDrawer'   },
+  { id:'grid-detail-modal',   label:'GridDetailModal'    },
   { id:'form-drawer',         label:'FormDrawer'         },
   { id:'toast',               label:'Toast'             },
   { id:'confirm-modal',       label:'ConfirmModal'      },
@@ -290,14 +292,27 @@ export default function SamplePanel() {
 
         <SectionCard id="grid-detail-drawer" title="GridDetailDrawer"
           propRows={[
-            ['open',         'boolean',  'false', '드로어 열림 여부'],
-            ['data',         'object',   '-',     '선택된 로우 데이터'],
-            ['onClose',      'function', '-',     '닫기 핸들러'],
-            ['defaultWidth', 'number',   '420',   '초기 너비(px), 드래그로 조절 가능 (300~700)'],
-            ['columns',      'number',   '1',     '기본정보 탭 열 수 1 | 2 | 3'],
+            ['open',         'boolean',   'false',   '드로어 열림 여부'],
+            ['title',        'string',    '상세 정보', '헤더 제목'],
+            ['onClose',      'function',  '-',       '닫기 핸들러'],
+            ['children',     'ReactNode', '-',       'pk 기반 상세 컴포넌트 주입 — 내부에서 API 조회'],
+            ['defaultWidth', 'number',    '420',     '초기 너비(px), 드래그로 조절 가능 (300~800)'],
           ]}
         >
           <GridDetailDrawerFeature />
+        </SectionCard>
+
+        <SectionCard id="grid-detail-modal" title="GridDetailModal"
+          propRows={[
+            ['open',     'boolean',   'false',   '모달 열림 여부'],
+            ['title',    'string',    '상세 정보', '헤더 제목'],
+            ['onClose',  'function',  '-',       '닫기 핸들러 (ESC · 백드롭 클릭도 동작)'],
+            ['children', 'ReactNode', '-',       'pk 기반 상세 컴포넌트 주입 — 내부에서 API 조회'],
+            ['width',    'string',    '860px',   '초기 너비, 드래그 리사이즈 가능'],
+            ['height',   'string',    '80vh',    '초기 높이, 드래그 리사이즈 가능'],
+          ]}
+        >
+          <GridDetailModalFeature />
         </SectionCard>
 
         <SectionCard id="form-drawer" title="FormDrawer"

@@ -12,7 +12,7 @@ export default function TextInputFeature() {
         label="기본 텍스트"
         placeholder="텍스트를 입력하세요"
         value={text}
-        onChange={e => setText(e.target.value)}
+        onChange={setText}
       />
       <TextInput
         label="필수 입력"

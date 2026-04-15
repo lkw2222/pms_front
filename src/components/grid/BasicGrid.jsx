@@ -38,6 +38,7 @@ const BasicGrid = forwardRef(function BasicGrid({
   rowData        = [],
   colDefs        = [],
   onRowClick,
+  onRowDoubleClick,
   height         = '100%',
   pageSize       = 20,
   datasource,
@@ -58,6 +59,12 @@ const BasicGrid = forwardRef(function BasicGrid({
     if (e.event?.target?.closest('button')) return
     onRowClick?.(e.data)
   }, [onRowClick])
+
+  const onCellDoubleClicked = useCallback((e) => {
+    if (e.event?.target?.closest('button')) return
+    if (!e.data) return
+    onRowDoubleClick?.(e.data)
+  }, [onRowDoubleClick])
 
   // ── Theming API (v33+) ────────────────────────────────────────────────────
   // theme 변경 시 CSS 변수값을 다시 읽어 그리드 테마 재적용
@@ -110,6 +117,7 @@ const BasicGrid = forwardRef(function BasicGrid({
         columnDefs={colDefs}
         defaultColDef={defaultColDef}
         onRowClicked={onRowClicked}
+        onCellDoubleClicked={onCellDoubleClicked}
         rowSelection="single"
         animateRows={true}
         loading={loading}

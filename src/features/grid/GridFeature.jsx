@@ -1,18 +1,21 @@
-import React, { useState, useMemo, useRef, useCallback } from 'react'
+import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import BasicGrid          from '@/components/grid/BasicGrid.jsx'
 import GridActionButtons  from '@/components/grid/GridActionButtons.jsx'
 import GridDetailDrawer   from '@/components/grid/GridDetailDrawer.jsx'
+import GridDetailModal    from '@/components/grid/GridDetailModal.jsx'
 import SectionDivider     from '@/components/layout/SectionDivider.jsx'
-import TextInput   from '@/components/input/TextInput.jsx'
-import SelectInput from '@/components/input/SelectInput.jsx'
-import DateInput   from '@/components/input/DateInput.jsx'
-import BasicButton from '@/components/button/BasicButton.jsx'
-import BasicLabel  from '@/components/label/BasicLabel.jsx'
+import TextInput          from '@/components/input/TextInput.jsx'
+import SelectInput        from '@/components/input/SelectInput.jsx'
+import DateInput          from '@/components/input/DateInput.jsx'
+import BasicButton        from '@/components/button/BasicButton.jsx'
+import BasicLabel         from '@/components/label/BasicLabel.jsx'
+import GisFeature         from '@/features/gis/GisFeature.jsx'
+import WindPressureFeature from '@/features/windPressure/WindPressureFeature.jsx'
 import { Search, RotateCcw, FileDown, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import ConfirmModal from '@/components/modal/ConfirmModal.jsx'
-import styles from './GridFeature.module.css'
+import ConfirmModal       from '@/components/modal/ConfirmModal.jsx'
+import styles             from './GridFeature.module.css'
 
 // ── 샘플 데이터 1000건 (API 연동 시 제거) ─────────────────────────────────────
 const ALL_DATA = Array.from({ length: 1000 }, (_, i) => ({
@@ -100,20 +103,224 @@ function SearchForm({ search, setSearch, onSearch, onReset, totalCount, isLoadin
   )
 }
 
-// ── 페이징 그리드 (useQuery 적용) ─────────────────────────────────────────────
+// ── 상세 패널 공통 탭 ─────────────────────────────────────────────────────────
+const WORK_TABS = [
+  { key:'info',    label:'기본 정보'      },
+  { key:'history', label:'풍하중 계산결과' },
+  { key:'file',    label:'첨부 파일'      },
+  { key:'map',     label:'지도'           },
+]
+
+/**
+ * WorkDetailPane — GridDetailDrawer / GridDetailModal 에 주입하는 업무 상세 컴포넌트
+ *
+ * @param {{ id: number, [key]: any }} pk  복합 PK 객체 (null 이면 빈 상태)
+ * @param {1|2|3}                    columns 기본정보 탭 열 수
+ *
+ * @example
+ * // 단순 PK
+ * <WorkDetailPane pk={{ id: row.id }} />
+ *
+ * // 복합 PK 예시 (실제 API 연동 시)
+ * <WorkDetailPane pk={{ siteId: row.siteId, workId: row.workId }} />
+ */
+function WorkDetailPane({ pk, columns = 1 }) {
+  const [tab, setTab] = useState('info')
+
+  // 지도 탭 전환 시 OpenLayers updateSize 트리거
+  useEffect(() => {
+    if (tab === 'map') setTimeout(() => window.dispatchEvent(new Event('resize')), 50)
+  }, [tab])
+
+  // ── 실제 API 연동 시 아래 주석 해제 ────────────────────────────────────────
+  // const { data, isLoading } = useQuery({
+  //   queryKey: ['work', 'detail', pk],          // pk 객체 전체를 키로 사용 (복합키 대응)
+  //   queryFn:  () => workApi.getDetail(pk),
+  //   enabled:  !!pk,
+  // })
+  // ────────────────────────────────────────────────────────────────────────────
+  const data = useMemo(() => pk ? ALL_DATA.find(r => r.id === pk.id) ?? null : null, [pk])
+
+  if (!pk) return (
+    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100%', color:'var(--color-text-muted)', fontSize:13 }}>
+      로우를 선택하세요
+    </div>
+  )
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
+      {/* 탭 */}
+      <div style={{ display:'flex', borderBottom:'1px solid var(--color-border)', flexShrink:0 }}>
+        {WORK_TABS.map(t => (
+          <button key={t.key} onClick={() => setTab(t.key)} style={{
+            flex:1, padding:'8px 4px', fontSize:12, border:'none', cursor:'pointer',
+            background:'transparent', transition:'all .15s', marginBottom:-1,
+            fontWeight:   tab===t.key ? 600 : 400,
+            borderBottom: tab===t.key ? '2px solid var(--color-accent)' : '2px solid transparent',
+            color:        tab===t.key ? 'var(--color-accent)' : 'var(--color-text-secondary)',
+          }}
+            onMouseEnter={e => { if (tab!==t.key) e.currentTarget.style.color='var(--color-text-primary)' }}
+            onMouseLeave={e => { if (tab!==t.key) e.currentTarget.style.color='var(--color-text-secondary)' }}
+          >{t.label}</button>
+        ))}
+      </div>
+
+      {/* 탭 내용 */}
+      <div style={{ flex:1, overflow:'hidden', position:'relative' }}>
+        {/* 지도: display 토글로 unmount 방지 */}
+        <div style={{ display: tab==='map' ? 'block' : 'none', height:'100%' }}>
+          <GisFeature />
+        </div>
+        {tab !== 'map' && (
+          <div style={{ padding:14, height:'100%', overflowY:'auto', boxSizing:'border-box' }}>
+            {tab === 'info'    && <InfoPane           data={data} columns={columns} />}
+            {tab === 'history' && <WindPressureFeature />}
+            {tab === 'file'    && <PaneEmpty           text="첨부 파일이 없습니다." />}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * HistoryDetailPane — 처리 이력 행 상세 (MasterDetailGrid → GridDetailDrawer)
+ *
+ * @param {{ masterId: number, subId: number }} pk  복합 PK 객체
+ *
+ * @example
+ * <HistoryDetailPane pk={{ masterId: masterRow.id, subId: subRow.id }} />
+ */
+function HistoryDetailPane({ pk }) {
+  // ── 실제 API 연동 시 아래 주석 해제 ────────────────────────────────────────
+  // const { data } = useQuery({
+  //   queryKey: ['work', 'history', 'detail', pk],  // 복합키 대응
+  //   queryFn:  () => workApi.getHistoryDetail(pk),
+  //   enabled:  !!pk,
+  // })
+  // ────────────────────────────────────────────────────────────────────────────
+  const data = useMemo(() => {
+    if (!pk) return null
+    const master = ALL_DATA.find(r => r.id === pk.masterId)
+    return master ? (makeSubData(master).find(s => s.id === pk.subId) ?? null) : null
+  }, [pk])
+
+  if (!pk) return (
+    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100%', color:'var(--color-text-muted)', fontSize:13 }}>
+      항목을 선택하세요
+    </div>
+  )
+  if (!data) return (
+    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100%', color:'var(--color-text-muted)', fontSize:13 }}>
+      데이터를 찾을 수 없습니다
+    </div>
+  )
+
+  const rows = [
+    ['순번',    data.seq],
+    ['처리일',  data.date],
+    ['담당자',  data.handler],
+    ['처리내용', data.action],
+    ['결과',    data.result],
+  ]
+
+  return (
+    <div style={{ padding:14 }}>
+      {rows.map(([label, value]) => (
+        <div key={label}
+          style={{ display:'grid', gridTemplateColumns:'80px 1fr', padding:'9px 12px', fontSize:13, gap:8, borderBottom:'1px solid var(--color-border)', transition:'background 0.12s' }}
+          onMouseEnter={e => e.currentTarget.style.background='var(--color-bg-tertiary)'}
+          onMouseLeave={e => e.currentTarget.style.background='transparent'}
+        >
+          <span style={{ color:'var(--color-text-muted)', fontWeight:500, fontSize:12 }}>{label}</span>
+          <span style={{ color:'var(--color-text-primary)' }}>{value ?? '-'}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── 기본 정보 패널 ────────────────────────────────────────────────────────────
+function InfoPane({ data, columns = 1 }) {
+  if (!data) return null
+  const rows = [
+    ['No.',      data.id],
+    ['담당자',   data.name],
+    ['분류',     data.category],
+    ['상태',     data.status],
+    ['우선순위', data.priority],
+    ['등록일',   data.date],
+    ['비고',     data.remark],
+  ]
+  const grouped = []
+  for (let i = 0; i < rows.length; i += columns) grouped.push(rows.slice(i, i + columns))
+  return (
+    <div style={{ display:'flex', flexDirection:'column' }}>
+      {grouped.map((group, gi) => (
+        <div key={gi}
+          style={{ display:'grid', gridTemplateColumns:`repeat(${columns}, 1fr)`, borderBottom:'1px solid var(--color-border)', transition:'background 0.12s' }}
+          onMouseEnter={e => e.currentTarget.style.background='var(--color-bg-tertiary)'}
+          onMouseLeave={e => e.currentTarget.style.background='transparent'}
+        >
+          {group.map(([label, value]) => (
+            <div key={label} style={{ display:'grid', gridTemplateColumns:'80px 1fr', padding:'9px 12px', fontSize:13, gap:8 }}>
+              <span style={{ color:'var(--color-text-muted)', fontWeight:500, fontSize:12 }}>{label}</span>
+              <span style={{ color:'var(--color-text-primary)' }}>{value ?? '-'}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── 처리 이력 패널 ────────────────────────────────────────────────────────────
+function HistoryPane({ data }) {
+  if (!data) return null
+  const history = [
+    { date:'2025-03-01', user:'관리자',  action:'등록',     desc:'업무 최초 등록' },
+    { date:'2025-03-05', user:data.name, action:'수정',     desc:'상태 변경: 정상 → 점검중' },
+    { date:'2025-03-10', user:'김관리',  action:'완료처리', desc:'점검 완료 확인' },
+  ]
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:2 }}>
+      {history.map((h, i) => (
+        <div key={i} style={{ padding:10, borderRadius:'var(--radius-md)', fontSize:12, borderLeft:'2px solid var(--color-border)', marginBottom:4, background:'var(--color-bg-primary)' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
+            <BasicLabel text={h.action} variant='info' />
+            <span style={{ color:'var(--color-text-muted)' }}>{h.date}</span>
+            <span style={{ color:'var(--color-text-secondary)' }}>{h.user}</span>
+          </div>
+          <div style={{ color:'var(--color-text-primary)' }}>{h.desc}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── 빈 상태 ───────────────────────────────────────────────────────────────────
+function PaneEmpty({ text }) {
+  return (
+    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:100, color:'var(--color-text-muted)', fontSize:12, border:'1px dashed var(--color-border)', borderRadius:'var(--radius-md)' }}>
+      {text}
+    </div>
+  )
+}
+
+// ── 페이징 그리드 ─────────────────────────────────────────────────────────────
 function PaginateGrid() {
   const INIT = { name:'', category:'', status:'', dateFrom:'', dateTo:'' }
   const [search,        setSearch]       = useState(INIT)
   const [applied,       setApplied]      = useState(INIT)
   const [detailOpen,    setDetailOpen]   = useState(false)
-  const [detailData,    setDetailData]   = useState(null)
+  const [detailRow,     setDetailRow]    = useState(null)   // 타이틀용 + pk 기준 row
   const [confirmOpen,   setConfirmOpen]  = useState(false)
   const [confirmTarget, setConfirmTarget]= useState(null)
 
-  const openDetail  = useCallback((data) => {
-    if (detailData?.id === data.id) { setDetailOpen(o => !o) }
-    else { setDetailData(data); setDetailOpen(true) }
-  }, [detailData])
+  const openDetail = useCallback((data) => {
+    if (detailRow?.id === data.id) { setDetailOpen(o => !o) }
+    else { setDetailRow(data); setDetailOpen(true) }
+  }, [detailRow])
   const closeDetail = useCallback(() => setDetailOpen(false), [])
 
   const openDeleteConfirm   = useCallback((data) => { setConfirmTarget(data); setConfirmOpen(true) }, [])
@@ -176,8 +383,18 @@ function PaginateGrid() {
             onRowClick={openDetail} height="100%" pageSize={20} loading={isLoading}
           />
         </div>
-        <GridDetailDrawer open={detailOpen} data={detailData} onClose={closeDetail} defaultWidth={500} columns={2} />
+
+        {/* pk 기반 상세 드로어 */}
+        <GridDetailDrawer
+          open={detailOpen}
+          title={detailRow ? `${detailRow.name} — 상세` : '상세 정보'}
+          onClose={closeDetail}
+          defaultWidth={500}
+        >
+          <WorkDetailPane pk={detailRow ? { id: detailRow.id } : null} columns={2} />
+        </GridDetailDrawer>
       </div>
+
       <ConfirmModal
         open={confirmOpen} variant="danger" title="삭제 확인"
         message={`'${confirmTarget?.name}' 항목을 삭제하시겠습니까?\n삭제된 데이터는 복구할 수 없습니다.`}
@@ -190,9 +407,14 @@ function PaginateGrid() {
 // ── 무한 스크롤 그리드 ────────────────────────────────────────────────────────
 function InfiniteGrid() {
   const INIT = { name:'', category:'', status:'' }
-  const [search,  setSearch]  = useState(INIT)
-  const [applied, setApplied] = useState(INIT)
+  const [search,    setSearch]    = useState(INIT)
+  const [applied,   setApplied]   = useState(INIT)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalRow,  setModalRow]  = useState(null)
   const gridRef = useRef(null)
+
+  const openModal  = useCallback((row) => { setModalRow(row); setModalOpen(true) }, [])
+  const closeModal = useCallback(() => setModalOpen(false), [])
 
   const onSearch = () => {
     setApplied({ ...search })
@@ -231,6 +453,16 @@ function InfiniteGrid() {
     }).length
   , [applied])
 
+  const colDefs = useMemo(() => [
+    ...COL_DEFS,
+    {
+      headerName: '액션', width:80, flex:0, sortable:false, filter:false,
+      cellRenderer: ({ data }) => data
+        ? <GridActionButtons data={data} buttons={[{ type:'detail', onClick: openModal }]} />
+        : null,
+    },
+  ], [openModal])
+
   return (
     <div className="panel-container">
       <SearchForm search={search} setSearch={setSearch} onSearch={onSearch} onReset={onReset} totalCount={totalCount} isLoading={false} />
@@ -242,8 +474,17 @@ function InfiniteGrid() {
         </span>
       </div>
       <div style={{ flex:1, overflow:'hidden' }}>
-        <BasicGrid ref={gridRef} mode="infinite" datasource={datasource} colDefs={COL_DEFS} height="100%" cacheBlockSize={50} />
+        <BasicGrid ref={gridRef} mode="infinite" datasource={datasource} colDefs={colDefs} height="100%" cacheBlockSize={50} />
       </div>
+
+      {/* pk 기반 상세 모달 */}
+      <GridDetailModal
+        open={modalOpen}
+        title={modalRow ? `${modalRow.name} — 상세` : '상세 정보'}
+        onClose={closeModal}
+      >
+        <WorkDetailPane pk={modalRow ? { id: modalRow.id } : null} columns={2} />
+      </GridDetailModal>
     </div>
   )
 }
@@ -270,24 +511,24 @@ const makeSubData = (master) => master ? Array.from({ length: (master.id % 5) + 
 })) : []
 
 function MasterDetailGrid() {
-  const [selected,   setSelected]  = useState(null)
+  const [selected,   setSelected]   = useState(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [drawerData, setDrawerData] = useState(null)
+  const [drawerRow,  setDrawerRow]  = useState(null)   // { ...subRow, masterId }
 
   const masterData = useMemo(() => ALL_DATA, [])
   const detailData = useMemo(() => makeSubData(selected), [selected])
 
   const selectMaster = useCallback((row) => {
     setSelected(prev => {
-      if (prev?.id !== row.id) { setDrawerOpen(false); setDrawerData(null) }
+      if (prev?.id !== row.id) { setDrawerOpen(false); setDrawerRow(null) }
       return row
     })
   }, [])
 
   const openDrawer = useCallback((row) => {
-    if (drawerData?.id === row.id) { setDrawerOpen(o => !o) }
-    else { setDrawerData({ ...row, name: row.handler, status: row.result, priority: null }); setDrawerOpen(true) }
-  }, [drawerData])
+    if (drawerRow?.id === row.id) { setDrawerOpen(o => !o) }
+    else { setDrawerRow({ ...row, masterId: selected?.id }); setDrawerOpen(true) }
+  }, [drawerRow, selected])
   const closeDrawer = useCallback(() => setDrawerOpen(false), [])
 
   return (
@@ -338,7 +579,16 @@ function MasterDetailGrid() {
         </div>
 
       </div>
-      <GridDetailDrawer open={drawerOpen} data={drawerData} onClose={closeDrawer} defaultWidth={420} />
+
+      {/* 복합 pk 기반 처리 이력 상세 드로어 */}
+      <GridDetailDrawer
+        open={drawerOpen}
+        title={drawerRow ? `${drawerRow.handler} — 처리 이력` : '처리 이력 상세'}
+        onClose={closeDrawer}
+        defaultWidth={420}
+      >
+        <HistoryDetailPane pk={drawerRow ? { masterId: drawerRow.masterId, subId: drawerRow.id } : null} />
+      </GridDetailDrawer>
     </div>
   )
 }

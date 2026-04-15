@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
-import BasicGrid   from '@/components/grid/BasicGrid.jsx'
-import BasicLabel  from '@/components/label/BasicLabel.jsx'
-import BasicButton from '@/components/button/BasicButton.jsx'
+import React, { useState, useMemo, useCallback } from 'react'
+import BasicGrid            from '@/components/grid/BasicGrid.jsx'
+import BasicLabel           from '@/components/label/BasicLabel.jsx'
+import BasicButton          from '@/components/button/BasicButton.jsx'
+import GridActionButtons    from '@/components/grid/GridActionButtons.jsx'
+import GridDetailModal      from '@/components/grid/GridDetailModal.jsx'
+import WindPressureFeature  from '@/features/windPressure/WindPressureFeature.jsx'
 import { LoaderCircle } from 'lucide-react'
 
 const SAMPLE_DATA = Array.from({ length: 30 }, (_, i) => ({
@@ -51,8 +54,22 @@ function DemoBox({ label, children }) {
 }
 
 export default function BasicGridFeature() {
-  const [clicked,  setClicked]  = useState(null)
-  const [loading,  setLoading]  = useState(false)
+  const [clicked,   setClicked]   = useState(null)
+  const [loading,   setLoading]   = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalRow,  setModalRow]  = useState(null)
+
+  const openModal = useCallback((row) => { setModalRow(row); setModalOpen(true) }, [])
+
+  const INFINITE_COL_DEFS = useMemo(() => [
+    ...COL_DEFS,
+    {
+      headerName: '액션', width: 80, flex: 0, sortable: false, filter: false,
+      cellRenderer: ({ data }) => data
+        ? <GridActionButtons data={data} buttons={[{ type:'detail', onClick: openModal }]} />
+        : null,
+    },
+  ], [openModal])
 
   return (
     <div>
@@ -91,16 +108,24 @@ export default function BasicGridFeature() {
         </div>
       </DemoBox>
 
-      <DemoBox label="mode=&quot;infinite&quot; — 무한 스크롤 (datasource 필요)">
+      <DemoBox label="mode=&quot;infinite&quot; — 무한 스크롤 (datasource 필요) · 액션 버튼으로 상세 모달">
         <BasicGrid
           mode="infinite"
           datasource={INFINITE_DATASOURCE}
-          colDefs={COL_DEFS}
+          colDefs={INFINITE_COL_DEFS}
           onRowClick={setClicked}
           height="100%"
           cacheBlockSize={10}
         />
       </DemoBox>
+
+      <GridDetailModal
+        open={modalOpen}
+        title={modalRow ? `상세 정보 — ${modalRow.name} (${modalRow.category})` : '상세 정보'}
+        onClose={() => setModalOpen(false)}
+      >
+        <WindPressureFeature />
+      </GridDetailModal>
 
       <DemoBox label="mode=&quot;none&quot; — 페이징/스크롤 없음 (소량 데이터)">
         <BasicGrid
