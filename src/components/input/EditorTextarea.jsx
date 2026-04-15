@@ -10,8 +10,7 @@ import {
     toolbarPlugin,
     UndoRedo,
     BoldItalicUnderlineToggles,
-    BlockTypeSelect,
-    CreateLink
+    HighlightToggle,
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 
@@ -63,11 +62,9 @@ export default function EditorTextarea({label, placeholder = '', value, onChange
                                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                                     <UndoRedo />
                                     <div style={{ width: '1px', height: '20px', backgroundColor: '#ddd' }} />
-                                    <BlockTypeSelect /> {/* 제목, 본문 등 글자 크기 선택 */}
-                                    <div style={{ width: '1px', height: '20px', backgroundColor: '#ddd' }} />
                                     <BoldItalicUnderlineToggles /> {/* 굵게, 기울임 등 */}
                                     <div style={{ width: '1px', height: '20px', backgroundColor: '#ddd' }} />
-                                    <CreateLink />
+                                    <HighlightToggle />
                                 </div>
                             )
                         })
