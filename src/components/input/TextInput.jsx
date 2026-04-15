@@ -53,7 +53,7 @@ export default function TextInput({
             onFocus={() => setFocused(true)}
             onBlur={() => { setFocused(false); setTouched(true) }}
             placeholder={placeholder} disabled={disabled}
-            className={[styles.input, isError ? styles.error : '', Icon ? styles.hasIcon : ''].join(' ')}
+            className={[styles.input, isError ? styles.error : '', Icon ? styles.hasIcon : '', className ? className : ''].join(' ')}
             {...props}
           />
         </div>
