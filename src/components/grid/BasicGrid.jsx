@@ -9,18 +9,6 @@ import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-communi
 
 ModuleRegistry.registerModules([AllCommunityModule])
 
-/**
- * BasicGrid
- * @param {'paginate'|'infinite'|'none'} mode
- * @param {Array}    rowData
- * @param {Array}    colDefs
- * @param {function} onRowClick
- * @param {string}   height
- * @param {number}   pageSize
- * @param {object}   datasource   - infinite 모드 전용
- * @param {number}   cacheBlockSize
- * @param {...any}   props
- */
 const localeText = {
   pageSizeSelectorLabel: '페이지당 건수',
   ariaPageSizeSelectorLabel: '페이지당 건수',
@@ -33,6 +21,29 @@ const localeText = {
   nextPage: '다음 페이지',
   lastPage: '마지막 페이지',
 }
+/**
+ * AG Grid v33+ 래퍼 컴포넌트. paginate(페이징) / infinite(무한 스크롤) / none(기본)
+ * 세 가지 모드 지원. 테마는 Theming API(themeQuartz) 적용
+ *
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}                        props
+ * @param {'paginate'|'infinite'|'none'}  [props.mode='paginate']     그리드 모드
+ * @param {Array}                         [props.rowData=[]]          행 데이터
+ * @param {Array}                         [props.colDefs=[]]          컬럼 정의
+ * @param {function}                      [props.onRowClick]          행 클릭 핸들러
+ * @param {function}                      [props.onRowDoubleClick]    행 더블클릭 핸들러
+ * @param {string}                        [props.height='100%']       그리드 높이
+ * @param {number}                        [props.pageSize=20]         페이지당 행 수 (paginate 모드)
+ * @param {object}                        [props.datasource]          무한 스크롤 데이터소스 (infinite 모드)
+ * @param {number}                        [props.cacheBlockSize=50]   캐시 블록 크기 (infinite 모드)
+ * @param {boolean}                       [props.loading=false]       로딩 상태
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
+ */
 const BasicGrid = forwardRef(function BasicGrid({
   mode           = 'paginate',
   rowData        = [],

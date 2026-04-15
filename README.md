@@ -25,6 +25,7 @@
 16. [탭 레이아웃 자동 저장/복원](#16-탭-레이아웃-자동-저장복원)
 17. [뒤로가기 / 백스페이스 방지](#17-뒤로가기--백스페이스-방지)
 18. [금지 사항](#18-금지-사항-dont)
+19. [JSDoc 작성 규칙](#19-jsdoc-작성-규칙)
 - [부록. 아이콘 사용법](#부록-아이콘-사용법-lucide-react)
 
 ---
@@ -1613,6 +1614,105 @@ toast.success('저장 완료')            // ✅ 토스트 알림
 
 ```js
 console.log('디버그:', data)  // ❌ PR 전 반드시 제거
+```
+
+---
+
+## 19. JSDoc 작성 규칙
+
+JSDoc은 **파일 상단이 아닌 함수(컴포넌트) 바로 위**에 작성합니다.
+
+### 기본 구조
+
+```js
+import React from 'react'
+import styles from '../styles/BasicButton.module.css'
+
+/**
+ * 한 줄 설명 — 컴포넌트 역할과 주요 기능을 간결하게 작성
+ *
+ * @author 작성자
+ * @since YYYY-MM-DD
+ * @param {Object}    props
+ * @param {string}    props.label               버튼 텍스트
+ * @param {string}    [props.variant='primary']  색상 테마 — primary | secondary | danger
+ * @param {Component} [props.icon]              lucide-react 아이콘
+ * @param {boolean}   [props.disabled=false]    비활성 여부
+ * @param {function}  [props.onClick]           클릭 핸들러
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
+ * | 2026-04-15 | JDJ    | 최초 작성 |
+ * | 2026-05-20 | JDJ    | excel variant 추가 |
+ */
+export default function BasicButton({ label, variant = 'primary', icon, disabled, onClick }) {
+```
+
+### 태그 설명
+
+| 태그 | 필수 | 설명 |
+|------|------|------|
+| 설명 (첫 줄) | ✅ | 컴포넌트 역할 한 줄 요약 — `@description` 태그 없이 직접 작성 |
+| `@author` | ✅ | 최초 작성자 |
+| `@since` | ✅ | 최초 작성일 (YYYY-MM-DD) |
+| `@param` | ✅ | props 타입 및 설명 — `{타입}` `[선택=기본값]` 형식 |
+| `@returns` | ✅ | 반환 타입 (컴포넌트는 `{JSX.Element}`) |
+| `@history` | ✅ | 수정 이력 테이블 — 수정 시마다 행 추가 |
+| `@example` | 권장 | 사용 예시가 복잡한 경우 추가 |
+
+### @param 작성 규칙
+
+```js
+// 필수 props — 대괄호 없음
+ * @param {string}   props.label
+
+// 선택 props — 대괄호로 감싸고 기본값 명시
+ * @param {string}   [props.variant='primary']
+ * @param {boolean}  [props.disabled=false]
+
+// 타입 정렬 — 세로로 맞춰서 가독성 확보
+ * @param {Object}    props
+ * @param {string}    [props.label]
+ * @param {boolean}   [props.disabled=false]
+ * @param {function}  [props.onClick]
+ * @param {Component} [props.icon]
+```
+
+### 수정 이력 작성 규칙
+
+- 수정할 때마다 `@history` 테이블에 **날짜 · 수정자 · 내용** 한 줄 추가
+- 내용은 간결하게 — 무엇을 왜 바꿨는지 핵심만
+- 최초 작성 시에는 빈 테이블로 남겨두어도 됨
+
+```js
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
+ * | 2026-04-15 | JDJ    | 최초 작성 |
+ * | 2026-05-20 | JDJ    | excel variant 추가 |
+```
+
+### ❌ 하지 말 것
+
+```js
+// 파일 상단에 @fileoverview 방식으로 작성 금지 — 함수 위에 달 것
+/**
+ * @fileoverview BasicButton 컴포넌트
+ * @description 버튼입니다
+ */
+import React from 'react'   // ← 이렇게 하지 말 것
+
+// @author, @since, @history 누락 금지
+/**
+ * 버튼입니다
+ */
+export default function BasicButton() {
+
+// 단순 한 줄 주석으로 대체 금지
+// BasicButton.jsx — 버튼 컴포넌트
+export default function BasicButton() {
 ```
 
 ---

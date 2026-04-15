@@ -12,11 +12,21 @@ const DOMAINS = [
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
 /**
- * EmailInput
- * - 너비는 부모 컨테이너가 결정 (width: 100% 고정)
- * @param {string}   value
- * @param {function} onChange  - (emailString) => void  (e.target.value 아닌 문자열 직접 전달)
- * @param {string}   errorMessage
+ * 이메일 입력 컴포넌트. 아이디 + 도메인 분리 입력 방식으로 직접 입력 또는
+ * 주요 도메인 선택 지원. onChange 는 완성된 이메일 문자열을 직접 전달
+ *
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}   props
+ * @param {string}   [props.label]                         라벨 텍스트
+ * @param {string}   [props.value='']                      이메일 값
+ * @param {function} [props.onChange]                      변경 핸들러 — (emailString) => void
+ * @param {string}   [props.errorMessage]                  에러 메시지
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
  */
 export default function EmailInput({
   label,

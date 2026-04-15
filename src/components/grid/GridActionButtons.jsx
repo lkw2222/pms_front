@@ -1,36 +1,6 @@
 import React from 'react'
 import { Eye, Pencil, Trash2, Download, Copy, Plus, Check, X, Play } from 'lucide-react'
 
-/**
- * GridActionButtons
- * 그리드 로우에서 사용하는 액션 버튼 모음
- *
- * @param {object} data    - 현재 로우 데이터
- * @param {Array}  buttons - 버튼 설정 배열
- *
- * buttons 설정 예시:
- * [
- *   { type: 'detail'   },
- *   { type: 'edit'     },
- *   { type: 'delete'   },
- *   { type: 'download' },
- *   { type: 'copy'     },
- *   { type: 'add'      },
- *   { type: 'confirm'  },
- *   { type: 'cancel'   },
- *   { type: 'custom', label:'라벨', icon:IconComponent, variant:'ghost' },
- * ]
- *
- * 공통 옵션 (모든 type에서 사용 가능):
- *   onClick:  (data) => {}          클릭 핸들러
- *   label:    string                버튼 텍스트 (type 기본값 사용 가능)
- *   icon:     LucideIcon            아이콘 (type 기본값 사용 가능)
- *   variant:  string                스타일 (type 기본값 사용 가능)
- *   disabled: bool | (data) => bool
- *   hidden:   bool | (data) => bool
- *   title:    string                툴팁
- */
-
 const TYPE_PRESET = {
   detail:   { label:'상세', icon:Eye,      variant:'ghost'     },
   edit:     { label:'수정', icon:Pencil,   variant:'ghost'     },
@@ -109,6 +79,28 @@ const VARIANT_HOVER = {
   },
 }
 
+/**
+ * 그리드 로우에서 사용하는 액션 버튼 모음. type 프리셋(detail·edit·delete 등)과
+ * custom 버튼을 배열로 조합해 렌더링
+ *
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object} props
+ * @param {object} props.data      현재 로우 데이터
+ * @param {Array}  [props.buttons] 버튼 설정 배열
+ * @param {string}         props.buttons[].type      프리셋 타입 — detail | edit | delete | download | copy | add | confirm | cancel | run | custom
+ * @param {string}         [props.buttons[].label]   버튼 텍스트 (type 기본값 사용 가능)
+ * @param {Component}      [props.buttons[].icon]    아이콘 (type 기본값 사용 가능)
+ * @param {string}         [props.buttons[].variant] 스타일 (type 기본값 사용 가능)
+ * @param {function|boolean} [props.buttons[].disabled] 비활성 여부 또는 (data) => boolean
+ * @param {function|boolean} [props.buttons[].hidden]   숨김 여부 또는 (data) => boolean
+ * @param {function}       [props.buttons[].onClick]  클릭 핸들러 — (data) => void
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
+ */
 export default function GridActionButtons({ data, buttons = [] }) {
   return (
     <div style={{ display:'flex', alignItems:'center', gap:3, height:'100%' }}>

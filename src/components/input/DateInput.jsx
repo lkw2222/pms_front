@@ -5,9 +5,23 @@ import { Korean } from 'flatpickr/dist/l10n/ko.js'
 import { Calendar } from 'lucide-react'
 
 /**
- * DateInput
- * - 너비는 부모 컨테이너가 결정 (width: 100% 고정)
- * - options 으로 flatpickr 옵션 확장 (mode, minDate 등 특수 케이스만)
+ * 날짜 선택 입력 컴포넌트 (flatpickr 기반). 한국어 로케일 적용.
+ * options 으로 flatpickr 옵션 확장(mode, minDate 등) 가능
+ *
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}   props
+ * @param {string}   [props.label]                     라벨 텍스트
+ * @param {string}   [props.value]                     날짜 값
+ * @param {function} [props.onChange]                  변경 핸들러 — (dateStr, dates) => void
+ * @param {string}   [props.placeholder='날짜를 선택하세요'] 플레이스홀더
+ * @param {object}   [props.options={}]                flatpickr 추가 옵션
+ * @param {boolean}  [props.disabled=false]            비활성 여부
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
  */
 export default function DateInput({
   label, value, onChange,

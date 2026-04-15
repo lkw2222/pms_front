@@ -67,15 +67,24 @@ function EmptyState({ message = '데이터가 없습니다.' }) {
 
 // ── QueryState ────────────────────────────────────────────────────────────────
 /**
- * useQuery 결과에 따라 로딩/에러/빈 상태를 공통 UI로 처리합니다.
+ * API 요청 상태(로딩 / 에러 / 빈 데이터)를 공통으로 표시하는 피드백 컴포넌트.
+ * useQuery 결과에 따라 로딩/에러/정상 상태를 공통 UI로 처리
  *
- * @param {boolean}   isLoading  - 로딩 중 여부
- * @param {boolean}   isError    - 에러 여부
- * @param {Error}     error      - 에러 객체
- * @param {Function}  onRetry    - 다시 시도 핸들러 (optional)
- * @param {string}    loadingMsg - 로딩 메시지 (optional)
- * @param {string}    errorMsg   - 에러 메시지 (optional)
- * @param {ReactNode} children   - 정상 상태일 때 렌더링할 내용
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}    props
+ * @param {boolean}   [props.isLoading]    로딩 중 여부
+ * @param {boolean}   [props.isError]      에러 여부
+ * @param {Error}     [props.error]        에러 객체
+ * @param {Function}  [props.onRetry]      다시 시도 핸들러
+ * @param {string}    [props.loadingMsg]   로딩 메시지
+ * @param {string}    [props.errorMsg]     에러 메시지
+ * @param {ReactNode} [props.children]     정상 상태일 때 렌더링할 내용
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
  */
 export default function QueryState({ isLoading, isError, error, onRetry, loadingMsg, errorMsg, style, children }) {
   if (isLoading) return <div style={{ flex:1, ...style }}><LoadingState message={loadingMsg} /></div>

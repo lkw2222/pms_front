@@ -10,12 +10,20 @@ const formatSize = (bytes) => {
 }
 
 /**
- * FileInput
- * @param {string}   label
- * @param {function} onChange   - (File[]) => void
- * @param {string}   accept     - 허용 확장자 (예: ".pdf,.doc,image/*")
- * @param {boolean}  multiple   - 다중 선택 여부
- * @param {...any}   props      - input 엘리먼트에 전달되는 나머지 props
+ * 파일 첨부 입력 컴포넌트. 드래그 앤 드롭 · 다중 파일 선택 · 파일 크기 표시 지원
+ *
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}   props
+ * @param {string}   [props.label]          라벨 텍스트
+ * @param {function} [props.onChange]       변경 핸들러 — (File[]) => void
+ * @param {string}   [props.accept]        허용 확장자 (예: ".pdf,.doc,image/*")
+ * @param {boolean}  [props.multiple=true]  다중 선택 여부
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
  */
 export default function FileInput({
   label,
