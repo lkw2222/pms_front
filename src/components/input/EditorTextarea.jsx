@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styles from "../styles/TextInput.module.css";
 import {
     MDXEditor,
@@ -16,14 +16,9 @@ import '@mdxeditor/editor/style.css';
 
 export default function EditorTextarea({label, placeholder = '', value, onChange, isNotNull = false
                          , errorMessage, disabled = false, height = "200px", icon: Icon
-                         , className = '', regex, ...props}) {
-    const [touched, setTouched] = useState(false);
-    const [focused, setFocused] = useState(false);
+                         , className = '', regex}) {
 
-    const isError = touched && (
-        (isNotNull && !value) ||
-        (regex && value && !regex.test(value))
-    )
+    const isError = (isNotNull && !value) || (regex && value && !regex.test(value));
 
     return (
         <div className={[styles.wrapper, className].join(' ')}>
