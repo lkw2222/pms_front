@@ -68,23 +68,25 @@ npm run build
 
 ## 2. 기술 스택
 
-| 분류 | 라이브러리 | 버전 | 용도 |
-|---|---|---|---|
-| UI 프레임워크 | React | 19 | 컴포넌트 기반 UI |
-| MDI 레이아웃 | dockview-react | 5 | 탭/패널 드래그 레이아웃 |
-| 서버 상태 관리 | TanStack Query | 5 | API 데이터, 캐싱, 로딩 상태 |
-| 클라이언트 상태 | Zustand | 5 | 전역 UI 상태 (테마, 인증 등) |
-| 폼 상태 관리 | React Hook Form | 7 | 폼 입력, 유효성 검사 |
-| 스타일 | Tailwind CSS | 4 | 유틸리티 클래스 |
-| 아이콘 | lucide-react | - | 아이콘 (SVG 기반) |
-| 그리드 | AG-Grid | 35 | 데이터 테이블 |
-| 차트 | Apache ECharts | 5 | 대시보드 차트 (게이지, 혼합 차트, 히트맵 등) |
-| 차트 | Nivo | 0.99 | 대시보드 차트 (도넛, 라인, 레이더 등) |
-| 지도 | OpenLayers | 10 | GIS 지도 |
-| HTTP | Axios | 1 | API 통신 |
-| 날짜 | Flatpickr | 4 | 날짜 선택기 |
-| 토스트 | Sonner | 2 | 토스트 알림 |
-| 빌드 | Vite | 7 | 개발 서버 / 번들러 |
+| 분류       | 라이브러리           | 버전 | 용도                          |
+|----------|-----------------|---|-----------------------------|
+| UI 프레임워크 | React           | 19 | 컴포넌트 기반 UI                  |
+| MDI 레이아웃 | dockview-react  | 5 | 탭/패널 드래그 레이아웃               |
+| 서버 상태 관리 | TanStack Query  | 5 | API 데이터, 캐싱, 로딩 상태          |
+| 클라이언트 상태 | Zustand         | 5 | 전역 UI 상태 (테마, 인증 등)         |
+| 폼 상태 관리  | React Hook Form | 7 | 폼 입력, 유효성 검사                |
+| 스타일      | Tailwind CSS    | 4 | 유틸리티 클래스                    |
+| 아이콘      | lucide-react    | - | 아이콘 (SVG 기반)                |
+| 그리드      | AG-Grid         | 35 | 데이터 테이블                     |
+| 차트       | Apache ECharts  | 5 | 대시보드 차트 (게이지, 혼합 차트, 히트맵 등) |
+| 차트       | Nivo            | 0.99 | 대시보드 차트 (도넛, 라인, 레이더 등)     |
+| 지도       | OpenLayers      | 10 | GIS 지도                      |
+| HTTP     | Axios           | 1 | API 통신                      |
+| 날짜       | Flatpickr       | 4 | 날짜 선택기                      |
+| 토스트      | Sonner          | 2 | 토스트 알림                      |
+| 에디터      | MDXEditor       | 3.54.0 | 텍스트 입력 에디터                  |
+| 웹소켓      | stompjs         | 7.3.0 | 클라이언트 웹소켓 라이브러리             |
+| 빌드       | Vite            | 7 | 개발 서버 / 번들러                 |
 
 ---
 
@@ -190,8 +192,16 @@ src/
 │   ├── index.css            # CSS 변수(테마), 전역 리셋
 │   ├── layout.module.css    # 앱 레이아웃 CSS Module
 │   └── dockview.css         # Dockview 테마 오버라이드
-├── App.jsx                  # 레이아웃 (탑바 + 사이드바 + Dockview)
-└── main.jsx                 # React 진입점 + QueryClientProvider
+├── layout              # App.jsx 에 랜더링 될 레이아웃
+│   ├── login               # 로그인
+│   ├────── LoginLayout.jsx     # 로그인 레이아웃 
+│   └── app                 # App
+│       ├── AppLayout.jsx       # App 레이아웃 (탑 + 왼쪽메뉴 + 탭(Dockview))
+│       ├── ContentArea.jsx     # 탭(Dockview) 영역
+│       ├── LeftArea.jsx        # 왼쪽메뉴 영역
+│       └── TopArea.jsx         # 탑 영역
+├── App.jsx     # 레이아웃 랜더링 
+└── main.jsx    # React 진입점 + QueryClientProvider
 ```
 
 ### 네이밍 규칙
