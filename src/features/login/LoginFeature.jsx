@@ -2,7 +2,7 @@ import React, {useId} from 'react'
 import { useForm } from 'react-hook-form'
 import TextInput   from '@/components/input/TextInput.jsx'
 import BasicButton from '@/components/button/BasicButton.jsx'
-
+import { User, Lock, LogIn } from 'lucide-react'
 import '@/assets/styles/login.css';
 
 /**
@@ -11,7 +11,7 @@ import '@/assets/styles/login.css';
  * register() 반환값 = { name, ref, onChange, onBlur }
  * → TextInput 의 ...props 로 그대로 전달되어 자동 연결
  */
-export default function LoginFeature({ onLogin }) {
+export default function LoginFeature({ onLogin, className='btn-login' }) {
     const {
         register,
         handleSubmit,
@@ -73,12 +73,14 @@ export default function LoginFeature({ onLogin }) {
                   {errors.password && <span style={{ fontSize:11, color:'var(--color-danger)', marginTop:-8 }}>{errors.password.message}</span>}
               </div>
 
-              <div className="form-row">
-                  <label className="checkbox" htmlFor="saveId">
-                      <input id="saveId" type="checkbox" name="saveId" />
-                      <span>아이디 저장</span>
-                  </label>
-              </div>
+              <BasicButton
+                  label={isSubmitting ? '로그인 중...' : '로그인'}
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  disabled={isSubmitting}
+                  className={className}
+              />
 
               <nav className="brand-links" aria-label="로그인 관련 바로가기">
                   <div className="brand-links-group">
@@ -88,15 +90,6 @@ export default function LoginFeature({ onLogin }) {
                   </div>
                   <a href="#">회원가입</a>
               </nav>
-
-              <BasicButton
-                  label={isSubmitting ? '로그인 중...' : '로그인'}
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  disabled={isSubmitting}
-                  className="btn-login"
-              />
 
           </form>
         </>

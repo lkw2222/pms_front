@@ -50,8 +50,8 @@ export default function LoginWidget() {
       animation:      'fadeIn 0.2s ease',
     }}>
       <div style={{
-        width:        360,
-        padding:      '32px',
+        width:        380,
+        padding:      '40px',
         borderRadius: 'var(--radius-lg)',
         background:   'var(--color-bg-secondary)',
         border:       '1px solid var(--color-border)',
@@ -69,17 +69,20 @@ export default function LoginWidget() {
             <ShieldAlert size={20} style={{ color:'var(--color-warning)' }} />
           </div>
           <div style={{ textAlign:'center' }}>
-            <div style={{ fontSize:15, fontWeight:700, color:'var(--color-text-primary)', marginBottom:4 }}>
+            <div style={{ fontSize:18, fontWeight:700, color:'var(--color-text-primary)', marginBottom:4 }}>
               세션이 만료되었습니다
             </div>
-            <div style={{ fontSize:12, color:'var(--color-text-muted)', lineHeight:1.5 }}>
+            <div style={{ fontSize:15, color:'var(--color-text-muted)', lineHeight:1.5 }}>
               보안을 위해 자동 로그아웃되었습니다.<br />다시 로그인하면 작업을 계속할 수 있습니다.
             </div>
           </div>
         </div>
 
         {/* 로그인 폼 — 기존 LoginFeature 재사용 */}
-        <LoginFeature onLogin={(id, password) => loginMutation.mutate({ id, password })} />
+        <LoginFeature
+            className={'w-full !mt-4'}
+            onLogin={(id, password) => loginMutation.mutate({ id, password })}
+        />
       </div>
     </div>
   )
