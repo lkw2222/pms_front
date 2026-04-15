@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { AlertTriangle, Info, CheckCircle, Trash2, X } from 'lucide-react'
 
+
 // variant 별 아이콘 & 색상
 const VARIANT = {
   danger:  { icon: Trash2,         color: 'var(--color-danger)',  confirmLabel: '삭제' },

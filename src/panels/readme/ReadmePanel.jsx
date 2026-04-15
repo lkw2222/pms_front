@@ -78,16 +78,21 @@ function extractToc(md) {
 }
 
 export default function ReadmePanel() {
-  const [active, setActive] = useState(null)
+  const [active,     setActive]     = useState(null)
+  const contentRef = React.useRef(null)
   const html = parseMarkdown(readmeContent)
   const toc  = extractToc(readmeContent)
 
   const scrollTo = (title) => {
     setActive(title)
-    const headers = document.querySelectorAll('.readme-content h2')
+    const container = contentRef.current
+    if (!container) return
+    const headers = container.querySelectorAll('h2')
     for (const h of headers) {
       if (h.textContent.trim() === title) {
-        h.scrollIntoView({ behavior:'smooth', block:'start' })
+        // scrollIntoView 대신 직접 계산 — 상단 여백 24px 확보
+        const top = h.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop - 24
+        container.scrollTo({ top, behavior: 'smooth' })
         break
       }
     }
@@ -120,7 +125,7 @@ export default function ReadmePanel() {
       </div>
 
       {/* 우측 본문 */}
-      <div className="readme-content"
+      <div ref={contentRef} className="readme-content"
         style={{ flex:1, overflowY:'auto', padding:'32px 40px' }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
