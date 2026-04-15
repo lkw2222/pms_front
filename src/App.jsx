@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { toast } from 'sonner'
 import AppLayout from "./layout/app/AppLayout.jsx";
+import LoginLayout from "./layout/login/LoginLayout";
 
 // ── App ────────────────────────────────────────────────────────────────────────
 export default function App() {
@@ -34,9 +35,12 @@ export default function App() {
   }, []);
 
   return (
-      // 세션이이 있는 경우 App 레이아웃
-      <AppLayout />
+      <>
+        {/*세션이이 있는 경우 App 레이아웃*/}
+        <AppLayout />
 
-      //세션이 없는 경우 로그인 레이아웃
+        {/*세션이 없는 경우 로그인 레이아웃*/}
+        {/*<LoginLayout />*/}
+      </>
   )
 }

@@ -132,8 +132,8 @@ src/
 │
 ├── widgets/                 # 독립 UI 모듈 — 자체 데이터·상태 보유, 특정 위치에 고정
 │   ├── auth/
-│   │   ├── ProfileDropdown.jsx        # 우상단 프로필 / 로그아웃
-│   │   └── SessionExpiredOverlay.jsx  # 세션 만료 블러 오버레이
+│   │   ├── ProfileWidget.jsx        # 우상단 프로필 / 로그아웃
+│   │   └── LoginWidget.jsx  # 세션 만료 블러 오버레이
 │   ├── job/
 │   │   └── JobProgressWidget.jsx      # 탑바 작업 현황 드롭다운
 │   └── notification/
@@ -1430,7 +1430,7 @@ API 응답이 `401 Unauthorized`이면 로그인 오버레이를 자동으로 �
 ```
 API 401 응답
   → useAppStore.getState().setSessionExpired(true)
-  → SessionExpiredOverlay 표시 (기존 탭 위에 블러 오버레이)
+  → LoginWidget 표시 (기존 탭 위에 블러 오버레이)
   → 로그인 성공 → setSessionExpired(false) → 오버레이 닫힘
 ```
 
@@ -1455,11 +1455,11 @@ apiClient.interceptors.response.use(
 
 ### 관련 파일
 
-| 파일 | 역할 |
-|------|------|
-| `src/components/auth/SessionExpiredOverlay.jsx` | 오버레이 UI 컴포넌트 |
-| `src/store/useAppStore.js` | `sessionExpired`, `setSessionExpired` 상태 |
-| `src/App.jsx` | 루트에 `<SessionExpiredOverlay />` 배치 |
+| 파일                                    | 역할                                       |
+|---------------------------------------|------------------------------------------|
+| `src/components/auth/LoginWidget.jsx` | 로그인 Widget UI 컴포넌트                       |
+| `src/store/useAppStore.js`            | `sessionExpired`, `setSessionExpired` 상태 |
+| `src/App.jsx`                         | 루트에 `<LoginWidget />` 배치       |
 
 ---
 

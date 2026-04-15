@@ -11,7 +11,7 @@ import {
     LayoutDashboard, LogIn, Map, MonitorCog, Settings
 } from "lucide-react";
 
-import styles from '@/styles/layout.module.css'
+import styles from '@/assets/styles/layout.module.css'
 
 // ── 사이드바 메뉴 ──────────────────────────────────────────────────────────────
 const MENU_GROUPS = [

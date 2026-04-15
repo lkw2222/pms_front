@@ -4,11 +4,11 @@ import { useAppStore } from '@/store/useAppStore.js'
 
 import NotificationWidget from '@/widgets/notification/NotificationWidget.jsx'
 import JobProgressWidget from '@/widgets/job/JobProgressWidget.jsx'
-import ProfileDropdown from '@/widgets/auth/ProfileDropdown.jsx'
+import ProfileWidget from '@/widgets/auth/ProfileWidget.jsx'
 
-import styles from '@/styles/layout.module.css'
-import logoImg from '@/styles/logo.png'
-import logoDarkImg from '@/styles/logo-dark.png'
+import styles from '@/assets/styles/layout.module.css'
+import logoImg from '@/assets/image/logo.png'
+import logoDarkImg from '@/assets/image/logo-dark.png'
 
 export default function TopArea({apiRef}) {
     const { theme, toggleTheme, toggleSidebar, openPanels } = useAppStore();
@@ -60,7 +60,7 @@ export default function TopArea({apiRef}) {
                 </button>
                 <JobProgressWidget  open={jobOpen}  onClose={() => setJobOpen(false)}  />
                 <NotificationWidget open={notiOpen} onClose={() => setNotiOpen(false)} />
-                <ProfileDropdown />
+                <ProfileWidget />
             </div>
         </header>
     )

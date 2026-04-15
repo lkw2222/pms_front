@@ -5,8 +5,8 @@ import LeftArea from "@/layout/app/LeftArea.jsx";
 import { Toaster } from 'sonner'
 import { useAppStore } from '@/store/useAppStore.js'
 
-import SessionExpiredOverlay  from '@/widgets/auth/SessionExpiredOverlay.jsx'
-import styles from '@/styles/layout.module.css'
+import LoginWidget  from '@/widgets/auth/LoginWidget.jsx'
+import styles from '@/assets/styles/layout.module.css'
 
 import DashboardPanel from '@/panels/dashboard/DashboardPanel.jsx';
 import LoginPanel     from '@/panels/login/LoginPanel.jsx';
@@ -76,7 +76,7 @@ export default function AppLayout() {
                 closeButton
                 duration={3000}
             />
-            <SessionExpiredOverlay />
+            <LoginWidget />
             <div className={styles.appRoot}>
 
                 {/* ── 탑바 ── */}

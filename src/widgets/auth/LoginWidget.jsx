@@ -7,34 +7,34 @@ import { loginApi }  from '@/services/login/loginService.js'
 import { useAppStore } from '@/store/useAppStore.js'
 
 /**
- * SessionExpiredOverlay
+ * LoginWidget
  *
  * 세션 만료 시 전체 화면 위에 블러 오버레이로 로그인 폼을 표시합니다.
  * 로그인 성공 시 오버레이가 사라지고 기존 탭/작업 상태가 그대로 유지됩니다.
  *
  * 사용법:
  *   // App.jsx 최상단에 배치
- *   <SessionExpiredOverlay />
+ *   <LoginWidget />
  *
  *   // API 401 응답 시 (axios interceptor 등)
  *   useAppStore.getState().setSessionExpired(true)
  */
-export default function SessionExpiredOverlay() {
-  const { sessionExpired, setSessionExpired, setAuth } = useAppStore()
+export default function LoginWidget() {
+    const { sessionExpired, setSessionExpired, setAuth } = useAppStore();
 
-  const loginMutation = useMutation({
-    mutationFn: ({ id, password }) => loginApi.login(id, password),
-    onSuccess: (result) => {
-      setAuth(result.user, result.token)
-      setSessionExpired(false)
-      toast.success('로그인되었습니다. 작업을 계속하세요.')
-    },
-    onError: (error) => {
-      toast.error(error.message || '로그인에 실패했습니다.')
-    },
-  })
+    const loginMutation = useMutation({
+        mutationFn: ({ id, password }) => loginApi.login(id, password),
+        onSuccess: (result) => {
+            setAuth(result.user, result.token)
+            setSessionExpired(false)
+            toast.success('로그인되었습니다. 작업을 계속하세요.')
+        },
+        onError: (error) => {
+            toast.error(error.message || '로그인에 실패했습니다.')
+        },
+    })
 
-  if (!sessionExpired) return null
+    if (!sessionExpired) return null;
 
   return (
     <div style={{
@@ -50,7 +50,7 @@ export default function SessionExpiredOverlay() {
       animation:      'fadeIn 0.2s ease',
     }}>
       <div style={{
-        width:        320,
+        width:        360,
         padding:      '32px',
         borderRadius: 'var(--radius-lg)',
         background:   'var(--color-bg-secondary)',

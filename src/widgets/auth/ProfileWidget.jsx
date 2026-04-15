@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { LogOut, User } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore.js'
 
-export default function ProfileDropdown() {
+export default function ProfileWidget() {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
 

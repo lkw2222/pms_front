@@ -5,8 +5,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import App from './App.jsx'
 import { queryClient } from './lib/queryClient.js'
 import { useAppStore } from './store/useAppStore.js'
-import './styles/index.css'
-import './styles/dockview.css'
+import './assets/styles/index.css'
+import './assets/styles/dockview.css'
 
 // 앱 시작 시 저장된 테마 즉시 적용 (깜빡임 방지)
 const savedTheme = useAppStore.getState().theme
