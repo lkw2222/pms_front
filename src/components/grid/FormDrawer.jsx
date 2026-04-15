@@ -5,15 +5,22 @@ const MIN_WIDTH = 400
 const MAX_WIDTH = 900
 
 /**
- * FormDrawer
- * 등록 / 수정 전용 우측 고정형 드로어 (드래그 리사이즈 지원)
+ * 등록 / 수정 전용 우측 고정형 드로어. 드래그 리사이즈(400~900px) 지원
  *
- * @param {boolean}   open         - 열림 여부
- * @param {string}    title        - 헤더 제목
- * @param {function}  onClose      - 닫기 핸들러
- * @param {ReactNode} footer       - 하단 버튼 영역 (저장/취소 등)
- * @param {ReactNode} children     - 폼 내용
- * @param {number}    defaultWidth - 초기 너비 (기본 600px)
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}    props
+ * @param {boolean}   props.open                   열림 여부
+ * @param {string}    [props.title]                헤더 제목
+ * @param {function}  [props.onClose]              닫기 핸들러
+ * @param {ReactNode} [props.footer]               하단 버튼 영역 (저장/취소 등)
+ * @param {ReactNode} [props.children]             폼 내용
+ * @param {number}    [props.defaultWidth=600]     초기 너비 (px)
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
  */
 export default function FormDrawer({ open, title, onClose, footer, children, defaultWidth = 600 }) {
   const [width, setWidth] = useState(defaultWidth)

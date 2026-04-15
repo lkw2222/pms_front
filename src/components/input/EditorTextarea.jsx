@@ -14,6 +14,29 @@ import {
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 
+/**
+ * MDXEditor 기반 마크다운 에디터 컴포넌트. 툴바(실행 취소/되돌리기, 굵게/기울임/밑줄, 하이라이트)와
+ * 최소 높이 지정을 지원하며 react-hook-form 과 함께 사용 가능
+ *
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}    props
+ * @param {string}    [props.label]              라벨 텍스트
+ * @param {string}    [props.placeholder='']     플레이스홀더
+ * @param {string}    [props.value]              마크다운 입력값
+ * @param {function}  [props.onChange]           변경 핸들러
+ * @param {boolean}   [props.isNotNull=false]    필수 입력 여부
+ * @param {RegExp}    [props.regex]              유효성 검사 정규식
+ * @param {string}    [props.errorMessage]       에러 메시지
+ * @param {boolean}   [props.disabled=false]     비활성 여부
+ * @param {string}    [props.height='200px']     에디터 최소 높이
+ * @param {Component} [props.icon]               lucide-react 아이콘
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
+ */
 export default function EditorTextarea({label, placeholder = '', value, onChange, isNotNull = false
                          , errorMessage, disabled = false, height = "200px", icon: Icon
                          , className = '', regex}) {

@@ -34,7 +34,7 @@ export default function TextInputFeature() {
       />
 
         <EditorTextarea label="에디터 텍스트 영역" placeholder="내용을 입력해주세요." />
-        <Textarea label="일반 에디터 텍스트 영역" placeholder="내용을 입력해주세요." rows={5} />
+        <Textarea label="일반 에디터 텍스트 영역" placeholder="내용을 입력해주세요." rows={11} />
     </div>
   )
 }

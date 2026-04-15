@@ -11,17 +11,26 @@ const VARIANT = {
 }
 
 /**
- * ConfirmModal
- * 사용자 확인이 필요한 작업에 사용하는 모달
+ * 사용자 확인이 필요한 작업에 사용하는 공통 확인 모달.
+ * danger / warning / info / success 네 가지 variant 지원.
+ * ESC 키 및 백드롭 클릭으로 취소 가능
  *
- * @param {boolean}  open           - 모달 열림 여부
- * @param {string}   title          - 제목
- * @param {string}   message        - 본문 메시지
- * @param {string}   variant        - 'danger' | 'warning' | 'info' | 'success'
- * @param {string}   confirmText    - 확인 버튼 텍스트 (기본값은 variant에 따라 결정)
- * @param {string}   cancelText     - 취소 버튼 텍스트 (기본: '취소')
- * @param {function} onConfirm      - 확인 클릭 핸들러
- * @param {function} onCancel       - 취소 / 닫기 핸들러
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}   props
+ * @param {boolean}  props.open                       모달 열림 여부
+ * @param {string}   [props.title]                    제목
+ * @param {string}   [props.message]                  본문 메시지
+ * @param {string}   [props.variant='danger']         색상 테마 — danger | warning | info | success
+ * @param {string}   [props.confirmText]              확인 버튼 텍스트 (기본값은 variant에 따라 결정)
+ * @param {string}   [props.cancelText='취소']         취소 버튼 텍스트
+ * @param {function} [props.onConfirm]                확인 클릭 핸들러
+ * @param {function} [props.onCancel]                 취소 / 닫기 핸들러
+ * @returns {JSX.Element|null}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
  */
 export default function ConfirmModal({
   open,

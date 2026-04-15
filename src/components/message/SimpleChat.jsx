@@ -2,6 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
+/**
+ * WebSocket(STOMP / SockJS) 기반 실시간 채팅 컴포넌트.
+ * Spring Boot 서버와 연동하며 연결 상태 · 메시지 송수신 관리
+ *
+ * @author JDJ
+ * @since 2026-04-15
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
+ */
 const SimpleChat = () => {
     const [messages, setMessages] = useState([]); // 받은 메시지 목록
     const [inputValue, setInputValue] = useState(''); // 입력창 상태

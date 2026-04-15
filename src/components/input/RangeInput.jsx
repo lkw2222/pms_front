@@ -1,17 +1,24 @@
 import React from 'react'
 
 /**
- * RangeInput
- * - 트랙 위에 채워지는 게이지 (min~value 구간 색상 표시)
- * @param {string}   label
- * @param {number}   value
- * @param {function} onChange
- * @param {number}   min
- * @param {number}   max
- * @param {number}   step
- * @param {boolean}  showValue
- * @param {boolean}  disabled
- * @param {...any}   props
+ * 범위 슬라이더 입력 컴포넌트. 트랙 위에 채워지는 게이지(min~value 구간 색상 표시) 지원
+ *
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}   props
+ * @param {string}   [props.label]           라벨 텍스트
+ * @param {number}   [props.value=0]         현재 값
+ * @param {function} [props.onChange]        변경 핸들러
+ * @param {number}   [props.min=0]           최솟값
+ * @param {number}   [props.max=100]         최댓값
+ * @param {number}   [props.step=1]          증감 단위
+ * @param {boolean}  [props.showValue=true]  현재 값 표시 여부
+ * @param {boolean}  [props.disabled=false]  비활성 여부
+ * @returns {JSX.Element}
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
  */
 export default function RangeInput({
   label,

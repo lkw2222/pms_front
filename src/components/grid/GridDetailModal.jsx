@@ -5,19 +5,28 @@ const MIN_W = 400
 const MIN_H = 300
 
 /**
- * GridDetailModal — 그리드 상세 모달 (중앙 팝업 · 드래그 리사이즈 지원)
+ * 그리드 상세 모달. 중앙 팝업 방식으로 우측·하단·우하단 드래그 리사이즈 지원.
+ * ESC 키 및 백드롭 클릭으로 닫기 가능
  *
- * @param {boolean}   open    열림 여부
- * @param {string}    title   헤더 제목
- * @param {function}  onClose 닫기 핸들러 (ESC / 백드롭 클릭도 동작)
- * @param {ReactNode} children 내용 — pk 기반 상세 컴포넌트를 주입
- * @param {string}    width   초기 너비 (기본 860px)
- * @param {string}    height  초기 높이 (기본 80vh)
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}    props
+ * @param {boolean}   props.open                   열림 여부
+ * @param {string}    [props.title='상세 정보']      헤더 제목
+ * @param {function}  [props.onClose]              닫기 핸들러 (ESC / 백드롭 클릭도 동작)
+ * @param {ReactNode} [props.children]             내용 — pk 기반 상세 컴포넌트를 주입
+ * @param {string}    [props.width='860px']        초기 너비
+ * @param {string}    [props.height='80vh']        초기 높이
+ * @returns {JSX.Element|null}
  *
  * @example
  * <GridDetailModal open={open} title="업무 상세" onClose={() => setOpen(false)}>
  *   <WorkDetailPane pk={{ id: selectedRow?.id }} />
  * </GridDetailModal>
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
  */
 export default function GridDetailModal({
   open,

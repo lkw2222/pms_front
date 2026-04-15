@@ -5,19 +5,20 @@ const MIN_WIDTH = 300
 const MAX_WIDTH = 800
 
 /**
- * GridDetailDrawer — 그리드 우측 슬라이드 패널
+ * 그리드 우측 슬라이드 패널. children 에 pk 기반 상세 컴포넌트를 주입하며
+ * 드래그 리사이즈(300~800px) 지원
  *
- * @param {boolean}   open         열림 여부
- * @param {string}    title        헤더 제목
- * @param {function}  onClose      닫기 핸들러
- * @param {ReactNode} children     내용 — pk 기반 상세 컴포넌트를 주입
- * @param {number}    defaultWidth 초기 너비 (기본 420px)
+ * @author JDJ
+ * @since 2026-04-15
+ * @param {Object}    props
+ * @param {boolean}   props.open                   열림 여부
+ * @param {string}    [props.title='상세 정보']      헤더 제목
+ * @param {function}  [props.onClose]              닫기 핸들러
+ * @param {ReactNode} [props.children]             내용 — pk 기반 상세 컴포넌트를 주입
+ * @param {number}    [props.defaultWidth=420]     초기 너비 (px)
+ * @returns {JSX.Element}
  *
  * @example
- * // 사용 패턴
- * const [selectedRow, setSelectedRow] = useState(null)
- * const [open, setOpen] = useState(false)
- *
  * // 단순 PK
  * <GridDetailDrawer open={open} title="업무 상세" onClose={() => setOpen(false)}>
  *   <WorkDetail pk={{ id: selectedRow?.id }} />
@@ -27,6 +28,10 @@ const MAX_WIDTH = 800
  * <GridDetailDrawer open={open} title="처리 이력" onClose={() => setOpen(false)}>
  *   <HistoryDetail pk={{ masterId: selectedRow?.masterId, subId: selectedRow?.id }} />
  * </GridDetailDrawer>
+ *
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
  */
 export default function GridDetailDrawer({
   open,
