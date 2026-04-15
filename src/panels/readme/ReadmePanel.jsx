@@ -11,6 +11,9 @@ function escapeHtml(str) {
  * - 이렇게 해야 코드블록 안의 #, **, - 등이 헤더/강조로 잘못 변환되지 않음
  */
 function parseMarkdown(md) {
+  // ── Step 0. 줄바꿈 정규화 (Windows CRLF → LF) ───────────────────────────
+  md = md.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+
   // ── Step 1. 코드블록을 placeholder 로 추출 ──────────────────────────────
   const codeBlocks = []
   const withPlaceholders = md.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
@@ -33,12 +36,12 @@ function parseMarkdown(md) {
     // 굵게 / 기울임
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    // 테이블
+    // 테이블 — trailing 공백 및 CRLF 대응, 빈 행 필터
     .replace(
-      /(\|.+\|\n)\|[-| :]+\|\n((?:\|.+\|\n?)*)/g,
+      /(\|.+\|\s*\n)\|[-| :]+\|\s*\n((?:\|.+\|\s*\n?)*)/g,
       (_, header, rows) => {
         const th  = header.trim().split('|').filter(Boolean).map(c => `<th>${c.trim()}</th>`).join('')
-        const trs = rows.trim().split('\n').map(row =>
+        const trs = rows.trim().split('\n').filter(Boolean).map(row =>
           '<tr>' + row.split('|').filter(Boolean).map(c => `<td>${c.trim()}</td>`).join('') + '</tr>'
         ).join('')
         return `<table class="md-table"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table>`
@@ -59,6 +62,8 @@ function parseMarkdown(md) {
     .replace(/^/, '<p class="md-p">')
     .concat('</p>')
     .replace(/<p class="md-p"><\/p>/g, '')
+    // 단일 줄바꿈 → <br> (HTML 닫는 태그 뒤 \n 은 제외 — 태그 사이 불필요한 br 방지)
+    .replace(/([^>])\n/g, '$1<br>')
 
   // ── Step 3. placeholder 를 실제 코드블록 HTML 로 복원 ────────────────────
   result = result.replace(/%%CODEBLOCK_(\d+)%%/g, (_, i) => codeBlocks[parseInt(i)])
