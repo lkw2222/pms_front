@@ -1,21 +1,21 @@
 .dv-theme-dark,
 .dv-theme-light {
-  --dv-background-color:                                var(--color-bg-primary);
-  --dv-separator-border:                                var(--color-border);
-  --dv-tabs-and-actions-container-height:               48px;
-  --dv-tabs-and-actions-container-background-color:     var(--color-bg-tabsbody);
-  --dv-activegroup-visiblepanel-tab-background-color:   var(--color-bg-secondary);
-  --dv-activegroup-hiddenpanel-tab-background-color:    var(--color-bg-tertiary);
-  --dv-inactivegroup-visiblepanel-tab-background-color: var(--color-bg-secondary);
-  --dv-inactivegroup-hiddenpanel-tab-background-color:  var(--color-bg-tertiary);
-  --dv-activegroup-visiblepanel-tab-color:              var(--color-text-primary);
-  --dv-activegroup-hiddenpanel-tab-color:               var(--color-text-muted);
-  --dv-inactivegroup-visiblepanel-tab-color:            var(--color-text-secondary);
-  --dv-inactivegroup-hiddenpanel-tab-color:             var(--color-text-muted);
-  --dv-tab-divider-color:                               var(--color-border);
-  --dv-active-sash-color:                               var(--color-accent);
-  --dv-group-view-background-color:                     var(--color-bg-secondary);
-  --dv-tabs-and-actions-container-font-size:            13px;
+  --dv-background-color:                                var(--color-bg-primary)    !important;
+  --dv-separator-border:                                var(--color-border)         !important;
+  --dv-tabs-and-actions-container-height:               48px                        !important;
+  --dv-tabs-and-actions-container-background-color:     var(--color-bg-tabsbody)    !important;
+  --dv-activegroup-visiblepanel-tab-background-color:   var(--color-bg-secondary)   !important;
+  --dv-activegroup-hiddenpanel-tab-background-color:    var(--color-bg-tertiary)    !important;
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--color-bg-secondary)   !important;
+  --dv-inactivegroup-hiddenpanel-tab-background-color:  var(--color-bg-tertiary)    !important;
+  --dv-activegroup-visiblepanel-tab-color:              var(--color-text-primary)   !important;
+  --dv-activegroup-hiddenpanel-tab-color:               var(--color-text-muted)     !important;
+  --dv-inactivegroup-visiblepanel-tab-color:            var(--color-text-secondary) !important;
+  --dv-inactivegroup-hiddenpanel-tab-color:             var(--color-text-muted)     !important;
+  --dv-tab-divider-color:                               var(--color-border)         !important;
+  --dv-active-sash-color:                               var(--color-accent)         !important;
+  --dv-group-view-background-color:                     var(--color-bg-secondary)   !important;
+  --dv-tabs-and-actions-container-font-size:            13px                        !important;
 }
 
 /* 탭 기본 */

@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react';
 import { useAppStore } from '@/store/useAppStore.js';
 import {DockviewReact} from "dockview-react";
-import 'dockview-react/dist/styles/dockview.css'
 import styles from '@/assets/styles/layout.module.css';
 
 // ── 레이아웃 localStorage 저장/복원 (Dockview toJSON/fromJSON) ───────────────

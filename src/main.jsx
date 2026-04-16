@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import App from './App.jsx'
 import { queryClient } from './lib/queryClient.js'
 import { useAppStore } from './store/useAppStore.js'
+import 'dockview-react/dist/styles/dockview.css'
 import './assets/styles/index.css'
 import './assets/styles/dockview.css'
 
