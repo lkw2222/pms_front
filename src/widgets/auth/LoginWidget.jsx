@@ -72,7 +72,7 @@ export default function LoginWidget() {
             <div style={{ fontSize:18, fontWeight:700, color:'var(--color-text-primary)', marginBottom:4 }}>
               세션이 만료되었습니다
             </div>
-            <div style={{ fontSize:15, color:'var(--color-text-muted)', lineHeight:1.5 }}>
+            <div style={{ fontSize:14, color:'var(--color-text-muted)', lineHeight:1.5 }}>
               보안을 위해 자동 로그아웃되었습니다.<br />다시 로그인하면 작업을 계속할 수 있습니다.
             </div>
           </div>
