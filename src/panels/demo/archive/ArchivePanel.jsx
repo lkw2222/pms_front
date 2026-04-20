@@ -2,7 +2,7 @@ import React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import ErrorBoundary  from '@/components/feedback/ErrorBoundary.jsx'
-import ArchiveFeature from '@/features/archive/ArchiveFeature.jsx'
+import ArchiveFeature from '@/features/demo/archive/ArchiveFeature.jsx'
 
 // ── ArchivePanel ──────────────────────────────────────────────────────────────
 function ArchivePanelInner() {

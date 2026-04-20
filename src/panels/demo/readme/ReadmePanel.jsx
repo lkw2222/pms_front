@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import readmeContent from '../../../README.md?raw'
+import readmeContent from '../../../../README.md?raw'
 
 function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')

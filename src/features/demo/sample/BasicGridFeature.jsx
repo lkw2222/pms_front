@@ -4,7 +4,7 @@ import BasicLabel           from '@/components/label/BasicLabel.jsx'
 import BasicButton          from '@/components/button/BasicButton.jsx'
 import GridActionButtons    from '@/components/grid/GridActionButtons.jsx'
 import GridDetailModal      from '@/components/grid/GridDetailModal.jsx'
-import WindPressureFeature  from '@/features/windPressure/WindPressureFeature.jsx'
+import WindPressureFeature  from '@/features/demo/windPressure/WindPressureFeature.jsx'
 import { LoaderCircle } from 'lucide-react'
 
 const SAMPLE_DATA = Array.from({ length: 30 }, (_, i) => ({

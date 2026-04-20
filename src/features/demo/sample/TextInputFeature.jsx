@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import TextInput from '@/components/input/TextInput.jsx'
-import EditorTextarea from "../../components/input/EditorTextarea";
-import Textarea from "../../components/input/Textarea.jsx";
+import EditorTextarea from "../../../components/input/EditorTextarea.jsx";
+import Textarea from "../../../components/input/Textarea.jsx";
 
 export default function TextInputFeature() {
   const [text, setText] = useState('')

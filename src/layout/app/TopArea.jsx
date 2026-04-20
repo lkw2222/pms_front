@@ -2,9 +2,9 @@ import React, {useCallback, useState} from 'react'
 import {Activity, Bell, Menu, Moon, PanelLeftClose, Sun, X} from "lucide-react";
 import { useAppStore } from '@/store/useAppStore.js'
 
-import NotificationWidget from '@/widgets/notification/NotificationWidget.jsx'
-import JobProgressWidget from '@/widgets/job/JobProgressWidget.jsx'
-import ProfileWidget from '@/widgets/auth/ProfileWidget.jsx'
+import NotificationWidget from '@/widgets/common/notification/NotificationWidget.jsx'
+import JobProgressWidget from '@/widgets/common/job/JobProgressWidget.jsx'
+import ProfileWidget from '@/widgets/common/auth/ProfileWidget.jsx'
 
 import styles from '@/assets/styles/layout.module.css'
 import logoImg from '@/assets/image/logo.png'

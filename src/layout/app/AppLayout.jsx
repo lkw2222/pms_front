@@ -5,17 +5,17 @@ import LeftArea from "@/layout/app/LeftArea.jsx";
 import { Toaster } from 'sonner'
 import { useAppStore } from '@/store/useAppStore.js'
 
-import LoginWidget  from '@/widgets/auth/LoginWidget.jsx'
+import LoginWidget  from '@/widgets/common/auth/LoginWidget.jsx'
 import styles from '@/assets/styles/layout.module.css'
 
-import DashboardPanel from '@/panels/dashboard/DashboardPanel.jsx';
-import LoginPanel     from '@/panels/login/LoginPanel.jsx';
-import GridPanel      from '@/panels/grid/GridPanel.jsx';
-import GisPanel       from '@/panels/gis/GisPanel.jsx';
-import SamplePanel    from '@/panels/sample/SamplePanel.jsx';
-import ReadmePanel    from '@/panels/readme/ReadmePanel.jsx';
-import ArchivePanel        from '@/panels/archive/ArchivePanel.jsx';
-import WindPressurePanel   from '@/panels/windPressure/WindPressurePanel.jsx';
+import DashboardPanel from '@/panels/demo/dashboard/DashboardPanel.jsx';
+import LoginPanel     from '@/panels/demo/login/LoginPanel.jsx';
+import GridPanel      from '@/panels/demo/grid/GridPanel.jsx';
+import GisPanel       from '@/panels/demo/gis/GisPanel.jsx';
+import SamplePanel    from '@/panels/demo/sample/SamplePanel.jsx';
+import ReadmePanel    from '@/panels/demo/readme/ReadmePanel.jsx';
+import ArchivePanel        from '@/panels/demo/archive/ArchivePanel.jsx';
+import WindPressurePanel   from '@/panels/demo/windPressure/WindPressurePanel.jsx';
 
 // ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
 const PANEL_COMPONENTS = {

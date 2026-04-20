@@ -2,8 +2,8 @@ import React from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { ShieldAlert } from 'lucide-react'
-import LoginFeature  from '@/features/login/LoginFeature.jsx'
-import { loginApi }  from '@/services/login/loginService.js'
+import LoginFeature  from '@/features/common/login/LoginFeature.jsx'
+import { loginApi }  from '@/services/common/login/loginService.js'
 import { useAppStore } from '@/store/useAppStore.js'
 
 /**

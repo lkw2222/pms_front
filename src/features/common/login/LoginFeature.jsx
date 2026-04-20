@@ -84,11 +84,11 @@ export default function LoginFeature({ onLogin, className='btn-login' }) {
 
               <nav className="brand-links" aria-label="로그인 관련 바로가기">
                   <div className="brand-links-group">
-                      <a href="#">아이디 찾기</a>
+                      <a href="src/features/common/login/LoginFeature.jsx#">아이디 찾기</a>
                       <span className="divider" aria-hidden="true">|</span>
-                      <a href="#">비밀번호 찾기</a>
+                      <a href="src/features/common/login/LoginFeature.jsx#">비밀번호 찾기</a>
                   </div>
-                  <a href="#">회원가입</a>
+                  <a href="src/features/common/login/LoginFeature.jsx#">회원가입</a>
               </nav>
 
           </form>

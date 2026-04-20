@@ -1,5 +1,5 @@
 import React from 'react'
-import DashboardFeature from '@/features/dashboard/DashboardFeature.jsx'
+import DashboardFeature from '@/features/demo/dashboard/DashboardFeature.jsx'
 import ErrorBoundary    from '@/components/feedback/ErrorBoundary.jsx'
 
 export default function DashboardPanel() {

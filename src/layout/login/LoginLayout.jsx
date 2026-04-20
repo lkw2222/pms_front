@@ -1,5 +1,5 @@
 import React from "react";
-import LoginFeature from "@/features/login/LoginFeature.jsx";
+import LoginFeature from "@/features/common/login/LoginFeature.jsx";
 import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {useAppStore} from "@/store/useAppStore.js";

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useMutation } from '@tanstack/react-query'
-import LoginFeature from '@/features/login/LoginFeature.jsx'
-import { loginApi } from '@/services/login/loginService.js'
+import LoginFeature from '@/features/common/login/LoginFeature.jsx'
+import { loginApi } from '@/services/common/login/loginService.js'
 import { useAppStore } from '@/store/useAppStore.js'
 import { toast } from 'sonner'
 
