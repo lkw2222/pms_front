@@ -3,6 +3,7 @@ import LoginFeature from "@/features/common/login/LoginFeature.jsx";
 import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {useAppStore} from "@/store/useAppStore.js";
+import { loginApi }  from '@/services/common/login/loginService.js'
 
 import kepco from "@/assets/image/kepco.png";
 import loginSlide01 from "@/assets/image/login-slide-01.png";
@@ -15,13 +16,24 @@ export default function LoginLayout() {
 
     const loginMutation = useMutation({
         mutationFn: ({ id, password }) => loginApi.login(id, password),
+        throwOnError: false,
         onSuccess: (result) => {
-            setAuth(result.user, result.token)
-            setSessionExpired(false)
-            toast.success('로그인되었습니다. 작업을 계속하세요.')
+            setAuth(result.user, result.token);
+            setSessionExpired(false);
+            toast.success('로그인되었습니다. 작업을 계속하세요.');
         },
         onError: (error) => {
-            toast.error(error.message || '로그인에 실패했습니다.')
+            toast.error(error.message || '로그인에 실패했습니다.', {style: {
+                minWidth: '500px',
+                    minHeight: '80px',
+                    padding: '20px',
+                    fontSize: '20px',
+                    fontWeight : 'bolder',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, 0%)'
+            }});
         },
     })
 
@@ -68,7 +80,7 @@ export default function LoginLayout() {
                             <h2 id="login-title" className="brand-title">전주 진단우선순위 시스템</h2>
                         </div>
                         {/* 로그인 폼 — 기존 LoginFeature 재사용 */}
-                        <LoginFeature onLogin={(id, password) => loginMutation.mutate({ id, password })} />
+                        <LoginFeature isPending={loginMutation.isPending} onLogin={(id, password) => { loginMutation.mutate({ id, password })} } />
                     </div>
                 </section>
             </div>

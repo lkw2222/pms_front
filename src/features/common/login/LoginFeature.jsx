@@ -2,7 +2,6 @@ import React, {useId} from 'react'
 import { useForm } from 'react-hook-form'
 import TextInput   from '@/components/input/TextInput.jsx'
 import BasicButton from '@/components/button/BasicButton.jsx'
-import { User, Lock, LogIn } from 'lucide-react'
 import '@/assets/styles/login.css';
 
 /**
@@ -11,12 +10,12 @@ import '@/assets/styles/login.css';
  * register() 반환값 = { name, ref, onChange, onBlur }
  * → TextInput 의 ...props 로 그대로 전달되어 자동 연결
  */
-export default function LoginFeature({ onLogin, className='btn-login' }) {
+export default function LoginFeature({ onLogin, className='btn-login', isPending }) {
     const {
         register,
         handleSubmit,
         watch,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm({
         defaultValues: { id: '', password: '' },
     });
@@ -27,8 +26,9 @@ export default function LoginFeature({ onLogin, className='btn-login' }) {
     const idValue       = watch('id', '');
     const passwordValue = watch('password', '');
 
-    const onSubmit = async (data) => {
-        await onLogin(data.id, data.password)
+    const onSubmit = (data) => {
+        /*await onLogin(data.id, data.password)*/
+        onLogin(data.id, data.password);
     }
 
     return (
@@ -42,12 +42,13 @@ export default function LoginFeature({ onLogin, className='btn-login' }) {
                       </span>
                       <TextInput
                           id={inputIdID}
-                          type="text"
+                          type="id"
                           className="field-input"
                           placeholder="아이디를 입력하세요"
                           isNotNull
                           value={idValue}
-                          {...register('id', { required: '아이디를 입력하세요.' })} />
+                          autoFocus
+                          {...register('id', { required: '아이디를 입력하세요.' })} inputMode="url"/>
                   </div>
                   {errors.id && <span style={{ fontsize:11, color:'var(--color-danger)', margintop:-8 }}>{errors.id.message}</span>}
               </div>
@@ -74,11 +75,11 @@ export default function LoginFeature({ onLogin, className='btn-login' }) {
               </div>
 
               <BasicButton
-                  label={isSubmitting ? '로그인 중...' : '로그인'}
+                  label={isPending ? '로그인 중...' : '로그인'}
                   type="submit"
                   variant="primary"
                   size="lg"
-                  disabled={isSubmitting}
+                  disabled={isPending}
                   className={className}
               />
 

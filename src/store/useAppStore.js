@@ -12,33 +12,31 @@ import { persist } from 'zustand/middleware'
  *   const { theme, toggleTheme } = useAppStore()
  */
 export const useAppStore = create(
-  persist(
-    (set, get) => ({
-      // ── 테마 (기본값: light) ───────────────────────────────────────────────
-      theme: 'light',
-      toggleTheme: () => {
-        const next = get().theme === 'dark' ? 'light' : 'dark'
-        document.documentElement.setAttribute('data-theme', next)
-        set({ theme: next })
-      },
-      setTheme: (theme) => {
+    persist((set, get) => ({
+        // ── 테마 (기본값: light) ───────────────────────────────────────────────
+        theme: 'light',
+        toggleTheme: () => {
+            const next = get().theme === 'dark' ? 'light' : 'dark'
+            document.documentElement.setAttribute('data-theme', next)
+            set({ theme: next })
+        },
+        setTheme: (theme) => {
         document.documentElement.setAttribute('data-theme', theme)
         set({ theme })
-      },
+        },
 
-      // ── 사이드바 ───────────────────────────────────────────────────────────
-      sidebarOpen: true,
-      toggleSidebar:  () => set(s => ({ sidebarOpen: !s.sidebarOpen })),
-      setSidebarOpen: (open) => set({ sidebarOpen: open }),
+        // ── 사이드바 ───────────────────────────────────────────────────────────
+        sidebarOpen: true,
+        toggleSidebar:  () => set(s => ({ sidebarOpen: !s.sidebarOpen })),
+        setSidebarOpen: (open) => set({ sidebarOpen: open }),
 
 
         // ── 인증 ──────────────────────────────────────────────────────────────
         // JWT는 httpOnly 쿠키로 관리 (프론트에서 토큰 직접 보관 안 함)
         // 로그인 성공 시 백엔드가 쿠키 발급, 로그아웃 시 백엔드가 쿠키 만료 처리
-        user:       null,
+        user: null,
         setAuth:    (user) => set({ user }),
         clearAuth:  () => set({ user: null }),
-        isLoggedIn: () => !!get().user,
 
         // ── 세션 만료 ─────────────────────────────────────────────────────────
         // API 401 응답 시 setSessionExpired(true) → 로그인 오버레이 표시
