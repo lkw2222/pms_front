@@ -3,7 +3,9 @@
     font-weight:45 920;
     font-style:normal;
     font-display: swap;
-    src: url('../font/PretendardVariable.woff2') format('woff2-variations');
+    src: local('Pretendard Variable'),
+    local('PretendardVariable'),
+    url('../font/PretendardVariable.woff2') format('woff2-variations');
 }
 :root {
     --color-bg:#eef2f7;

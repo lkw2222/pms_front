@@ -8,6 +8,24 @@ import { useAppStore } from './store/useAppStore.js'
 import 'dockview-react/dist/styles/dockview.css'
 import './assets/styles/index.css'
 import './assets/styles/dockview.css'
+import pretendardVariableWoff2 from './assets/font/PretendardVariable.woff2'
+
+// 폰트 깜빡임 방지
+const preloadPretendardFont = () => {
+    if (document.querySelector('link[data-font="pretendard-variable"]')) return
+
+    const link = document.createElement('link')
+    link.rel = 'preload'
+    link.as = 'font'
+    link.type = 'font/woff2'
+    link.href = pretendardVariableWoff2
+    link.crossOrigin = ''
+    link.setAttribute('data-font', 'pretendard-variable')
+
+    document.head.appendChild(link)
+}
+
+preloadPretendardFont()
 
 // 앱 시작 시 저장된 테마 즉시 적용 (깜빡임 방지)
 const savedTheme = useAppStore.getState().theme
