@@ -1,30 +1,53 @@
 import React, {useCallback, useState} from 'react';
 import { useAppStore } from '@/store/useAppStore.js';
 import {
+    AlertTriangle,
     Archive,
     BarChart2,
+    Calculator,
     ChevronDown,
     ChevronLeft,
     ChevronRight as ChevRight,
-    ChevronRight, FilePlus,
-    FileSpreadsheet, HelpCircle, Layers,
-    LayoutDashboard, LogIn, Map, MonitorCog, Settings
+    ChevronRight,
+    ClipboardCheck,
+    FileSpreadsheet, HelpCircle,
+    LayoutDashboard, ListOrdered, LogIn, Map, MapPin, MonitorCog,
+    PieChart, PlayCircle, ScrollText, Settings,
+    TableProperties, Trophy,
+    UtilityPole, Wind, ChartBarDecreasing
 } from "lucide-react";
 
 import styles from '@/assets/styles/layout.module.css'
+
+const WindPoleIcon = ({ size = 24, color = "currentColor", windColor = "currentColor" }) => (
+  <div style={{ position: "relative", width: size * 1.4, height: size, display: "inline-flex" }}>
+    <UtilityPole size={size} color={color} />
+    <Wind size={size * 0.75} color={windColor}
+      style={{ position: "absolute", right: 0, bottom: 0 }} />
+  </div>
+);
 
 // ── 사이드바 메뉴 ──────────────────────────────────────────────────────────────
 const MENU_GROUPS = [
     { id:'dashboard', label:'대시보드', icon:LayoutDashboard, children:[
             { id:'dashboardPanel', label:'대시보드',    icon:LayoutDashboard, component:'dashboardPanel', pip:false },
         ]},
-    { id:'work', label:'업무관리', icon:FileSpreadsheet, children:[
-            { id:'gridPanel',  label:'업무 현황', icon:BarChart2, component:'gridPanel' },
-            { id:'gridPanel2', label:'업무 등록', icon:FilePlus,  component:'gridPanel' },
+    { id:'wlc', label:'풍하중 평가', icon:WindPoleIcon, children:[
+            { id:'wlc_1', label:'풍하중 배치 실행(수동)', icon:PlayCircle,  component:'gridPanel' },
+            { id:'wlc_2', label:'풍하중 실행로그 조회',   icon:ScrollText,  component:'gridPanel' },
+            { id:'wlc_3', label:'풍하중 결과',             icon:BarChart2,   component:'gridPanel' },
+            { id:'wlc_4', label:'평가결과 분포도',         icon:PieChart,    component:'gridPanel' },
         ]},
-    { id:'gis', label:'GIS', icon:Map, children:[
-            { id:'gisPanel',  label:'지도',      icon:Map,    component:'gisPanel' },
-            { id:'gisPanel2', label:'공간 분석', icon:Layers, component:'gisPanel' },
+    { id:'scc', label:'진단우선수위 평가', icon:ChartBarDecreasing, children:[
+            { id:'scc_1', label:'SCC 배치 실행(수동)',        icon:PlayCircle,      component:'gridPanel' },
+            { id:'scc_2', label:'SCC 실행로그 조회',          icon:ScrollText,      component:'gridPanel' },
+            { id:'scc_3', label:'SCC 종합평가 결과',           icon:ClipboardCheck,  component:'gridPanel' },
+            { id:'scc_4', label:'종합평가 결과조회',          icon:TableProperties, component:'gridPanel' },
+            { id:'scc_5', label:'이상치 설비 목록조회',       icon:AlertTriangle,   component:'gridPanel' },
+            { id:'scc_6', label:'진단비용산출 시물레이션',   icon:Calculator,      component:'gridPanel' },
+            { id:'scc_7', label:'GIS 기반 조회',              icon:MapPin,          component:'gridPanel' },
+            { id:'scc_8', label:'SCC 등급별 조회',            icon:ListOrdered,     component:'gridPanel' },
+            { id:'scc_9', label:'진단우선순위 결과조회',      icon:Trophy,          component:'gridPanel' },
         ]},
     { id:'sample', label:'개발 샘플', icon:MonitorCog, children:[
             { id:'samplePanel',       label:'컴포넌트',       icon:MonitorCog, component:'samplePanel' },
@@ -93,7 +116,7 @@ function SidebarGroup({ group, sidebarOpen, openPanels, onOpen, onPip, expandedG
 export default function LeftArea({ apiRef }) {
     const {sidebarOpen, toggleSidebar, openPanels, setOpenPanels} = useAppStore();
     const [pipBlocked,     setPipBlocked]     = useState(false);
-    const [expandedGroups, setExpandedGroups] = useState(new Set(['work','gis','sample','system']));
+    const [expandedGroups, setExpandedGroups] = useState(new Set(['wlc','scc','sample','system']));
 
     const openPanel = useCallback((item) => {
         if (!apiRef.current) return;
