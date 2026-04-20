@@ -1,6 +1,6 @@
 import React from 'react'
 import BasicButton from '@/components/button/BasicButton.jsx'
-import { Save, Search, Trash2, X, Check, AlertCircle, Edit, RefreshCw, Download, Plus, FileDown } from 'lucide-react'
+import { Save, Search, Trash2, X, Check, AlertCircle, Edit, RefreshCw, Download, Plus, FileDown, Play } from 'lucide-react'
 
 export default function ButtonFeature() {
   return (
@@ -15,6 +15,7 @@ export default function ButtonFeature() {
           <BasicButton label="완료"  variant="success"   icon={Check}       />
           <BasicButton label="주의"  variant="warning"   icon={AlertCircle} />
           <BasicButton label="엑셀"  variant="excel"     icon={FileDown}    />
+          <BasicButton label="실행"  variant="primary"   icon={Play}        />
         </div>
       </div>
       <div>

@@ -14,8 +14,9 @@ import GridPanel      from '@/panels/demo/grid/GridPanel.jsx';
 import GisPanel       from '@/panels/demo/gis/GisPanel.jsx';
 import SamplePanel    from '@/panels/demo/sample/SamplePanel.jsx';
 import ReadmePanel    from '@/panels/demo/readme/ReadmePanel.jsx';
-import ArchivePanel        from '@/panels/demo/archive/ArchivePanel.jsx';
-import WindPressurePanel   from '@/panels/demo/windPressure/WindPressurePanel.jsx';
+import ArchivePanel             from '@/panels/demo/archive/ArchivePanel.jsx';
+import WindPressurePanel        from '@/panels/demo/windPressure/WindPressurePanel.jsx';
+import WlcBatchExecutePanel     from '@/panels/wlc/wlcBatchExecute/WlcBatchExecutePanel.jsx';
 
 // ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
 const PANEL_COMPONENTS = {
@@ -32,6 +33,7 @@ const PANEL_COMPONENTS = {
     settingPanel:     SamplePanel,
     archivePanel:        ArchivePanel,
     windPressurePanel:   WindPressurePanel,
+    wlcBatchExecutePanel: WlcBatchExecutePanel,
 }
 
 const components = Object.fromEntries(

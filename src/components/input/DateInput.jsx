@@ -3,6 +3,7 @@ import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/flatpickr.css'
 import { Korean } from 'flatpickr/dist/l10n/ko.js'
 import { Calendar } from 'lucide-react'
+import styles from "@/components/styles/DateInput.module.css";
 
 /**
  * 날짜 선택 입력 컴포넌트 (flatpickr 기반). 한국어 로케일 적용.
@@ -25,7 +26,7 @@ import { Calendar } from 'lucide-react'
  */
 export default function DateInput({
   label, value, onChange,
-  placeholder = '날짜를 선택하세요',
+  placeholder = '날짜를 선택하세요', isNotNull = false,
   options = {}, disabled = false, className = '', ...props
 }) {
   return (
@@ -33,6 +34,7 @@ export default function DateInput({
       <label style={{ display:'flex', flexDirection:'column', gap:6, cursor: disabled ? 'not-allowed' : 'pointer' }}>
         {label && (
           <span style={{ fontSize:12, fontWeight:500, color:'var(--color-text-secondary)' }}>
+            {isNotNull && <span className={styles.required}>*</span>}
             {label}
           </span>
         )}

@@ -33,7 +33,7 @@ const MENU_GROUPS = [
             { id:'dashboardPanel', label:'대시보드',    icon:LayoutDashboard, component:'dashboardPanel', pip:false },
         ]},
     { id:'wlc', label:'풍하중 평가', icon:WindPoleIcon, children:[
-            { id:'wlc_1', label:'풍하중 배치 실행(수동)', icon:PlayCircle,  component:'gridPanel' },
+            { id:'wlc_1', label:'풍하중 배치 실행(수동)', icon:PlayCircle,  component:'wlcBatchExecutePanel' },
             { id:'wlc_2', label:'풍하중 실행로그 조회',   icon:ScrollText,  component:'gridPanel' },
             { id:'wlc_3', label:'풍하중 결과',             icon:BarChart2,   component:'gridPanel' },
             { id:'wlc_4', label:'평가결과 분포도',         icon:PieChart,    component:'gridPanel' },

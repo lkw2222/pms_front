@@ -113,7 +113,7 @@ export default function ConfirmModal({
         </div>
 
         {/* 본문 */}
-        <div style={{ padding:'20px 16px', fontSize:13, color:'var(--color-text-secondary)', lineHeight:1.6 }}>
+        <div style={{ padding:'20px 16px', fontSize:13, color:'var(--color-text-secondary)', lineHeight:1.6, whiteSpace:'pre-line' }}>
           {message}
         </div>
 
