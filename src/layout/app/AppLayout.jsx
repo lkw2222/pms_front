@@ -17,6 +17,9 @@ import ReadmePanel    from '@/panels/demo/readme/ReadmePanel.jsx';
 import ArchivePanel             from '@/panels/demo/archive/ArchivePanel.jsx';
 import WindPressurePanel        from '@/panels/demo/windPressure/WindPressurePanel.jsx';
 import WlcBatchExecutePanel     from '@/panels/wlc/wlcBatchExecute/WlcBatchExecutePanel.jsx';
+import WlcExecuteLogPanel       from '@/panels/wlc/wlcExecuteLog/WlcExecuteLogPanel.jsx';
+
+import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
 
 // ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
 const PANEL_COMPONENTS = {
@@ -34,6 +37,9 @@ const PANEL_COMPONENTS = {
     archivePanel:        ArchivePanel,
     windPressurePanel:   WindPressurePanel,
     wlcBatchExecutePanel: WlcBatchExecutePanel,
+    wlcExecuteLogPanel:   WlcExecuteLogPanel,
+
+    emptyPanel:         EmptyPanel,
 }
 
 const components = Object.fromEntries(
