@@ -2,14 +2,12 @@ import React, { useRef, useState } from 'react'
 import ContentArea from "@/layout/app/ContentArea";
 import TopArea from "@/layout/app/TopArea.jsx";
 import LeftArea from "@/layout/app/LeftArea.jsx";
-import { Toaster } from 'sonner'
 import { useAppStore } from '@/store/useAppStore.js'
 
 import LoginWidget  from '@/widgets/common/auth/LoginWidget.jsx'
 import styles from '@/assets/styles/layout.module.css'
 
 import DashboardPanel from '@/panels/demo/dashboard/DashboardPanel.jsx';
-import LoginPanel     from '@/panels/demo/login/LoginPanel.jsx';
 import GridPanel      from '@/panels/demo/grid/GridPanel.jsx';
 import GisPanel       from '@/panels/demo/gis/GisPanel.jsx';
 import SamplePanel    from '@/panels/demo/sample/SamplePanel.jsx';
@@ -21,7 +19,6 @@ import WlcBatchExecutePanel     from '@/panels/wlc/wlcBatchExecute/WlcBatchExecu
 // ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
 const PANEL_COMPONENTS = {
     dashboardPanel:   DashboardPanel,
-    loginPanel:       LoginPanel,
     gridPanel:        GridPanel,
     gridPanel2:       GridPanel,
     gridPanel_sample: GridPanel,
@@ -71,13 +68,6 @@ export default function AppLayout() {
 
     return (
         <>
-            <Toaster
-                position="top-center"
-                theme={theme}
-                richColors
-                closeButton
-                duration={3000}
-            />
             <LoginWidget />
             <div className={styles.appRoot}>
 
