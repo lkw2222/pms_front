@@ -23,9 +23,9 @@ import styles from '@/styles/wlc/wlcResultDistribution/WlcResultDistribution.mod
 export default function WlcResultDistributionPanel() {
     return (
         <ErrorBoundary>
-            <div className={styles.dashboard}>
-                <div className={styles.header}><WlcResultDistributionSearchFeature /></div>
-                <div className={styles.bottom}>
+            <div className="grid-wrap">
+                <WlcResultDistributionSearchFeature />
+                <div className={styles.wrap}>
                     <div className={styles.left}>
                         <div className={styles.box}><WlcResultDistributionMapFeature /></div>
                         <div className={styles.box}><WlcResultDistributionGridFeature /></div>

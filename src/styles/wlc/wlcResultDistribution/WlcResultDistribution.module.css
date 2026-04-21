@@ -1,19 +1,4 @@
-.dashboard {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px;
-    height: calc(100vh - 100px);
-    box-sizing: border-box;
-}
-
-.header {
-    border: 2px solid #000;
-    padding: 16px;
-    min-height: 120px;
-}
-
-.bottom {
+.wrap {
     display: flex;
     gap: 16px;
     flex: 1;              /* 남은 공간 모두 차지 */
@@ -28,7 +13,31 @@
 }
 
 .box {
-    border: 2px solid #000;
     padding: 16px;
     flex: 1;              /* 각 박스 균등 분배 */
+}
+
+.totalCount {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    position: relative;
+    top: 5px;
+}
+
+.idLink {
+    color: var(--color-accent);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 12px;
+}
+.idLink:hover {
+    color: var(--color-accent-hover);
+}
+
+.msgCell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    color: var(--color-danger);
 }
