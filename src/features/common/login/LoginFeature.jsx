@@ -73,6 +73,7 @@ export default function LoginFeature({ onLogin, className='btn-login', isPending
                               autoComplete="current-password"
                               isNotNull
                               value={passwordValue}
+                              showStrength={false}
                               {...register('password', {
                                   required:  '비밀번호를 입력하세요.',
                                   minLength: { value: 4, message: '비밀번호는 4자 이상 입력하세요.' },
