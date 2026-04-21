@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import {toast, Toaster} from 'sonner';
 import AppLayout from "@/layout/app/AppLayout.jsx";
-import LoginLayout from "@/layout/login/LoginLayout";
+import LoginLayout from "@/layout/login/LoginLayout.jsx";
 import {useAppStore} from "@/store/useAppStore.js";
 
 // ── App ────────────────────────────────────────────────────────────────────────

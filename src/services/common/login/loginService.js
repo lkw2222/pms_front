@@ -9,13 +9,21 @@ export const loginApi = {
     // 실제 API 연동 시 아래 주석 해제 후 mock 제거
     // login: (id, password) => apiClient.post('/login', { id, password }).then(r => r.data),
     login: (id, password) => new Promise((resolve, reject) => {
-        if(id === "pmsuser" && password === "pms123") {
+        if(id && password) {
             setTimeout(() => resolve({
                 user:  { id, name: id, bonbu: '기술본부', sabupso: '서울사업소' }
             }), 1000);
         } else {
             setTimeout(() => reject(new Error('아이디 또는 비밀번호가 올바르지 않습니다.')), 1000);
         }
+
+        /*if(id === "pmsuser" && password === "pms123") {
+            setTimeout(() => resolve({
+                user:  { id, name: id, bonbu: '기술본부', sabupso: '서울사업소' }
+            }), 1000);
+        } else {
+            setTimeout(() => reject(new Error('아이디 또는 비밀번호가 올바르지 않습니다.')), 1000);
+        }*/
     }),
     logout: ()             => apiClient.post('/logout').then(r => r.data),
     me:     ()             => apiClient.get('/me').then(r => r.data),

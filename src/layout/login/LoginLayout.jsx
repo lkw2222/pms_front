@@ -88,11 +88,10 @@ export default function LoginLayout() {
     })
 
     return (
-        <main id="main-content" className="login-page">
+        <main className="login-page">
             <div className="login-shell">
                 <section
                     className="login-visual"
-                    aria-labelledby="visual-title"
                     onMouseEnter={stopAutoPlay}
                     onMouseLeave={() => {
                         if (!isPaused) startAutoPlay();
@@ -114,7 +113,7 @@ export default function LoginLayout() {
                     </div>
                     <div className="visual-copy">
                         <p className="eyebrow">지능형 전주 진단 플랫폼</p>
-                        <h1 id="visual-title" className="headline">데이터가 알려주는<br />다음 교체 전주</h1>
+                        <h1 className="headline">데이터가 알려주는<br />다음 교체 전주</h1>
                         <p className="description">
                             복합하중 계산과 SCC 인자 분석을 통한 지능형 전주 진단 플랫폼.<br />
                             700만본 전주의 위험도를 실시간으로 평가하고 관리합니다.
@@ -142,7 +141,6 @@ export default function LoginLayout() {
                             </div>
 
                             <button
-                                id="visualToggle"
                                 className="visual-toggle"
                                 type="button"
                                 aria-pressed={isPaused ? "true" : "false"}
@@ -158,7 +156,7 @@ export default function LoginLayout() {
                     <div className="login-box">
                         <div className="brand">
                             <img className="brand-logo" src={ logoKepri } alt="전력연구원" />
-                            <h2 id="login-title" className="brand-title">전주 진단우선순위 시스템</h2>
+                            <h2 className="brand-title">전주 진단우선순위 시스템</h2>
                         </div>
                         {/* 로그인 폼 — 기존 LoginFeature 재사용 */}
                         <LoginFeature isPending={loginMutation.isPending} onLogin={(id, password) => { loginMutation.mutate({ id, password })} } />

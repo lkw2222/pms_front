@@ -33,7 +33,7 @@
 * {box-sizing:border-box;}
 html, body {width:100%; height:100%; margin:0; padding:0; color:var(--color-text); background:var(--color-bg);}
 .login-page, .login-page * {font-family:"Pretendard Variable", "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;}
-.login-page button, .login-page input, .login-page textarea, .login-page select {font:inherit;}
+/*.login-page button, .login-page input, .login-page textarea, .login-page select {font:inherit;}*/
 body {min-width:320px;}
 a, button, input {font:inherit;}
 a {color:inherit;}
