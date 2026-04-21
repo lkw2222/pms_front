@@ -1,0 +1,55 @@
+.widgetBg {
+  position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: fadeIn 0.2s ease;
+}
+
+.widgetWrap {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  width: 500px;
+  box-shadow: var(--shadow-lg);
+}
+
+.widgetHeader {
+  display: flex;
+  align-items:center;
+  gap: 8px;
+  padding:13px 16px;
+  border-bottom:1px solid var(--color-border);
+  flex-shrink:0;
+}
+
+.widgetHeaderIcon {
+  color:var(--color-text-secondary);
+}
+
+.widgetHeaderText {
+  font-size:13px; font-weight:700; color:var(--color-text-primary); flex:1;
+}
+
+.widgetBody {
+  display:flex;
+  flex-direction:column;
+  padding:10px 20px;
+  gap: 8px;
+}
+
+.widgetFooter {
+  display: flex; justify-content: flex-end; gap: 8px; padding: 0 20px 10px;
+}
+
+.idCheckInput {
+  width:334px; float:left;
+}
+
+.idCheckButton {
+  float:right; margin-top: 25px;
+}
+
+.findWidgetTitle {
+  font-weight: bold;
+}
+
+.widgetTopLine {
+  border-top : 1px solid var(--color-border);
+}

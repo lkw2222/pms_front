@@ -2,9 +2,11 @@ import React, {useId, useState} from 'react'
 import { useForm } from 'react-hook-form'
 import TextInput   from '@/components/input/TextInput.jsx'
 import BasicButton from '@/components/button/BasicButton.jsx'
-import SignUpWidget from "@/widgets/common/auth/SignUpWidget.jsx";
 import TextButton from '@/components/button/TextButton.jsx'
+import SignUpWidget from "@/widgets/common/auth/SignUpWidget.jsx";
+import FindAccountWidget from "@/widgets/common/auth/FindAccountWidget.jsx";
 import '@/assets/styles/login.css';
+import styles from './LoginFeature.module.css'
 
 /**
  * LoginFeature - React Hook Form 적용
@@ -29,6 +31,7 @@ export default function LoginFeature({ onLogin, className='btn-login', isPending
     const passwordValue = watch('password', '');
 
     const [ signupOpen, setSignupOpen ] = useState(false);
+    const [ findAccountOpen, setFindAccountOpen ] = useState(false);
 
     const onSubmit = (data) => {
         /*await onLogin(data.id, data.password)*/
@@ -39,7 +42,7 @@ export default function LoginFeature({ onLogin, className='btn-login', isPending
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
-                    <label className="field-label" htmlFor={inputIdID}>아이디</label>
+                    <label className="field-label" htmlFor={inputIdID}>ID</label>
                     <div className="field">
                       <span className="field-icon" aria-hidden="true">
                           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 448 512"><path fill="rgb(110, 110, 110)" d="M224 248a120 120 0 1 0 0-240 120 120 0 1 0 0 240zm-29.7 56C95.8 304 16 383.8 16 482.3 16 498.7 29.3 512 45.7 512l356.6 0c16.4 0 29.7-13.3 29.7-29.7 0-98.5-79.8-178.3-178.3-178.3l-59.4 0z"/></svg>
@@ -48,11 +51,11 @@ export default function LoginFeature({ onLogin, className='btn-login', isPending
                           id={inputIdID}
                           type="id"
                           className="field-input"
-                          placeholder="아이디를 입력하세요"
+                          placeholder="ID를 입력하세요"
                           isNotNull
                           value={idValue}
                           autoFocus
-                          {...register('id', { required: '아이디를 입력하세요.' })} inputMode="url"/>
+                          {...register('id', { required: 'ID를 입력하세요.' })} inputMode="url"/>
                     </div>
                     {errors.id && <span style={{ fontsize:11, color:'var(--color-danger)', margintop:-8 }}>{errors.id.message}</span>}
                 </div>
@@ -89,9 +92,11 @@ export default function LoginFeature({ onLogin, className='btn-login', isPending
 
                 <nav className="brand-links" aria-label="로그인 관련 바로가기">
                     <div className="brand-links-group">
-                        <a href="src/features/common/login/LoginFeature.jsx#">아이디 찾기</a>
-                        <span className="divider" aria-hidden="true">|</span>
-                        <a href="src/features/common/login/LoginFeature.jsx#">비밀번호 찾기</a>
+                        <TextButton
+                            label="ID/비밀번호 찾기"
+                            type="button"
+                            onClick={() => setFindAccountOpen(true)}
+                        />
                     </div>
                     <TextButton
                           label="회원가입"
@@ -101,10 +106,13 @@ export default function LoginFeature({ onLogin, className='btn-login', isPending
                 </nav>
             </form>
 
-            {signupOpen && (
-                <SignUpWidget onClose={() => setSignupOpen(false)} />
+            {findAccountOpen && (
+                <FindAccountWidget onClose={() => setFindAccountOpen(false)} styles={styles} />
             )}
 
+            {signupOpen && (
+                <SignUpWidget onClose={() => setSignupOpen(false)} styles={styles} />
+            )}
         </>
     )
 }
