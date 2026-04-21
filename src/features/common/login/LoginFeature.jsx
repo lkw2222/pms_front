@@ -7,7 +7,7 @@ import TextButton from '@/components/button/TextButton.jsx'
 import SignUpWidget from "@/widgets/common/auth/SignUpWidget.jsx";
 import FindAccountWidget from "@/widgets/common/auth/FindAccountWidget.jsx";
 import '@/assets/styles/login.css';
-import styles from '@/styles/CommonAuth.module.css'
+import styles from '@/styles/common/CommonAuth.module.css'
 
 /**
  * LoginFeature - React Hook Form 적용
