@@ -103,7 +103,7 @@ const VARIANT_HOVER = {
  */
 export default function GridActionButtons({ data, buttons = [] }) {
   return (
-    <div style={{ display:'flex', alignItems:'center', gap:3, height:'100%' }}>
+    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:3, height:'100%' }}>
       {buttons.map((btn, idx) => {
         const preset  = TYPE_PRESET[btn.type] ?? {}
         const label   = btn.label   ?? preset.label   ?? ''

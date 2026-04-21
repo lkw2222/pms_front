@@ -1,5 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import { useAppStore } from '@/store/useAppStore.js';
+import { setDockviewMenu } from '@/store/dockviewStore.js';
 import {
     AlertTriangle,
     Archive,
@@ -35,7 +36,7 @@ const MENU_GROUPS = [
     { id:'wlc', label:'풍하중 평가', icon:WindPoleIcon, children:[
             { id:'wlc_1', label:'풍하중 배치 실행(수동)', icon:PlayCircle,  component:'wlcBatchExecutePanel' },
             { id:'wlc_2', label:'풍하중 실행로그 조회',   icon:ScrollText,  component:'wlcExecuteLogPanel' },
-            { id:'wlc_3', label:'풍하중 결과',             icon:BarChart2,   component:'emptyPanel' },
+            { id:'wlc_3', label:'풍하중 결과',             icon:BarChart2,   component:'wlcResultPanel' },
             { id:'wlc_4', label:'평가결과 분포도',         icon:PieChart,    component:'emptyPanel' },
         ]},
     { id:'scc', label:'진단우선수위 평가', icon:ChartBarDecreasing, children:[
@@ -116,7 +117,12 @@ function SidebarGroup({ group, sidebarOpen, openPanels, onOpen, onPip, expandedG
 export default function LeftArea({ apiRef }) {
     const {sidebarOpen, toggleSidebar, openPanels, setOpenPanels} = useAppStore();
     const [pipBlocked,     setPipBlocked]     = useState(false);
-    const [expandedGroups, setExpandedGroups] = useState(new Set(['wlc','scc','sample','system']));
+    const [expandedGroups, setExpandedGroups] = useState(new Set([]));
+
+    // MENU_GROUPS 는 모듈 상수 → 항상 동일 값이므로 렌더마다 호출해도 안전.
+    // useEffect([]) 는 Vite HMR 이 dockviewStore.js 를 재실행할 때 다시 호출되지 않으므로
+    // 렌더 함수에서 직접 호출해 HMR 후에도 _menuGroup 이 항상 최신 상태를 유지하게 한다.
+    setDockviewMenu(MENU_GROUPS)
 
     const openPanel = useCallback((item) => {
         if (!apiRef.current) return;

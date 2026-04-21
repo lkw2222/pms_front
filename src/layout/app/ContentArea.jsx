@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
-import { useAppStore } from '@/store/useAppStore.js';
+import { useAppStore }    from '@/store/useAppStore.js';
+import { setDockviewApi } from '@/store/dockviewStore.js';
 import {DockviewReact} from "dockview-react";
 import styles from '@/assets/styles/layout.module.css';
 
@@ -22,11 +23,13 @@ function loadLayout() {
 }
 
 export default function ContentArea({ apiRef, components }) {
-    const { theme, setOpenPanels } = useAppStore();
+    const { theme, setOpenPanels } = useAppStore()
+
 
     // ── Dockview 준비 → 레이아웃 복원 ───────────────────────────────────────
     const onReady = useCallback((event) => {
         apiRef.current = event.api
+        setDockviewApi(event.api)
         const saved = loadLayout()
 
         if (saved) {
@@ -45,7 +48,10 @@ export default function ContentArea({ apiRef, components }) {
         }
 
         // 레이아웃 변경 시마다 저장
-        event.api.onDidAddPanel(()          => saveLayout(event.api))
+        event.api.onDidAddPanel((p) => {
+            setOpenPanels(prev => new Set([...prev, p.id]))
+            saveLayout(event.api)
+        })
         event.api.onDidRemovePanel(p => {
             setOpenPanels(prev => { const s = new Set(prev); s.delete(p.id); return s })
             saveLayout(event.api)

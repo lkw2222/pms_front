@@ -3,11 +3,13 @@ import { useQuery }       from '@tanstack/react-query'
 import BasicGrid          from '@/components/grid/BasicGrid.jsx'
 import GridDetailDrawer   from '@/components/grid/GridDetailDrawer.jsx'
 import SelectInput        from '@/components/input/SelectInput.jsx'
-import TextInput          from '@/components/input/TextInput.jsx'
+import SearchInput        from '@/components/input/SearchInput.jsx'
 import DateInput          from '@/components/input/DateInput.jsx'
 import BasicButton        from '@/components/button/BasicButton.jsx'
 import BasicLabel         from '@/components/label/BasicLabel.jsx'
-import { Search, RotateCcw, RefreshCw, Loader2 } from 'lucide-react'
+import { useAppStore }     from '@/store/useAppStore.js'
+import { openDockPanel }  from '@/store/dockviewStore.js'
+import { Search, RotateCcw, Loader2 } from 'lucide-react'
 import styles             from './WlcExecuteLogFeature.module.css'
 
 // ── 목업 데이터 ────────────────────────────────────────────────────────────────
@@ -122,9 +124,18 @@ export default function WlcExecuteLogFeature() {
     const [detailOpen, setDetailOpen] = useState(false)
     const [detailData, setDetailData] = useState(null)
 
+    const { setWlcResultFilter } = useAppStore()
+
+    // 산출 ID 클릭 → 풍하중 결과 패널 오픈 + 필터 전달
+    // setOpenPanels 는 ContentArea onDidAddPanel 에서 자동 처리됨
+    const goToResult = useCallback((row) => {
+        setWlcResultFilter({ calcId: row.id, bonbu: row.bonbu, sabupso: row.sabupso })
+        openDockPanel({ id:'wlc_3' })
+    }, [setWlcResultFilter])
+
     const sabupsoOptions = SABUPSO_MAP[search.bonbu] ?? []
 
-    const { data, isLoading, refetch } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['wlc', 'execute-log', 'list', applied],
         queryFn: async () => {
             // ── 실제 API 호출 예제 ────────────────────────────────────────
@@ -160,7 +171,7 @@ export default function WlcExecuteLogFeature() {
         {
             field:'id', headerName:'풍하중 산출 ID', width:160, flex:0,
             cellRenderer: ({ value, data: row }) => (
-                <span className={styles.idLink} onClick={() => openDetail(row)}>{value}</span>
+                <span className={styles.idLink} onClick={() => goToResult(row)}>{value}</span>
             ),
         },
         { field:'bonbu',   headerName:'지역본부', width:140, flex:0,
@@ -169,10 +180,10 @@ export default function WlcExecuteLogFeature() {
           valueFormatter: ({ value }) => Object.values(SABUPSO_MAP).flat().find(o => o.value === value)?.label ?? value },
         { field:'executor',  headerName:'실행자',   width:80,  flex:0 },
         {
-            field:'status', headerName:'상태', width:80, flex:0,
+            field:'status', headerName:'상태', width:90, flex:0,
             cellRenderer: ({ value }) => <BasicLabel text={value} variant={STATUS_VARIANT[value] ?? 'default'} />,
         },
-        { field:'poleCount', headerName:'전주개수', width:85, flex:0, type:'numericColumn',
+        { field:'poleCount', headerName:'전주개수', width:90, flex:0, type:'numericColumn',
           valueFormatter: ({ value }) => value?.toLocaleString() ?? '' },
         {
             field:'message', headerName:'메시지', flex:1, sortable:false,
@@ -180,16 +191,16 @@ export default function WlcExecuteLogFeature() {
                 ? <span className={styles.msgCell} title={value}>{value}</span>
                 : null,
         },
-        { field:'startAt', headerName:'시작일시', width:145, flex:0 },
-        { field:'endAt',   headerName:'종료일시', width:145, flex:0,
+        { field:'startAt', headerName:'시작일시', width:160, flex:0 },
+        { field:'endAt',   headerName:'종료일시', width:160, flex:0,
           valueFormatter: ({ value }) => value || '—' },
-    ], [openDetail])
+    ], [openDetail, goToResult])
 
     return (
         <div className="grid-wrap">
             {/* ── 검색 조건 ── */}
             <div className="panel-toolbar panel-toolbar-col">
-                <div className="panel-search-value" style={{ display:'grid', gridTemplateColumns:'150px 150px 150px 150px 120px 150px', gap:10, alignItems:'end' }}>
+                <div className="panel-search-value" style={{ display:'grid', gridTemplateColumns:'150px 150px 160px 160px 1fr', gap:10, alignItems:'end' }}>
                     <SelectInput
                         label="지역본부"
                         value={search.bonbu}
@@ -215,18 +226,13 @@ export default function WlcExecuteLogFeature() {
                         value={search.dateTo}
                         onChange={v => setSearch(s => ({ ...s, dateTo: v }))}
                     />
-                    <SelectInput
-                        label="검색구분"
-                        value={search.searchType}
-                        onChange={e => setSearch(s => ({ ...s, searchType: e.target.value }))}
+                    <SearchInput
+                        label="검색"
                         options={SEARCH_TYPE_OPT}
-                        placeholder=""
-                    />
-                    <TextInput
-                        label="검색어"
-                        placeholder="검색어를 입력하세요"
-                        value={search.searchValue}
-                        onChange={e => setSearch(s => ({ ...s, searchValue: e.target.value }))}
+                        selectValue={search.searchType}
+                        onSelectChange={e => setSearch(s => ({ ...s, searchType: e.target.value }))}
+                        inputValue={search.searchValue}
+                        onInputChange={e => setSearch(s => ({ ...s, searchValue: e.target.value }))}
                         onKeyDown={e => e.key === 'Enter' && onSearch()}
                     />
                 </div>
@@ -237,13 +243,11 @@ export default function WlcExecuteLogFeature() {
                             : <>총 <strong style={{ color:'var(--color-danger-total)' }}>{(data?.totalCount ?? 0).toLocaleString()}</strong>건</>
                         }
                     </div>
-                    <div style={{ display:'flex', gap:8 }}>
+                    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
                         <BasicButton label="초기화" icon={RotateCcw}                    variant="secondary" onClick={onReset} />
                         <BasicButton label="조회"   icon={isLoading ? Loader2 : Search} variant="primary"   onClick={onSearch} disabled={isLoading} />
                     </div>
-                    <div style={{ display:'flex', justifyContent:'flex-end' }}>
-                        <BasicButton label="새로고침" icon={RefreshCw} variant="secondary" size="sm" onClick={() => refetch()} />
-                    </div>
+                    <div />
                 </div>
             </div>
 
@@ -257,6 +261,7 @@ export default function WlcExecuteLogFeature() {
                         height="100%"
                         pageSize={10}
                         loading={isLoading}
+                        defaultColDef={{ sortable:true, resizable:true, filter:false, minWidth:80, flex:1 }}
                     />
                 </div>
                 <GridDetailDrawer

@@ -47,6 +47,12 @@ export const useAppStore = create(
         setOpenPanels: (updater) => set((state) => ({
             openPanels: typeof updater === 'function' ? updater(state.openPanels) : updater
         })),
+
+        // ── 풍하중 결과 초기 필터 (실행로그 → 결과 페이지 이동 시 사용) ──────
+        // 결과 패널에서 읽은 뒤 반드시 clearWlcResultFilter() 호출
+        wlcResultFilter: null,
+        setWlcResultFilter:   (filter) => set({ wlcResultFilter: filter }),
+        clearWlcResultFilter: ()       => set({ wlcResultFilter: null }),
     }),
     {
       name: 'pms-app-store',

@@ -1,8 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { X } from 'lucide-react'
 
-const MIN_WIDTH = 300
-const MAX_WIDTH = 800
+const MIN_WIDTH  = 300
+const MAX_WIDTH  = 800
+const TRANSITION = 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)'
 
 /**
  * 그리드 우측 슬라이드 패널. children 에 pk 기반 상세 컴포넌트를 주입하며
@@ -40,23 +41,28 @@ export default function GridDetailDrawer({
   children,
   defaultWidth = 420,
 }) {
-  const [width, setWidth] = useState(defaultWidth)
-  const dragging = useRef(false)
-  const startX   = useRef(0)
-  const startW   = useRef(0)
+  const [width, setWidth]         = useState(defaultWidth)
+  const [isResizing, setIsResizing] = useState(false)
+  const panelRef = useRef(null)
 
   const onMouseDown = useCallback((e) => {
-    dragging.current = true
-    startX.current   = e.clientX
-    startW.current   = width
+    const startX = e.clientX
+    const startW = panelRef.current ? panelRef.current.offsetWidth : width
 
-    const onMove = (e) => {
-      if (!dragging.current) return
-      const delta = startX.current - e.clientX
-      setWidth(Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startW.current + delta)))
+    // transition 을 React state 로 제어 — 직접 DOM 뮤테이션 시 React 가 복원을 건너뛰는 문제 방지
+    setIsResizing(true)
+
+    const onMove = (mv) => {
+      const newW = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startW + (startX - mv.clientX)))
+      if (panelRef.current) {
+        panelRef.current.style.width    = `${newW}px`
+        panelRef.current.style.minWidth = `${newW}px`
+      }
     }
-    const onUp = () => {
-      dragging.current = false
+    const onUp = (up) => {
+      const newW = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startW + (startX - up.clientX)))
+      setWidth(newW)        // state 동기화 (React 18 배치: isResizing=false 와 한 번에 렌더)
+      setIsResizing(false)  // transition 복원 — React 가 'none' → TRANSITION 으로 정상 패치
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseup',   onUp)
     }
@@ -81,11 +87,11 @@ export default function GridDetailDrawer({
       )}
 
       {/* 패널 본체 */}
-      <div style={{
+      <div ref={panelRef} style={{
         width:         open ? width : 0,
         minWidth:      open ? width : 0,
         overflow:      'hidden',
-        transition:    'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
+        transition:    isResizing ? 'none' : TRANSITION,
         borderLeft:    open ? '1px solid var(--color-border)' : 'none',
         background:    'var(--color-bg-secondary)',
         display:       'flex',

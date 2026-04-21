@@ -16,6 +16,7 @@ import ArchivePanel             from '@/panels/demo/archive/ArchivePanel.jsx';
 import WindPressurePanel        from '@/panels/demo/windPressure/WindPressurePanel.jsx';
 import WlcBatchExecutePanel     from '@/panels/wlc/wlcBatchExecute/WlcBatchExecutePanel.jsx';
 import WlcExecuteLogPanel       from '@/panels/wlc/wlcExecuteLog/WlcExecuteLogPanel.jsx';
+import WlcResultPanel           from '@/panels/wlc/wlcResult/WlcResultPanel.jsx';
 
 import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
 
@@ -35,6 +36,7 @@ const PANEL_COMPONENTS = {
     windPressurePanel:   WindPressurePanel,
     wlcBatchExecutePanel: WlcBatchExecutePanel,
     wlcExecuteLogPanel:   WlcExecuteLogPanel,
+    wlcResultPanel:       WlcResultPanel,
 
     emptyPanel:         EmptyPanel,
 }

@@ -1,0 +1,58 @@
+.wrapper { display: flex; flex-direction: column; gap: 6px; }
+.labelText { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); cursor: pointer; user-select: none; }
+
+.inputGroup {
+    display:       flex;
+    align-items:   center;
+    height:        36px;
+    border:        1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background:    var(--color-bg-tertiary);
+    overflow:      hidden;
+    transition:    border-color 0.15s;
+}
+.inputGroup:focus-within {
+    border-color: var(--color-border-focus);
+}
+
+.selectWrap {
+    position:    relative;
+    flex-shrink: 0;
+    height:      100%;
+}
+.select {
+    height:      100%;
+    font-size:   13px;
+    padding:     0 28px 0 10px;
+    border:      none;
+    border-right: 1px solid var(--color-border);
+    background:  transparent;
+    color:       var(--color-text-primary);
+    appearance:  none;
+    cursor:      pointer;
+    outline:     none;
+    white-space: nowrap;
+}
+.arrow {
+    position:       absolute;
+    right:          7px;
+    top:            50%;
+    transform:      translateY(-50%);
+    pointer-events: none;
+    color:          var(--color-text-muted);
+    display:        flex;
+    align-items:    center;
+}
+
+.input {
+    flex:        1;
+    height:      100%;
+    font-size:   13px;
+    padding:     0 10px;
+    border:      none;
+    background:  transparent;
+    color:       var(--color-text-primary);
+    outline:     none;
+    min-width:   0;
+}
+.input::placeholder { color: var(--color-text-placeholder, var(--color-text-muted)); }

@@ -1,0 +1,137 @@
+.wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    color: var(--color-text-muted);
+    font-size: 13px;
+}
+
+/* ── 탭 바 ───────────────────────────────────────────────────────────────── */
+.tabBar {
+    display: flex;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+.tab {
+    flex: 1;
+    padding: 8px 4px;
+    font-size: 12px;
+    font-weight: 400;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: -1px;
+}
+
+.tab:hover {
+    color: var(--color-text-primary);
+}
+
+.tabActive {
+    font-weight: 600;
+    border-bottom-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+/* ── 요약 정보 콘텐츠 ────────────────────────────────────────────────────── */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.sectionLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 14px 8px 14px;
+    flex-shrink: 0;
+}
+
+.sectionLabel::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 13px;
+    background: var(--color-accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.sectionLabelText {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+/* ── 2열 정보 그룹 ───────────────────────────────────────────────────────── */
+.group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.12s;
+}
+
+.group:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.cell {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    padding: 8px 10px;
+    gap: 6px;
+    align-items: center;
+    min-width: 0;
+}
+
+/* 단일 항목 (홀수 마지막 or full 지정) — 전체 너비, 라벨 컬럼 넓게 */
+.cellFull {
+    grid-column: 1 / -1;
+    grid-template-columns: 76px 1fr;
+    padding: 8px 14px;
+}
+
+.cellLabel {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cellValue {
+    font-size: 12px;
+    color: var(--color-text-primary);
+    word-break: break-all;
+    min-width: 0;
+}
+
+/* ── 푸터 ────────────────────────────────────────────────────────────────── */
+.footer {
+    padding: 14px 14px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+/* ── 지도 탭 ─────────────────────────────────────────────────────────────── */
+.mapWrap {
+    flex: 1;
+    overflow: hidden;
+}
