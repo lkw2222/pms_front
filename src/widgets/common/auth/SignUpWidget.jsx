@@ -1,14 +1,51 @@
 import React from 'react'
+import { useForm } from 'react-hook-form';
 import {UserPlus, Pencil, Lock, Save, X, Check} from 'lucide-react'
-import TextInput from "@/components/input/TextInput";
-import SelectInput from "@/components/input/SelectInput";
-import Textarea from "@/Components/input/Textarea";
 import BasicButton from "@/Components/button/BasicButton";
+import {ControllerText, ControllerSelect, ControllerTextarea} from "@/utils/HookController.jsx";
+
 
 export default function SignUpWidget({ onClose, styles }) {
 
+    const {
+        control,
+        handleSubmit,
+        getValues,
+        watch,
+        formState: { isSubmitting }
+    } = useForm({
+        mode: 'onChange',
+        defaultValues: {
+            userId: '',
+            password: '',
+            passwordConfirm: '',
+            userNm: '',
+            headquarters: '',
+            branch: '',
+            pwQuestion: '',
+            pwAnswer: '',
+            purpose: ''
+        }
+    });
+
+    const password = watch('password'); // 비밀번호 확인 검증용
+
+    const onSubmit = async (data) => {
+        try {
+            /*const res = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (!res.ok) throw new Error('가입 실패');*/
+            onClose();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
-        <div className={styles.widgetBg} onClick={onClose} >
+        <div className={styles.widgetBg} >
             <div className={styles.widgetWrap} onClick={(e) => e.stopPropagation()} >
                 {/*헤더*/}
                 <div className={styles.widgetHeader}>
@@ -20,46 +57,73 @@ export default function SignUpWidget({ onClose, styles }) {
                 <div className={styles.widgetBody}>
                     <div>
                         <div className={styles.idCheckInput}>
-                            <TextInput
+                            <ControllerText
+                                name="userId"
+                                control={control}
+                                rules={{
+                                    required : 'ID는 필수입니다.',
+                                    pattern: {
+                                        value : /^[a-z0-9]{6,14}$/,
+                                        message : 'ID는 6~14자의 영문 소문자, 숫자만 입력 가능합니다.'
+                                    }
+                                }}
                                 label="ID"
-                                placeholder="6~14자의 영문 소문자, 숫자만 입력 가능합니다."
                                 type="text"
-                                isNotNull
+                                placeholder="6~14자의 영문 소문자, 숫자만 입력 가능합니다."
                                 icon={Pencil}
-                                regex={/^[a-z0-9]{6,14}$/}
-                                errorMessage="ID는 6~14자의 영문 소문자, 숫자만 입력 가능합니다."
                             />
                         </div>
                         <div className={styles.idCheckButton}>
                             <BasicButton label="ID 중복검사" icon={Check} variant="secondary" />
                         </div>
                     </div>
-                    <TextInput
+                    <ControllerText
+                        name="password"
+                        control={control}
+                        rules={{
+                            required : '비밀번호는 필수입니다.',
+                            pattern: {
+                                value : /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/,
+                                message : '영문과 숫자를 포함한 8자리 이상 입력하세요.'
+                            }
+                        }}
                         label="비밀번호"
                         type="password"
                         placeholder="영문과 숫자를 포함한 8자리 이상 입력하세요."
-                        isNotNull
-                        regex={/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/}
-                        errorMessage="영문과 숫자를 포함한 8자리 이상 입력하세요."
                         icon={Lock}
                     />
-                    <TextInput
+                    <ControllerText
+                        name="passwordConfirm"
+                        control={control}
+                        rules={{
+                            required: '비밀번호 확인은 필수입니다.',
+                            validate: (v) => v === getValues('password') || '비밀번호가 일치하지 않습니다.',
+                        }}
                         label="비밀번호 확인"
                         type="password"
                         placeholder="비밀번호를 한번 더 입력해주세요."
-                        isNotNull
+                        showStrength={false}
                         icon={Lock}
                     />
-                    <TextInput
+                    <ControllerText
+                        name="userNm"
+                        control={control}
+                        rules={{
+                            required : '이용자 이름은 필수입니다.',
+                        }}
                         label="이용자 이름"
-                        placeholder="이용자 이름을 입력해주세요."
                         type="text"
-                        isNotNull
+                        placeholder="이용자 이름을 입력해주세요."
                         icon={Pencil}
                     />
-                    <SelectInput
+
+                    <ControllerSelect
+                        name="headquarters"
+                        control={control}
                         label="지역본부"
-                        isNotNull
+                        rules={{
+                            required : '지역본부를 선택해주세요.',
+                        }}
                         options={[
                             {label:'서울본부', value:'서울본부'},
                             {label:'남서울본부', value:'남서울본부'},
@@ -78,9 +142,14 @@ export default function SignUpWidget({ onClose, styles }) {
                             {label:'제주본부', value:'제주본부'}
                         ]}
                     />
-                    <SelectInput
+
+                    <ControllerSelect
+                        name="branch"
+                        control={control}
                         label="사업소"
-                        isNotNull
+                        rules={{
+                            required : '사업소를 선택해주세요.',
+                        }}
                         options={[
                             {label:'동대문중랑지사', value:'동대문중랑지사'},
                             {label:'서대문은평지사', value:'서대문은평지사'},
@@ -90,22 +159,33 @@ export default function SignUpWidget({ onClose, styles }) {
                             {label:'노원도봉지사', value:'노원도봉지사'}
                         ]}
                     />
-                    <SelectInput
+
+                    <ControllerSelect
+                        name="pwQuestion"
+                        control={control}
                         label="비밀번호 찾기 질문"
-                        isNotNull
+                        rules={{
+                            required : '비밀번호 찾기 질문을 선택해주세요.',
+                        }}
                         options={[
                             {label:'나의 초등학교 이름은?', value:'001'},
                             {label:'나의 고향은?', value:'002'}
                         ]}
                     />
-                    <TextInput
+                    <ControllerText
+                        name="pwAnswer"
+                        control={control}
+                        rules={{
+                            required : '비밀번호 찾기 답변은 필수입니다.',
+                        }}
                         label="비밀번호 찾기 답변"
                         placeholder="비밀번호 찾기 질문에 대한 답변을 입력하세요."
                         type="text"
-                        isNotNull
                         icon={Pencil}
                     />
-                    <Textarea
+                    <ControllerTextarea
+                        name="purpose"
+                        control={control}
                         label="이용목적"
                         placeholder="이용목적을 입력해주세요."
                         rows={3}
@@ -119,6 +199,8 @@ export default function SignUpWidget({ onClose, styles }) {
                         label="가입"
                         icon={Save}
                         variant="primary" size="sm"
+                        disabled={isSubmitting}
+                        onClick={handleSubmit(onSubmit)}
                     />
 
                 </div>

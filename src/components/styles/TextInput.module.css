@@ -41,3 +41,42 @@
 }
 
 .errorMsg { font-size: 11px; color: var(--color-danger); }
+
+.strengthWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.strengthBar {
+  display: flex;
+  flex: 1;
+  gap: 3px;
+  height: 4px;
+}
+
+.strengthSegment {
+  flex: 1;
+  background-color: #e5e7eb;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.strengthLabel {
+  font-size: 11px;
+  font-weight: 500;
+  min-width: 48px;
+  text-align: right;
+}
+
+/* 강도별 색상 */
+.strengthSegment.weak       { background-color: #ef4444; } /* red */
+.strengthSegment.medium     { background-color: #f59e0b; } /* amber */
+.strengthSegment.strong     { background-color: #10b981; } /* emerald */
+.strengthSegment.veryStrong { background-color: #059669; } /* emerald-dark */
+
+.strengthLabel.weak       { color: #ef4444; }
+.strengthLabel.medium     { color: #f59e0b; }
+.strengthLabel.strong     { color: #10b981; }
+.strengthLabel.veryStrong { color: #059669; }

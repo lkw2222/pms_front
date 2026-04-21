@@ -1,13 +1,31 @@
 import React from 'react'
 import {Pencil, X, Search, RotateCcw} from 'lucide-react'
-import TextInput from "@/components/input/TextInput";
-import SelectInput from "@/components/input/SelectInput";
-import BasicButton from "@/Components/button/BasicButton";
+import {ControllerText, ControllerSelect} from "@/utils/HookController.jsx";
+import {useForm} from "react-hook-form";
+import BasicButton from "@/components/button/BasicButton.jsx";
 
 export default function FindAccountWidget({ onClose, styles }) {
 
+    const {
+        control,
+        handleSubmit,
+        getValues,
+        watch,
+        formState: { isSubmitting }
+    } = useForm({
+        mode: 'onChange',
+        defaultValues: {
+            userId: '',
+            userNm: '',
+            headquarters: '',
+            branch: '',
+            pwQuestion: '',
+            pwAnswer: '',
+        }
+    });
+
     return (
-        <div className={styles.widgetBg} onClick={onClose} >
+        <div className={styles.widgetBg}>
             <div className={styles.widgetWrap} onClick={(e) => e.stopPropagation()} >
                 {/*헤더*/}
                 <div className={styles.widgetHeader}>
@@ -18,17 +36,24 @@ export default function FindAccountWidget({ onClose, styles }) {
                 {/*바디*/}
                 <div className={styles.widgetBody}>
                     <div className={styles.findWidgetTitle}>ID 찾기</div>
-
-                    <TextInput
+                    <ControllerText
+                        name="userNm"
+                        control={control}
+                        rules={{
+                            required : '이용자 이름은 필수입니다.',
+                        }}
                         label="이용자 이름"
-                        placeholder="이용자 이름을 입력해주세요."
                         type="text"
-                        isNotNull
+                        placeholder="이용자 이름을 입력해주세요."
                         icon={Pencil}
                     />
-                    <SelectInput
+                    <ControllerSelect
+                        name="headquarters"
+                        control={control}
                         label="지역본부"
-                        isNotNull
+                        rules={{
+                            required : '지역본부를 선택해주세요.',
+                        }}
                         options={[
                             {label:'서울본부', value:'서울본부'},
                             {label:'남서울본부', value:'남서울본부'},
@@ -47,9 +72,13 @@ export default function FindAccountWidget({ onClose, styles }) {
                             {label:'제주본부', value:'제주본부'}
                         ]}
                     />
-                    <SelectInput
+                    <ControllerSelect
+                        name="branch"
+                        control={control}
                         label="사업소"
-                        isNotNull
+                        rules={{
+                            required : '사업소를 선택해주세요.',
+                        }}
                         options={[
                             {label:'동대문중랑지사', value:'동대문중랑지사'},
                             {label:'서대문은평지사', value:'서대문은평지사'},
@@ -65,26 +94,38 @@ export default function FindAccountWidget({ onClose, styles }) {
                 <div className={[styles.widgetBody, styles.widgetTopLine].join(' ')}>
                     <div className={styles.findWidgetTitle}>비밀번호 찾기</div>
 
-                    <TextInput
+                    <ControllerText
+                        name="userId"
+                        control={control}
+                        rules={{
+                            required : 'ID는 필수입니다.',
+                        }}
                         label="ID"
-                        placeholder="ID를 입력해주세요."
-                        isNotNull
                         type="text"
+                        placeholder="ID를 입력해주세요."
                         icon={Pencil}
                     />
-                    <SelectInput
+                    <ControllerSelect
+                        name="pwQuestion"
+                        control={control}
                         label="비밀번호 찾기 질문"
-                        isNotNull
+                        rules={{
+                            required : '비밀번호 찾기 질문을 선택해주세요.',
+                        }}
                         options={[
                             {label:'나의 초등학교 이름은?', value:'001'},
                             {label:'나의 고향은?', value:'002'}
                         ]}
                     />
-                    <TextInput
+                    <ControllerText
+                        name="pwAnswer"
+                        control={control}
+                        rules={{
+                            required : '비밀번호 찾기 답변은 필수입니다.',
+                        }}
                         label="비밀번호 찾기 답변"
                         placeholder="비밀번호 찾기 질문에 대한 답변을 입력하세요."
                         type="text"
-                        isNotNull
                         icon={Pencil}
                     />
                     <BasicButton label="비밀번호 초기화" icon={RotateCcw} variant="primary" />
