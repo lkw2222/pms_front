@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LoginFeature from "@/features/common/login/LoginFeature.jsx";
 import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";
@@ -11,8 +11,58 @@ import loginSlide02 from "@/assets/image/login-slide-02.png";
 import logoKepri from "@/assets/image/logo-kepri.png";
 
 export default function LoginLayout() {
-
     const { setSessionExpired, setAuth } = useAppStore();
+
+    // 이미지 슬라이드
+    const slides = [loginSlide01, loginSlide02].filter(Boolean);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
+    const timerRef = useRef(null);
+    const interval = 5000;
+    const stopAutoPlay = () => {
+        if (timerRef.current) {
+            window.clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+    };
+    const startAutoPlay = () => {
+        if (slides.length <= 1 || isPaused) return;
+
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduceMotion) return;
+
+        stopAutoPlay();
+        timerRef.current = window.setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % slides.length);
+        }, interval);
+    };
+    const goToSlide = (index) => {
+        setCurrentIndex(index);
+
+        if (!isPaused) {
+            startAutoPlay();
+        }
+    };
+    const toggleAutoPlay = () => {
+        setIsPaused((prev) => !prev);
+    };
+    const handleVisualBlur = (e) => {
+        if (!e.currentTarget.contains(e.relatedTarget) && !isPaused) {
+            startAutoPlay();
+        }
+    };
+    useEffect(() => {
+        if (currentIndex >= slides.length) {
+            setCurrentIndex(0);
+        }
+    }, [currentIndex, slides.length]);
+    useEffect(() => {
+        startAutoPlay();
+
+        return () => {
+            stopAutoPlay();
+        };
+    }, [isPaused, slides.length]);
 
     const loginMutation = useMutation({
         mutationFn: ({ id, password }) => loginApi.login(id, password),
@@ -24,7 +74,7 @@ export default function LoginLayout() {
         },
         onError: (error) => {
             toast.error(error.message || '로그인에 실패했습니다.', {style: {
-                minWidth: '500px',
+                    minWidth: '500px',
                     minHeight: '80px',
                     padding: '20px',
                     fontSize: '20px',
@@ -33,21 +83,34 @@ export default function LoginLayout() {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, 0%)'
-            }});
+                }});
         },
     })
 
     return (
         <main id="main-content" className="login-page">
             <div className="login-shell">
-                <section className="login-visual" aria-labelledby="visual-title">
+                <section
+                    className="login-visual"
+                    aria-labelledby="visual-title"
+                    onMouseEnter={stopAutoPlay}
+                    onMouseLeave={() => {
+                        if (!isPaused) startAutoPlay();
+                    }}
+                    onFocusCapture={stopAutoPlay}
+                    onBlurCapture={handleVisualBlur}
+                >
                     <div className="visual-track">
-                        <div className="visual-slide is-active" data-slide="0" aria-hidden="false">
-                            <img src={ loginSlide01 } alt="" />
-                        </div>
-                        <div className="visual-slide" data-slide="1" aria-hidden="true">
-                            <img src={ loginSlide02 } alt="" />
-                        </div>
+                        {slides.map((slide, index) => (
+                            <div
+                                key={index}
+                                className={`visual-slide ${currentIndex === index ? "is-active" : ""}`}
+                                data-slide={index}
+                                aria-hidden={currentIndex === index ? "false" : "true"}
+                            >
+                                <img src={slide} alt="" />
+                            </div>
+                        ))}
                     </div>
                     <div className="visual-copy">
                         <p className="eyebrow">지능형 전주 진단 플랫폼</p>
@@ -60,17 +123,35 @@ export default function LoginLayout() {
                     <div className="visual-footer-logo" aria-hidden="true">
                         <img src={ kepco } alt="" />
                     </div>
-                    <div className="visual-controls">
-                        <div className="visual-pager" role="group" aria-label="배경 이미지 선택">
-                            <button className="visual-dot is-active" type="button" data-index="0" aria-label="첫 번째 배경 이미지 보기" aria-current="true">
-                                <span className="visually-hidden">첫 번째 이미지</span>
-                            </button>
-                            <button className="visual-dot" type="button" data-index="1" aria-label="두 번째 배경 이미지 보기" aria-current="false">
-                                <span className="visually-hidden">두 번째 이미지</span>
+                    {slides.length > 1 && (
+                        <div className="visual-controls">
+                            <div className="visual-pager" role="group" aria-label="배경 이미지 선택">
+                                {slides.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        className={`visual-dot ${currentIndex === index ? "is-active" : ""}`}
+                                        type="button"
+                                        data-index={index}
+                                        aria-label={`${index + 1}번째 배경 이미지 보기`}
+                                        aria-current={currentIndex === index ? "true" : "false"}
+                                        onClick={() => goToSlide(index)}
+                                    >
+                                        <span className="visually-hidden">{index + 1}번째 이미지</span>
+                                    </button>
+                                ))}
+                            </div>
+
+                            <button
+                                id="visualToggle"
+                                className="visual-toggle"
+                                type="button"
+                                aria-pressed={isPaused ? "true" : "false"}
+                                onClick={toggleAutoPlay}
+                            >
+                                {isPaused ? "재생" : "일시정지"}
                             </button>
                         </div>
-                        <button id="visualToggle" className="visual-toggle" type="button" aria-pressed="false">일시정지</button>
-                    </div>
+                    )}
                 </section>
 
                 <section className="login-panel" aria-labelledby="login-title">
