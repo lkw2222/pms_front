@@ -4,6 +4,7 @@ import React from "react";
 import TextInput from "@/components/input/TextInput.jsx";
 import SelectInput from "@/components/input/SelectInput.jsx";
 import Textarea from "@/components/input/Textarea.jsx";
+import RadioInput from "@/components/input/RadioInput.jsx";
 
 // 공통 훅
 function useControlledField({ name, control, rules, defaultValue = '' }) {
@@ -42,3 +43,4 @@ function createControlled(Component) {
 export const ControllerText = createControlled(TextInput);
 export const ControllerSelect = createControlled(SelectInput);
 export const ControllerTextarea = createControlled(Textarea);
+export const ControllerRadio = createControlled(RadioInput);

@@ -11,7 +11,7 @@ export const loginApi = {
     login: (id, password) => new Promise((resolve, reject) => {
         if(id && password) {
             setTimeout(() => resolve({
-                user:  { id, name: id, bonbu: '기술본부', sabupso: '서울사업소' }
+                user:  { userId: id, userNm: "홍길동", headquarters: '서울본부', branch: '동대문중랑지사', pwQuestion : '001', pwAnswer: '용곡초등학교', purpose: '시스템 관리', auth:'시스템관리자', useYn: 'Y'}
             }), 1000);
         } else {
             setTimeout(() => reject(new Error('아이디 또는 비밀번호가 올바르지 않습니다.')), 1000);

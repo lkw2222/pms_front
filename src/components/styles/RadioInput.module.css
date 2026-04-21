@@ -16,3 +16,6 @@
   content: ''; width: 8px; height: 8px; border-radius: 50%;
   background: var(--color-accent);
 }
+
+.labelText  { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); }
+.required   { color: var(--color-danger); margin-right: 2px; }
