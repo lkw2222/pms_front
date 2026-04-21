@@ -1,4 +1,5 @@
 import React, {useId, useState} from 'react'
+import {UserPlus, Search} from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import TextInput   from '@/components/input/TextInput.jsx'
 import BasicButton from '@/components/button/BasicButton.jsx'
@@ -6,7 +7,7 @@ import TextButton from '@/components/button/TextButton.jsx'
 import SignUpWidget from "@/widgets/common/auth/SignUpWidget.jsx";
 import FindAccountWidget from "@/widgets/common/auth/FindAccountWidget.jsx";
 import '@/assets/styles/login.css';
-import styles from './LoginFeature.module.css'
+import styles from '@/styles/CommonAuth.module.css'
 
 /**
  * LoginFeature - React Hook Form 적용
@@ -93,15 +94,17 @@ export default function LoginFeature({ onLogin, className='btn-login', isPending
                 <nav className="brand-links" aria-label="로그인 관련 바로가기">
                     <div className="brand-links-group">
                         <TextButton
-                            label="ID/비밀번호 찾기"
+                            label="내 계정 찾기"
                             type="button"
                             onClick={() => setFindAccountOpen(true)}
+                            icon={Search}
                         />
                     </div>
                     <TextButton
                           label="회원가입"
                           type="button"
                           onClick={() => setSignupOpen(true)}
+                          icon={UserPlus}
                     />
                 </nav>
             </form>

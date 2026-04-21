@@ -1,0 +1,133 @@
+.widgetBg {
+  position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: fadeIn 0.2s ease;
+}
+
+.widgetWrap {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  width: 500px;
+  box-shadow: var(--shadow-lg);
+}
+
+.widgetHeader {
+  display: flex;
+  align-items:center;
+  gap: 8px;
+  padding:13px 16px;
+  border-bottom:1px solid var(--color-border);
+  flex-shrink:0;
+}
+
+.widgetHeaderIcon {
+  color:var(--color-text-secondary);
+}
+
+.widgetHeaderText {
+  font-size:13px; font-weight:700; color:var(--color-text-primary); flex:1;
+}
+
+.widgetBody {
+  display:flex;
+  flex-direction:column;
+  padding:10px 20px;
+  gap: 8px;
+}
+
+.widgetFooter {
+  display: flex; justify-content: flex-end; gap: 8px; padding: 0 20px 10px;
+}
+
+.idCheckInput {
+  width:334px; float:left;
+}
+
+.idCheckButton {
+  float:right; margin-top: 25px;
+}
+
+.findWidgetTitle {
+  font-weight: bold;
+}
+
+.widgetTopLine {
+  border-top : 1px solid var(--color-border);
+}
+
+.profileAvata {
+  width:32px; height:32px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg, var(--color-accent), var(--color-purple));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; cursor:pointer;
+  transition:border-color .15s;
+}
+
+.avataOpen {
+  border : 2px solid var(--color-border-focus);
+}
+
+.avataClose {
+  border : 2px solid transparent;
+}
+
+.profileDropdown {
+  position:absolute; top:calc(100% + 8px); right:0;
+  min-width:220px; width:max-content; z-index:1000;
+  background: var(--color-bg-secondary);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-md);
+  overflow:hidden;
+  animation:slideUp .15s ease;
+}
+
+.profileUser {
+  padding:14px 16px; display:flex; align-items:center; gap:12px; cursor:pointer; border-radius: var(--radius-md);
+}
+
+.profileUser:hover {
+  background : color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.profileUserinfo {
+  width:40px; height:40px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg, var(--color-accent), var(--color-purple));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff;
+}
+
+.profileUserWrap {
+  min-width:0;
+}
+
+.profileUserText {
+  display:flex; align-items:center; gap:5px; margin-bottom:2px;
+}
+
+.profileUserTextRole {
+  font-size:11px; color:var(--color-text-muted);
+}
+
+.profileUserTextName {
+  font-size:13px; font-weight:700; color:var(--color-text-primary); white-space:nowrap;
+}
+
+.profileUserSub {
+  font-size:11px; color:var(--color-text-muted); white-space:nowrap;
+}
+
+.profileLine {
+  height:1px; background:var(--color-border); margin:0 12px;
+}
+
+.profileLogout {
+  width:100%; display:flex; align-items:center; gap:8px;
+  padding:8px 10px; border-radius:var(--radius-md);
+  border:none; background:transparent; cursor:pointer;
+  font-size:13px; color:var(--color-danger);
+  font-weight:500; transition:background .12s;
+}
+
+.profileLogout:hover {
+  background : color-mix(in srgb, var(--color-danger) 10%, transparent);
+}

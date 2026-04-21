@@ -1,66 +1,115 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { LogOut, User } from 'lucide-react'
-import { useAppStore } from '@/store/useAppStore.js'
+import React from 'react'
+import {Pencil, Lock, Save, X, UserPen} from 'lucide-react'
+import TextInput from "@/components/input/TextInput";
+import SelectInput from "@/components/input/SelectInput";
+import Textarea from "@/Components/input/Textarea";
+import BasicButton from "@/Components/button/BasicButton";
+import {useAppStore} from "@/store/useAppStore.js";
 
-export default function MyPageWidget({ open }) {
+export default function MyPageWidget({ onClose, styles }) {
+
+    const { user } = useAppStore();
 
     return (
-        <>
-            {/* 드롭다운 */}
-            {open && (
-                <div style={{
-                    position:'absolute', top:'calc(100% + 8px)', right:0,
-                    minWidth:220, width:'max-content', zIndex:1000,
-                    background:'var(--color-bg-secondary)',
-                    border:'1px solid var(--color-border)',
-                    borderRadius:'var(--radius-lg)',
-                    boxShadow:'var(--shadow-md)',
-                    overflow:'hidden',
-                    animation:'slideUp .15s ease',
-                }}>
+        <div className={styles.widgetBg} onClick={onClose} >
+            <div className={styles.widgetWrap} onClick={(e) => e.stopPropagation()} >
+                {/*헤더*/}
+                <div className={styles.widgetHeader}>
+                    <UserPen size={14} className={styles.widgetHeaderIcon} />
+                    <span className={styles.widgetHeaderText}>마이 페이지</span>
+                </div>
 
-                    {/* 사용자 정보 */}
-                    <div style={{ padding:'14px 16px', display:'flex', alignItems:'center', gap:12 }}>
-                        <div style={{
-                            width:40, height:40, borderRadius:'50%', flexShrink:0,
-                            background:'linear-gradient(135deg, var(--color-accent), var(--color-purple))',
-                            display:'flex', alignItems:'center', justifyContent:'center',
-                            color:'#fff',
-                        }}>
-                            <User size={20} strokeWidth={2} />
-                        </div>
-                        <div style={{ minWidth:0 }}>
-                            <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:2 }}>
-                                <span style={{ fontSize:11, color:'var(--color-text-muted)' }}>{role}</span>
-                                <span style={{ fontSize:13, fontWeight:700, color:'var(--color-text-primary)', whiteSpace:'nowrap' }}>{name}</span>
-                            </div>
-                            <div style={{ fontSize:11, color:'var(--color-text-muted)', whiteSpace:'nowrap' }}>{subInfo}</div>
-                        </div>
-                    </div>
+                {/*바디*/}
+                <div className={styles.widgetBody}>
+                    <TextInput
+                        label="ID"
+                        type="text"
+                        value={user?.name ?? '김담당'}
+                        readonly
+                    />
+                    <TextInput
+                        label="현재 비밀번호"
+                        type="password"
+                        placeholder="영문과 숫자를 포함한 8자리 이상 입력하세요."
+                        isNotNull
+                        regex={/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/}
+                        errorMessage="영문과 숫자를 포함한 8자리 이상 입력하세요."
+                        icon={Lock}
+                    />
+                    <TextInput
+                        label="변경할 비밀번호"
+                        type="password"
+                        placeholder="영문과 숫자를 포함한 8자리 이상 입력하세요."
+                        isNotNull
+                        regex={/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/}
+                        errorMessage="영문과 숫자를 포함한 8자리 이상 입력하세요."
+                        icon={Lock}
+                    />
+                    <TextInput
+                        label="변경할 비밀번호 확인"
+                        type="password"
+                        placeholder="변경할 비밀번호를 한번 더 입력해주세요."
+                        isNotNull
+                        icon={Lock}
+                    />
+                    <TextInput
+                        label="이용자 이름"
+                        placeholder="이용자 이름을 입력해주세요."
+                        type="text"
+                        isNotNull
+                        icon={Pencil}
+                    />
+                    <TextInput
+                        label="지역본부"
+                        type="text"
+                        value="서울본부"
+                        readonly
+                    />
+                    <TextInput
+                        label="사업소"
+                        type="text"
+                        value="동대문중랑지사"
+                        readonly
+                    />
+                    <TextInput
+                        label="접근권한"
+                        type="text"
+                        value="시스템관리자"
+                        readonly
+                    />
+                    <SelectInput
+                        label="비밀번호 찾기 질문"
+                        isNotNull
+                        options={[
+                            {label:'나의 초등학교 이름은?', value:'001'},
+                            {label:'나의 고향은?', value:'002'}
+                        ]}
+                    />
+                    <TextInput
+                        label="비밀번호 찾기 답변"
+                        placeholder="비밀번호 찾기 질문에 대한 답변을 입력하세요."
+                        type="text"
+                        isNotNull
+                        icon={Pencil}
+                    />
+                    <Textarea
+                        label="이용목적"
+                        placeholder="이용목적을 입력해주세요."
+                        rows={3}
+                    />
+                </div>
 
-                    <div style={{ height:1, background:'var(--color-border)', margin:'0 12px' }} />
-
-                    {/* 로그아웃 */}
-                    <div style={{ padding:'6px' }}>
-                        <button
-                            onClick={handleLogout}
-                            style={{
-                                width:'100%', display:'flex', alignItems:'center', gap:8,
-                                padding:'8px 10px', borderRadius:'var(--radius-md)',
-                                border:'none', background:'transparent', cursor:'pointer',
-                                fontSize:13, color:'var(--color-danger)',
-                                fontWeight:500, transition:'background .12s',
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.background='color-mix(in srgb, var(--color-danger) 10%, transparent)'}
-                            onMouseLeave={e => e.currentTarget.style.background='transparent'}
-                        >
-                            <LogOut size={14} />
-                            로그아웃
-                        </button>
-                    </div>
+                {/*푸터*/}
+                <div className={styles.widgetFooter}>
+                    <BasicButton label="닫기" icon={X} variant="secondary" size="sm" onClick={ onClose } />
+                    <BasicButton
+                        label="저장"
+                        icon={Save}
+                        variant="primary" size="sm"
+                    />
 
                 </div>
-            )}
-        </>
+            </div>
+        </div>
     )
 }

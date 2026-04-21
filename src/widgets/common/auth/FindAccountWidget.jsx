@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pencil, Lock, Save, X, Search, IdCard} from 'lucide-react'
+import {Pencil, X, Search, RotateCcw} from 'lucide-react'
 import TextInput from "@/components/input/TextInput";
 import SelectInput from "@/components/input/SelectInput";
 import BasicButton from "@/Components/button/BasicButton";
@@ -12,12 +12,12 @@ export default function FindAccountWidget({ onClose, styles }) {
                 {/*헤더*/}
                 <div className={styles.widgetHeader}>
                     <Search size={14} className={styles.widgetHeaderIcon} />
-                    <span className={styles.widgetHeaderText}>ID / 비밀번호 찾기</span>
+                    <span className={styles.widgetHeaderText}>내 계정 찾기</span>
                 </div>
 
                 {/*바디*/}
                 <div className={styles.widgetBody}>
-                    <div className={styles.findWidgetTitle}>이용자 ID 찾기</div>
+                    <div className={styles.findWidgetTitle}>ID 찾기</div>
 
                     <TextInput
                         label="이용자 이름"
@@ -63,11 +63,11 @@ export default function FindAccountWidget({ onClose, styles }) {
                 </div>
 
                 <div className={[styles.widgetBody, styles.widgetTopLine].join(' ')}>
-                    <div className={styles.findWidgetTitle}>이용자 비밀번호 찾기</div>
+                    <div className={styles.findWidgetTitle}>비밀번호 찾기</div>
 
                     <TextInput
                         label="ID"
-                        placeholder="이용자 이름을 입력해주세요."
+                        placeholder="ID를 입력해주세요."
                         isNotNull
                         type="text"
                         icon={Pencil}
@@ -87,7 +87,7 @@ export default function FindAccountWidget({ onClose, styles }) {
                         isNotNull
                         icon={Pencil}
                     />
-                    <BasicButton label="비밀번호 찾기" icon={Search} variant="primary" />
+                    <BasicButton label="비밀번호 초기화" icon={RotateCcw} variant="primary" />
                 </div>
 
                 {/*푸터*/}
