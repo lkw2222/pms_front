@@ -1,18 +1,26 @@
-import React, { useState, useEffect } from 'react'
-import BasicLabel  from '@/components/label/BasicLabel.jsx'
-import BasicButton from '@/components/button/BasicButton.jsx'
-import WlcResDtlGisFeature from './WlcResDtlGisFeature.jsx'
-import { ExternalLink } from 'lucide-react'
+import React, { Suspense, useState, useEffect } from 'react'
+import { useSuspenseQuery }  from '@tanstack/react-query'
+import BasicLabel            from '@/components/label/BasicLabel.jsx'
+import BasicButton           from '@/components/button/BasicButton.jsx'
+import WlcResDtlGisFeature   from './WlcResDtlGisFeature.jsx'
+import { fetchDrawerDetail } from './wlcResDrwMock.js'
+import { ExternalLink, Loader2 } from 'lucide-react'
 import styles from './WlcResDrwFeature.module.css'
+import {LoadingState} from "@/components/feedback/QueryState.jsx";
 
 /**
  * 풍하중 결과 그리드 행 클릭 시 우측에 열리는 드로어 내용.
- * - 요약 정보 탭: 설비 식별 · 산출 현황 · 판정 결과 (2열 레이아웃)
+ * - 요약 정보 탭: 설비 식별 · 강도계산 결과 (2열 레이아웃)
  * - 지도 탭:     전주 설치 위치 (OpenLayers VWorld)
+ *
+ * 구조:
+ *   WlcResDrwFeature   — 탭 · 지도(항상 마운트) · Suspense 경계
+ *   └─ DrawerContent   — useSuspenseQuery 로 카운트 조회 (row 있을 때만 마운트)
  *
  * @param {{ row: object|null, onOpenModal: function }} props
  */
 
+// ── 상수 ──────────────────────────────────────────────────────────────────────
 const RESULT_VARIANT = { '적합': 'success', '부적합': 'danger' }
 
 const BONBU_OPTIONS = [
@@ -54,23 +62,17 @@ const TABS = [
     { key: 'map',     label: '지도'      },
 ]
 
-/**
- * items: [{ label, value, full? }]
- * full=true 인 항목은 2열 전체를 차지하고, 나머지는 2개씩 한 행에 배치.
- */
+// ── 2열 정보 그룹 ─────────────────────────────────────────────────────────────
 function InfoGroup({ items }) {
     const groups = []
     let i = 0
     while (i < items.length) {
         if (items[i].full) {
-            groups.push([items[i]])
-            i++
+            groups.push([items[i]]); i++
         } else if (i + 1 < items.length && !items[i + 1].full) {
-            groups.push([items[i], items[i + 1]])
-            i += 2
+            groups.push([items[i], items[i + 1]]); i += 2
         } else {
-            groups.push([items[i]])
-            i++
+            groups.push([items[i]]); i++
         }
     }
     return (
@@ -78,10 +80,7 @@ function InfoGroup({ items }) {
             {groups.map((group, gi) => (
                 <div key={gi} className={styles.group}>
                     {group.map(({ label, value, full }) => (
-                        <div
-                            key={label}
-                            className={`${styles.cell} ${(full || group.length === 1) ? styles.cellFull : ''}`}
-                        >
+                        <div key={label} className={`${styles.cell} ${(full || group.length === 1) ? styles.cellFull : ''}`}>
                             <span className={styles.cellLabel}>{label}</span>
                             <span className={styles.cellValue}>{value ?? '-'}</span>
                         </div>
@@ -92,10 +91,68 @@ function InfoGroup({ items }) {
     )
 }
 
-// 서울 시청 기본 좌표 — row 가 없을 때 OL 초기화용 fallback
-const DEFAULT_LON = 126.977969
-const DEFAULT_LAT = 37.566535
+// ── 드로어 데이터 컴포넌트 (useSuspenseQuery) ─────────────────────────────────
+// row 있을 때만 마운트되므로 null 체크 불필요
+function DrawerContent({ row, onOpenModal }) {
 
+    // PK: calcId + seq — 카운트 데이터 별도 API 조회
+    // 실제 API 연동 시: fetchDrawerDetail → wlcResService.getDrawerDetail
+    const { data: detail } = useSuspenseQuery({
+        queryKey:  ['wlc', 'result', 'drawer', row.calcId, row.seq],
+        queryFn:   () => fetchDrawerDetail(row.calcId, row.seq),
+        staleTime: 5 * 60 * 1000,  // 5분 캐싱 — 같은 행 재클릭 시 재호출 없음
+    })
+
+    const bonbuLabel   = BONBU_OPTIONS.find(o => o.value === row.bonbu)?.label   ?? row.bonbu
+    const sabupsoLabel = Object.values(SABUPSO_MAP).flat().find(o => o.value === row.sabupso)?.label ?? row.sabupso
+
+    return (
+        <>
+            <div className={styles.content}>
+                <div className={styles.sectionLabel}><span className={styles.sectionLabelText}>전주 기본 정보</span></div>
+                <InfoGroup items={[
+                    { label: '지역본부',   value: bonbuLabel },
+                    { label: '사업소',     value: sabupsoLabel },
+                    { label: '설비 GID',   value: row.gid },
+                    { label: '전산화번호', value: row.calcNo },
+                    { label: '전주종류',   value: row.poleType },
+                    { label: '전주형태',   value: row.poleShape },
+                    { label: '전주규격',   value: row.poleSize },
+                    { label: '지지대',     value: row.supportFlag },
+                    { label: '관련전주',   value: `${detail.relatedPoles}건` },
+                    { label: '전선',       value: `${detail.wireCount}건` },
+                    { label: '가공설비',   value: `${detail.overheadCount}건` },
+                    { label: '통신기기',   value: `${detail.commCount}건` },
+                ]} />
+
+                <div className={styles.sectionLabel}><span className={styles.sectionLabelText}>전주 강도계산 결과</span></div>
+                <InfoGroup items={[
+                    { label: '배전설비',   value: row.distEquipLoad    != null ? `${row.distEquipLoad.toLocaleString()} N·m`    : null },
+                    { label: '공가설비',   value: row.aerialEquipLoad  != null ? `${row.aerialEquipLoad.toLocaleString()} N·m`   : null },
+                    { label: '전주강도합', value: row.poleStrengthTotal != null ? `${row.poleStrengthTotal.toLocaleString()} N·m` : null },
+                    { label: '전선MT합',   value: row.wireMtSum        != null ? `${row.wireMtSum.toLocaleString()} N·m`         : null },
+                    { label: '지선부담',   value: row.stayLoad         != null ? `${row.stayLoad.toLocaleString()} N·m`          : null },
+                    { label: '전주부담',   value: row.poleLoad         != null ? `${row.poleLoad.toLocaleString()} N·m`          : null },
+                    { label: '안전율',     value: row.safetyFactor     != null ? row.safetyFactor.toFixed(2)                     : null },
+                    { label: '판정',       value: <BasicLabel text={row.result} variant={RESULT_VARIANT[row.result] ?? 'default'} /> },
+                ]} />
+            </div>
+
+            {/* 푸터: content 밖 → 항상 하단 고정 */}
+            <div className={styles.footer}>
+                <BasicButton
+                    label="전체 상세 보기"
+                    icon={ExternalLink}
+                    variant="primary"
+                    size="sm"
+                    onClick={onOpenModal}
+                />
+            </div>
+        </>
+    )
+}
+
+// ── 메인 컴포넌트 ─────────────────────────────────────────────────────────────
 export default function WlcResDrwFeature({ row, onOpenModal }) {
     const [tab, setTab] = useState('summary')
 
@@ -103,12 +160,6 @@ export default function WlcResDrwFeature({ row, onOpenModal }) {
     useEffect(() => {
         if (tab === 'map') setTimeout(() => window.dispatchEvent(new Event('resize')), 50)
     }, [tab])
-
-    const lon = row?.lon ?? DEFAULT_LON
-    const lat = row?.lat ?? DEFAULT_LAT
-
-    const bonbuLabel   = BONBU_OPTIONS.find(o => o.value === row?.bonbu)?.label   ?? row?.bonbu
-    const sabupsoLabel = Object.values(SABUPSO_MAP).flat().find(o => o.value === row?.sabupso)?.label ?? row?.sabupso
 
     return (
         <div className={styles.wrap}>
@@ -126,66 +177,21 @@ export default function WlcResDrwFeature({ row, onOpenModal }) {
                 ))}
             </div>
 
-            {/* ── 지도 탭: 항상 마운트 (OL 초기화를 드로어 애니메이션과 분리) ── */}
+            {/* ── 지도: 항상 마운트 ──────────────────────────────────────────────
+                row 바뀔 때마다 WlcResDtlGisFeature 내부에서 feature 레이어 갱신.
+                OL 초기화는 최초 1회만 — 드로어 애니메이션 중 블로킹 없음.        */}
             <div className={styles.mapWrap} style={{ display: tab === 'map' ? 'block' : 'none' }}>
-                <WlcResDtlGisFeature lon={lon} lat={lat} />
+                <WlcResDtlGisFeature row={row} />
             </div>
 
             {/* ── 요약 정보 탭 ── */}
             {tab === 'summary' && (
-                <>
-                    <div className={styles.content}>
-
-                        {!row ? (
-                            <div className={styles.empty}>행을 선택하세요</div>
-                        ) : (
-                            <>
-                                <div className={styles.sectionLabel}><span className={styles.sectionLabelText}>전주 기본 정보</span></div>
-                                <InfoGroup items={[
-                                    { label: '지역본부',  value: bonbuLabel },
-                                    { label: '사업소',    value: sabupsoLabel },
-                                    { label: '설비 GID',  value: row.gid },
-                                    { label: '전산화번호', value: row.calcNo },
-                                    { label: '전주종류',  value: row.poleType },
-                                    { label: '전주형태',  value: row.poleShape },
-                                    { label: '전주규격',  value: row.poleSize },
-                                    { label: '지지대',    value: row.supportFlag },
-                                    { label: '관련전주',  value: `${row.relatedPoles}건` },
-                                    { label: '전선',      value: `${row.wireCount}건` },
-                                    { label: '가공설비',  value: `${row.overheadCount}건` },
-                                    { label: '통신기기',  value: `${row.commCount}건` },
-                                ]} />
-
-                                <div className={styles.sectionLabel}><span className={styles.sectionLabelText}>전주 강도계산 결과</span></div>
-                                <InfoGroup items={[
-                                    { label: '배전설비',   value: row.distEquipLoad    != null ? `${row.distEquipLoad.toLocaleString()} N·m`    : null },
-                                    { label: '공가설비',   value: row.aerialEquipLoad  != null ? `${row.aerialEquipLoad.toLocaleString()} N·m`   : null },
-                                    { label: '전주강도합', value: row.poleStrengthTotal != null ? `${row.poleStrengthTotal.toLocaleString()} N·m` : null },
-                                    { label: '전선MT합',   value: row.wireMtSum        != null ? `${row.wireMtSum.toLocaleString()} N·m`         : null },
-                                    { label: '지선부담',   value: row.stayLoad         != null ? `${row.stayLoad.toLocaleString()} N·m`          : null },
-                                    { label: '전주부담',   value: row.poleLoad         != null ? `${row.poleLoad.toLocaleString()} N·m`          : null },
-                                    { label: '안전율',     value: row.safetyFactor     != null ? row.safetyFactor.toFixed(2)                     : null },
-                                    { label: '판정',       value: <BasicLabel text={row.result} variant={RESULT_VARIANT[row.result] ?? 'default'} /> },
-                                ]} />
-                            </>
-                        )}
-
-
-                        {/* 푸터: content 밖 → 항상 하단 고정 */}
-                        {row && (
-                            <div className={styles.footer}>
-                                <BasicButton
-                                    label="전체 상세 보기"
-                                    icon={ExternalLink}
-                                    variant="primary"
-                                    size="sm"
-                                    onClick={onOpenModal}
-                                />
-                            </div>
-                        )}
-                    </div>
-
-                </>
+                row
+                    /* row 있을 때만 마운트 → useSuspenseQuery null 문제 없음 */
+                    ? <Suspense fallback={<LoadingState message="데이터 로딩 중..." />}>
+                          <DrawerContent row={row} onOpenModal={onOpenModal} />
+                      </Suspense>
+                    : <div className={styles.empty}>행을 선택하세요</div>
             )}
 
         </div>

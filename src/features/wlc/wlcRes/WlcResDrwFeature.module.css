@@ -135,3 +135,39 @@
     flex: 1;
     overflow: hidden;
 }
+
+/* ── 로딩 스켈레톤 ───────────────────────────────────────────────────────── */
+.skeleton {
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    gap: 8px;
+    flex: 1;
+}
+
+.skeletonRow {
+    display: grid;
+    grid-template-columns: 54px 1fr 54px 1fr;
+    gap: 8px;
+    align-items: center;
+}
+
+.skeletonLabel {
+    height: 10px;
+    border-radius: 4px;
+    background: var(--color-bg-tertiary);
+    animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.skeletonValue {
+    height: 10px;
+    border-radius: 4px;
+    background: var(--color-bg-tertiary);
+    animation: shimmer 1.2s ease-in-out infinite;
+    animation-delay: 0.15s;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 1;   }
+}

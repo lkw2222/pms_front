@@ -11,23 +11,10 @@ import SearchInput           from '@/components/input/SearchInput.jsx'
 import BasicButton           from '@/components/button/BasicButton.jsx'
 import BasicLabel            from '@/components/label/BasicLabel.jsx'
 import WlcResDtlFeature from './WlcResDtlFeature.jsx'
-import { MOCK_DETAIL, MOCK_DETAIL_2 } from './wlcResDtlMock.js'
+import { MOCK_DETAIL, MOCK_DETAIL_2 } from '../../../../public/data/wlcResDtlMock.js'
+import { MOCK_DATA } from '../../../../public/data/wlcResMock.js'
 import { Search, RotateCcw, Loader2, Download } from 'lucide-react'
 import styles                from './WlcResFeature.module.css'
-
-// ── 목업 데이터 ────────────────────────────────────────────────────────────────
-const MOCK_DATA = [
-    { seq:1,  calcId:'WLC20260401002', bonbu:'DSCN',  sabupso:'DJ01', gid:'1000001', calcNo:'8027R504', poleType:'CP500kgf',  poleShape:'단주',   poleSize:'16M', supportFlag:'N', relatedPoles:2, wireCount:3, overheadCount:5, commCount:0, safetyHigh:1.25, safetyLow:1.18, result:'적합',   lon:127.394, lat:36.351, distEquipLoad:4820, aerialEquipLoad:1230, poleStrengthTotal:12500, wireMtSum:3610, stayLoad:0,    poleLoad:6040, safetyFactor:1.25, poleJudgeCode:'A' },
-    { seq:2,  calcId:'WLC20260401002', bonbu:'DSCN',  sabupso:'DJ01', gid:'1000002', calcNo:'8027R505', poleType:'CP700kgf',  poleShape:'A형주',  poleSize:'14M', supportFlag:'Y', relatedPoles:3, wireCount:4, overheadCount:6, commCount:1, safetyHigh:0.85, safetyLow:0.79, result:'부적합', lon:127.402, lat:36.358, distEquipLoad:6130, aerialEquipLoad:2450, poleStrengthTotal:11000, wireMtSum:4920, stayLoad:1850, poleLoad:8200, safetyFactor:0.85, poleJudgeCode:'C' },
-    { seq:3,  calcId:'WLC20260401002', bonbu:'DSCN',  sabupso:'DJ02', gid:'1000003', calcNo:'8027R601', poleType:'ST500kgf',  poleShape:'단주',   poleSize:'18M', supportFlag:'N', relatedPoles:1, wireCount:2, overheadCount:3, commCount:0, safetyHigh:1.42, safetyLow:1.35, result:'적합',   lon:127.291, lat:36.479, distEquipLoad:3910, aerialEquipLoad: 870, poleStrengthTotal:14200, wireMtSum:2780, stayLoad:0,    poleLoad:4680, safetyFactor:1.42, poleJudgeCode:'A' },
-    { seq:4,  calcId:'WLC20260320001', bonbu:'SEOUL', sabupso:'S01',  gid:'2000101', calcNo:'1234A001', poleType:'CP500kgf',  poleShape:'단주',   poleSize:'12M', supportFlag:'N', relatedPoles:2, wireCount:3, overheadCount:4, commCount:2, safetyHigh:1.15, safetyLow:1.08, result:'적합',   lon:127.043, lat:37.514, distEquipLoad:5340, aerialEquipLoad:1680, poleStrengthTotal:12000, wireMtSum:4100, stayLoad:0,    poleLoad:7020, safetyFactor:1.15, poleJudgeCode:'A' },
-    { seq:5,  calcId:'WLC20260320001', bonbu:'SEOUL', sabupso:'S01',  gid:'2000102', calcNo:'1234A002', poleType:'CP300kgf',  poleShape:'B형주',  poleSize:'14M', supportFlag:'Y', relatedPoles:4, wireCount:5, overheadCount:7, commCount:1, safetyHigh:0.92, safetyLow:0.88, result:'부적합', lon:127.051, lat:37.521, distEquipLoad:7210, aerialEquipLoad:2910, poleStrengthTotal:10200, wireMtSum:5830, stayLoad:2100, poleLoad:9410, safetyFactor:0.92, poleJudgeCode:'C' },
-    { seq:6,  calcId:'WLC20260319002', bonbu:'SEOUL', sabupso:'S02',  gid:'2000201', calcNo:'1234B011', poleType:'CP500kgf',  poleShape:'단주',   poleSize:'10M', supportFlag:'N', relatedPoles:1, wireCount:2, overheadCount:2, commCount:0, safetyHigh:1.31, safetyLow:1.24, result:'적합',   lon:127.127, lat:37.541, distEquipLoad:3120, aerialEquipLoad: 760, poleStrengthTotal:11500, wireMtSum:2340, stayLoad:0,    poleLoad:3880, safetyFactor:1.31, poleJudgeCode:'A' },
-    { seq:7,  calcId:'WLC20260315001', bonbu:'GGS',   sabupso:'GS01', gid:'3100001', calcNo:'5501C100', poleType:'CP700kgf',  poleShape:'A형주',  poleSize:'16M', supportFlag:'N', relatedPoles:2, wireCount:3, overheadCount:5, commCount:0, safetyHigh:0.78, safetyLow:0.71, result:'부적합', lon:127.016, lat:37.271, distEquipLoad:8050, aerialEquipLoad:3120, poleStrengthTotal:11000, wireMtSum:6280, stayLoad:0,    poleLoad:9300, safetyFactor:0.78, poleJudgeCode:'D' },
-    { seq:8,  calcId:'WLC20260310001', bonbu:'GGS',   sabupso:'GS02', gid:'3200001', calcNo:'5502D200', poleType:'CP500kgf',  poleShape:'단주',   poleSize:'12M', supportFlag:'N', relatedPoles:3, wireCount:4, overheadCount:6, commCount:1, safetyHigh:1.38, safetyLow:1.29, result:'적합',   lon:127.138, lat:37.443, distEquipLoad:4460, aerialEquipLoad:1540, poleStrengthTotal:12000, wireMtSum:3390, stayLoad:0,    poleLoad:5820, safetyFactor:1.38, poleJudgeCode:'A' },
-    { seq:9,  calcId:'WLC20260228001', bonbu:'DGB',   sabupso:'DG01', gid:'4100001', calcNo:'7701E300', poleType:'ST300kgf',  poleShape:'문형주', poleSize:'18M', supportFlag:'Y', relatedPoles:2, wireCount:3, overheadCount:4, commCount:2, safetyHigh:1.19, safetyLow:1.11, result:'적합',   lon:128.601, lat:35.871, distEquipLoad:5780, aerialEquipLoad:2060, poleStrengthTotal:13500, wireMtSum:4520, stayLoad:1620, poleLoad:7180, safetyFactor:1.19, poleJudgeCode:'B' },
-    { seq:10, calcId:'WLC20260220001', bonbu:'GJN',   sabupso:'GJ01', gid:'5100001', calcNo:'6201F400', poleType:'CP1000kgf', poleShape:'단주',   poleSize:'14M', supportFlag:'N', relatedPoles:1, wireCount:2, overheadCount:3, commCount:0, safetyHigh:0.95, safetyLow:0.90, result:'부적합', lon:126.851, lat:35.161, distEquipLoad:6890, aerialEquipLoad:2340, poleStrengthTotal:11500, wireMtSum:5410, stayLoad:0,    poleLoad:8730, safetyFactor:0.95, poleJudgeCode:'C' },
-]
 
 const RESULT_VARIANT = { '적합':'success', '부적합':'danger' }
 const BONBU_OPTIONS = [
@@ -153,7 +140,7 @@ export default function WlcResFeature() {
         if (!drawerRow || !data?.list) return
         const updated = data.list.find(r => r.gid === drawerRow.gid)
         if (updated) setDrawerRow(updated)
-    }, [data?.list]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [data?.list])
 
     const openDrawer = useCallback((row) => {
         if (drawerRow?.gid === row.gid) { setDrawerOpen(o => !o) }
@@ -181,7 +168,7 @@ export default function WlcResFeature() {
         { field:'wireCount',    headerName:'전선',     flex:1, minWidth:70,  type:'numericColumn' },
         { field:'overheadCount',headerName:'가공설비', flex:1, minWidth:90,  type:'numericColumn' },
         { field:'commCount',    headerName:'통신기기', flex:1, minWidth:90,  type:'numericColumn' },*/
-        { field:'safetyHigh',   headerName:'안전율',   flex:1, minWidth:80,  type:'numericColumn', valueFormatter: ({ value }) => value != null ? value.toFixed(2) : '' },
+        { field:'safetyFactor',   headerName:'안전율',   flex:1, minWidth:80,  type:'numericColumn', valueFormatter: ({ value }) => value != null ? value.toFixed(2) : '' },
         { field:'result',       headerName:'판정결과', flex:1, minWidth:100,  cellRenderer: ({ value }) => <BasicLabel text={value} variant={RESULT_VARIANT[value] ?? 'default'} />, cellStyle:{ display:'flex', alignItems:'center', justifyContent:'center' } },
         { headerName:'액션',    flex:1, minWidth:68,  sortable:false, filter:false,
           cellRenderer: ({ data }) => data
