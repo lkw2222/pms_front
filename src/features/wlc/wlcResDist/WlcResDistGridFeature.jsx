@@ -17,16 +17,7 @@ import BasicGrid from "@/components/grid/BasicGrid.jsx";
 export default function WlcResDistGridFeature() {
     return (
         <div>
-            <BasicGrid
-                mode="paginate"
-                rowData={data?.list ?? []}
-                colDefs={colDefs}
-                onRowClick={openDrawer}
-                height="100%"
-                pageSize={10}
-                loading={isLoading}
-                defaultColDef={{ sortable:true, resizable:true, filter:false, minWidth:60, flex:1 }}
-            />
+            그리드
         </div>
     )
 }

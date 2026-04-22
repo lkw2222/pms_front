@@ -363,7 +363,14 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex: 1;              /* 좌우 동일 너비 */
+}
+
+.panelLeft {
+  flex: 6;              /* 좌우 동일 너비 */
+}
+
+.panelRight {
+  flex: 4;
 }
 
 .panelBox {

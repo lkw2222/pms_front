@@ -1,0 +1,20 @@
+.metrixHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.pole {
+    font-weight: bold;
+}
+
+.new {
+    color: #6b7280;
+}
+
+.newCnt {
+    color: #2563eb; font-weight: bold;
+}
