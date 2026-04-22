@@ -1,8 +1,8 @@
 import React from 'react'
 
 /**
- * 풍하중 평과결과 분포도 파이 차트
- * 풍하중 평과결과 분포를 파이 차트로 조회
+ * 풍하중 평과결과 분포도 그리드
+ * 풍하중 평과결과 분포도 그리드 조회
  *
  * @author LKW
  * @since 2026-04-22
@@ -13,10 +13,10 @@ import React from 'react'
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResultDistributionPieFeature() {
+export default function WlcResDistGridFeature() {
     return (
         <div>
-            파이 차트
+            그리드
         </div>
     )
 }

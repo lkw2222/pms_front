@@ -1,8 +1,8 @@
 import React from 'react'
 
 /**
- * 풍하중 평과결과 분포도 그리드
- * 풍하중 평과결과 분포도 그리드 조회
+ * 풍하중 평과결과 분포도 매트릭스 차트 (히트맵 차트)
+ * 풍하중 평과결과 분포도 평가 대상 전주를 매트릭스 차트로 조회
  *
  * @author LKW
  * @since 2026-04-22
@@ -13,10 +13,10 @@ import React from 'react'
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResultDistributionGridFeature() {
+export default function WlcResDistMatrixFeature() {
     return (
         <div>
-            그리드
+            매트릭스 차트
         </div>
     )
 }

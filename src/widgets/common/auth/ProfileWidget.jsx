@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { LogOut, User } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore.js'
 import MyPageWidget from "@/widgets/common/auth/MyPageWidget.jsx";
-import styles from '@/styles/common/CommonAuth.module.css'
+import styles from '@/assets/styles/CommonAuth.module.css'
 
 export default function ProfileWidget() {
     const [open, setOpen] = useState(false)

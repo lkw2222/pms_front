@@ -351,3 +351,22 @@
   background: #7a9bff;
   border-color: #7a9bff;
 }
+
+.panelWrap {
+  display: flex;
+  gap: 16px;
+  flex: 1;              /* 남은 공간 모두 차지 */
+  min-height: 0;        /* flex 자식 overflow 방지 */
+}
+
+.panelLeft, .panelRight {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;              /* 좌우 동일 너비 */
+}
+
+.panelBox {
+  padding: 16px;
+  flex: 1;              /* 각 박스 균등 분배 */
+}

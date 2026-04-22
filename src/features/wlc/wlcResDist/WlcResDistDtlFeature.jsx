@@ -1,8 +1,8 @@
 import React from 'react'
 
 /**
- * 풍하중 평과결과 분포도 바 차트
- * 본부별 월간 안전율(수치) 산출 분포를 바 차트로 표현한다.
+ * 풍하중 평과결과 분포도 상세
+ * 풍하중 평과결과 분포도 그리드에서 클릭한 항목의 상세 조회
  *
  * @author LKW
  * @since 2026-04-22
@@ -13,10 +13,10 @@ import React from 'react'
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResultDistributionBarFeature() {
+export default function WlcResDistDtlFeature() {
     return (
         <div>
-            바차트
+            상세
         </div>
     )
 }

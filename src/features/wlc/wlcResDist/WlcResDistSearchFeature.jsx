@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import { useQuery }       from '@tanstack/react-query'
-import SelectInput        from '@/components/input/SelectInput.jsx'
-import TextInput          from '@/components/input/TextInput.jsx'
-import DateInput          from '@/components/input/DateInput.jsx'
-import BasicButton        from '@/components/button/BasicButton.jsx'
-import { Search, RotateCcw, RefreshCw, Loader2 } from 'lucide-react'
-import styles             from '@/styles/wlc/wlcResultDistribution/WlcResultDistribution.module.css'
+import React, { useState } from 'react';
+import { useQuery }       from '@tanstack/react-query';
+import SelectInput        from '@/components/input/SelectInput.jsx';
+import DateInput          from '@/components/input/DateInput.jsx';
+import BasicButton        from '@/components/button/BasicButton.jsx';
+import { Search, RotateCcw, RefreshCw, Loader2 } from 'lucide-react';
+import styles             from '@/features/wlc/wlcResDist/WlcResDistSearchFeature.module.css';
 
 // ── 목업 데이터 ────────────────────────────────────────────────────────────────
 const MOCK_DATA = [
@@ -19,13 +18,8 @@ const MOCK_DATA = [
     { id:'WLC20260305001', bonbu:'BUSAN', sabupso:'BS02', executor:'최수아', status:'종료',   poleCount:410,  message:'',                                              startAt:'2026-03-05 11:00:00', endAt:'2026-03-05 11:34:18' },
     { id:'WLC20260228001', bonbu:'DGB',   sabupso:'DG01', executor:'정도윤', status:'종료',   poleCount:730,  message:'',                                              startAt:'2026-02-28 09:00:00', endAt:'2026-02-28 10:01:55' },
     { id:'WLC20260220001', bonbu:'GJN',   sabupso:'GJ01', executor:'한지민', status:'계산중', poleCount:290,  message:'',                                              startAt:'2026-02-20 16:00:00', endAt:'' },
-]
+];
 
-const STATUS_VARIANT  = { 계산중:'warning', 종료:'success', 에러:'danger' }
-const SEARCH_TYPE_OPT = [
-    { label:'풍하중 산출 ID', value:'id'       },
-    { label:'실행자명',       value:'executor' },
-]
 const BONBU_OPTIONS = [
     { label:'서울본부',         value:'SEOUL'   },
     { label:'인천본부',         value:'INCHEON' },
@@ -41,7 +35,7 @@ const BONBU_OPTIONS = [
     { label:'경남본부',         value:'GN'      },
     { label:'울산본부',         value:'ULSAN'   },
     { label:'제주본부',         value:'JEJU'    },
-]
+];
 
 const SABUPSO_MAP = {
     SEOUL:   [{ label:'강남지사', value:'S01' }, { label:'강동지사', value:'S02' }, { label:'강서지사', value:'S03' }, { label:'강북지사', value:'S04' }, { label:'종로지사', value:'S05' }, { label:'동작지사', value:'S06' }, { label:'서초지사', value:'S07' }],
@@ -58,7 +52,7 @@ const SABUPSO_MAP = {
     GN:      [{ label:'창원지사', value:'GN01' }, { label:'진주지사', value:'GN02' }, { label:'통영지사', value:'GN03' }],
     ULSAN:   [{ label:'울산지사', value:'US01' }, { label:'울주지사', value:'US02' }],
     JEJU:    [{ label:'제주지사', value:'JJ01' }, { label:'서귀포지사', value:'JJ02' }],
-}
+};
 
 const INIT_SEARCH = { bonbu:'', sabupso:'', dateFrom:'', dateTo:'', searchType:'id', searchValue:'' }
 
@@ -75,14 +69,12 @@ const INIT_SEARCH = { bonbu:'', sabupso:'', dateFrom:'', dateTo:'', searchType:'
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResultDistributionPieFeature() {
+export default function WlcResDistSearchFeature() {
 
-    const [search,  setSearch]  = useState(INIT_SEARCH)
-    const [applied, setApplied] = useState(INIT_SEARCH)
-    const [detailOpen, setDetailOpen] = useState(false)
-    const [detailData, setDetailData] = useState(null)
+    const [search,  setSearch]  = useState(INIT_SEARCH);
+    const [applied, setApplied] = useState(INIT_SEARCH);
 
-    const sabupsoOptions = SABUPSO_MAP[search.bonbu] ?? []
+    const sabupsoOptions = SABUPSO_MAP[search.bonbu] ?? [];
 
     const { data, isLoading, refetch } = useQuery({
         queryKey: ['wlc', 'execute-log', 'list', applied],
@@ -108,8 +100,8 @@ export default function WlcResultDistributionPieFeature() {
         staleTime: 0,
     })
 
-    const onSearch = () => { setApplied({ ...search }); setDetailOpen(false) }
-    const onReset  = () => { setSearch(INIT_SEARCH); setApplied(INIT_SEARCH); setDetailOpen(false) }
+    const onSearch = () => { setApplied({ ...search }); setDetailOpen(false) };
+    const onReset  = () => { setSearch(INIT_SEARCH); setApplied(INIT_SEARCH); setDetailOpen(false) };
 
     return (
 
