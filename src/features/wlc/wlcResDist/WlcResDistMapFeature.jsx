@@ -55,7 +55,7 @@ export default function WlcResDistMapFeature() {
         { name: '강원', value: 180 },
         { name: '충북', value: 200 },
         { name: '충남', value: 270 },
-        { name: '전북도', value: 210 },
+        { name: '전북', value: 210 },
         { name: '전남', value: 230 },
         { name: '경북', value: 290 },
         { name: '경남', value: 340 },
@@ -66,7 +66,7 @@ export default function WlcResDistMapFeature() {
         '서울': '11', '부산': '26', '대구': '27', '인천': '28',
         '광주': '29', '대전': '30', '울산': '31', '세종': '36',
         '경기도': '41', '강원': '51', '충북': '43', '충남': '44',
-        '전북도': '52', '전남': '46', '경북': '47', '경남': '48',
+        '전북': '52', '전남': '46', '경북': '47', '경남': '48',
         '제주': '50',
     };
 
@@ -126,6 +126,7 @@ export default function WlcResDistMapFeature() {
                     zoom: 1.2,
                     center: [127.8, 36],
                     scaleLimit: { min: 0.8, max: 3 },
+                    zlevel: 1,       // 시리즈 자체의 zlevel
                     itemStyle: {
                         areaColor: '#f5f7fa',
                         borderColor: '#d1d9e0',
@@ -139,10 +140,16 @@ export default function WlcResDistMapFeature() {
                         padding: [4, 10, 4, 10],
                         fontSize: 11,
                         fontWeight: 'bold',
+                        z: 10
                     },
                     emphasis: {
+                        // 중요: emphasis에서 itemStyle만 바꾸고 label.z는 건드리지 않기
                         itemStyle: { areaColor: '#dbeafe' },
-                        label: { backgroundColor: '#1d4ed8' },
+                        label: {
+                            color: '#ffffff',
+                            backgroundColor: '#1d4ed8',
+                            z: 10,    // emphasis 상태에서도 동일하게 유지
+                        },
                     },
                     data: sidoData,
                 }],
@@ -169,6 +176,7 @@ export default function WlcResDistMapFeature() {
                     map: currentView.mapName,
                     roam: false,
                     scaleLimit: { min: 0.8, max: 5 },
+                    zlevel: 1,       // 시리즈 자체의 zlevel
                     itemStyle: {
                         areaColor: '#f5f7fa',
                         borderColor: '#d1d9e0',
@@ -182,10 +190,16 @@ export default function WlcResDistMapFeature() {
                         padding: [3, 8, 3, 8],
                         fontSize: 10,
                         fontWeight: 'bold',
+                        z: 10
                     },
                     emphasis: {
-                        itemStyle: { areaColor: '#dbeafe' },
-                        label: { backgroundColor: '#1d4ed8' },
+                        // 중요: emphasis에서 itemStyle만 바꾸고 label.z는 건드리지 않기
+                        itemStyle: { areaColor: '#dbeafe'},
+                        label: {
+                            color: '#ffffff',
+                            backgroundColor: '#1d4ed8',
+                            z: 10,    // emphasis 상태에서도 동일하게 유지
+                        },
                     },
                     data: sigData,
                 }],

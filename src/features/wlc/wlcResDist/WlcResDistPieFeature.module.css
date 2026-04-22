@@ -1,0 +1,48 @@
+.wrap {
+    align-items: center;
+    max-width: 500px;
+    gap: 16px
+}
+
+.leftCon {
+    float: left;
+}
+
+.leftTitle {
+    font-size: 14px;
+    font-weight: bold;
+    color: #374151;
+    margin-bottom: 40px;
+}
+
+.leftStats {
+    margin-bottom : 8px;
+}
+
+.leftTotalBlue {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.leftTotalRed {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ef4444;
+}
+
+.leftCnt {
+    font-size: 14px; color: #6b7280; margin-left: 4px;
+}
+
+.gradeGood {
+    color: #2563eb;
+}
+
+.gradeBad {
+    color: #ef4444;
+}
+
+.rightCon {
+    width: 300px; height: 160px; flex-shrink: 0; float: right;
+}

@@ -115,7 +115,7 @@ const BasicGrid = forwardRef(function BasicGrid({
   const paginateProps = mode === 'paginate' ? {
     pagination:                 true,
     paginationPageSize:         pageSize,
-    paginationPageSizeSelector: [10, 20, 50, 100],
+    paginationPageSizeSelector: [5, 10, 20, 50, 100],
   } : {}
 
   return (

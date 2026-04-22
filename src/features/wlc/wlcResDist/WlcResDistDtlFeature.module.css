@@ -1,0 +1,174 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    background: #f9fafb;
+}
+
+/* 메인 영역 */
+.mainArea {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ── 지도 래퍼: 오버레이 컨트롤의 기준점 ── */
+.mapWrapper {
+    position: relative;   /* 중요: 내부 absolute 요소의 기준 */
+    flex: 1;
+    height: 100%;
+}
+
+.map {
+    width: 100%;
+    height: 100%;
+}
+
+/* ── 좌측 상단: 지역본부/사업소 선택 ── */
+.selectGroup {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.select {
+    padding: 6px 12px;
+    font-size: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #ffffff;
+    cursor: pointer;
+    min-width: 140px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);  /* 지도 위에 띄운 느낌 */
+}
+
+/* ── 우측 상단: 등급 필터 ── */
+.legendBox {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 10px 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.legendTitle {
+    font-size: 12px;
+    font-weight: bold;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: #4b5563;
+    cursor: pointer;
+}
+
+.legendItem input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* ── 우측 상세 패널 ── */
+.detailPanel {
+    width: 280px;
+    background: #ffffff;
+    border-left: 1px solid #e5e7eb;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.emptyState {
+    color: #9ca3af;
+    font-size: 13px;
+    text-align: center;
+    padding: 40px 0;
+}
+
+/* 나머지 detail 관련 스타일은 기존과 동일 */
+.detailContent {
+    font-size: 12px;
+    color: #374151;
+}
+
+.section {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+.sectionTitle {
+    font-size: 13px;
+    font-weight: bold;
+    color: #2563eb;
+    margin: 0 0 8px 0;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #2563eb;
+    display: inline-block;
+}
+
+.subTitle {
+    font-weight: bold;
+    color: #4b5563;
+    margin: 10px 0 6px 0;
+    font-size: 12px;
+}
+
+.infoText {
+    margin-bottom: 4px;
+    line-height: 1.5;
+}
+
+.infoList {
+    margin: 0;
+    padding: 0;
+}
+
+.infoRow {
+    display: flex;
+    margin-bottom: 3px;
+}
+
+.infoRow dt {
+    color: #6b7280;
+    min-width: 70px;
+    margin-right: 6px;
+}
+
+.infoRow dd {
+    margin: 0;
+    color: #1f2937;
+}
+
+.bigText {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.gradeBadge {
+    padding: 8px 0;
+}

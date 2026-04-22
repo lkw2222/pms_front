@@ -1,5 +1,25 @@
-import React from 'react'
-import BasicGrid from "@/components/grid/BasicGrid.jsx";
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import { useQuery }          from '@tanstack/react-query'
+import { useAppStore }       from '@/store/useAppStore.js'
+import BasicGrid             from '@/components/grid/BasicGrid.jsx'
+import GridDetailModal       from '@/components/grid/GridDetailModal.jsx'
+import GridActionButtons     from '@/components/grid/GridActionButtons.jsx'
+import SearchInput           from '@/components/input/SearchInput.jsx'
+import BasicButton           from '@/components/button/BasicButton.jsx'
+import BasicLabel            from '@/components/label/BasicLabel.jsx'
+import WlcResDistDtlFeature from '@/features/wlc/wlcResDist/WlcResDistDtlFeature.jsx'
+import { MOCK_DATA } from '../../../../public/data/wlcResMock.js'
+import { Search, RotateCcw, Loader2 } from 'lucide-react'
+import styles from '@/features/wlc/wlcResDist/WlcResDistGridFeature.module.css'
+
+const RESULT_VARIANT = { '적합':'success', '부적합':'danger' }
+
+const SEARCH_TYPE_OPT = [
+    { label:'설비 GID',       value:'gid'    },
+    { label:'전산화번호',     value:'calcNo' },
+]
+
+const INIT_SEARCH = { bonbu:'', sabupso:'', poleType:'', poleShape:'', poleSize:'', supportFlag:'', result:'', searchType:'gid', searchValue:'' }
 
 /**
  * 풍하중 평과결과 분포도 그리드
@@ -15,9 +35,133 @@ import BasicGrid from "@/components/grid/BasicGrid.jsx";
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
 export default function WlcResDistGridFeature() {
+    const [search,    setSearch]    = useState(INIT_SEARCH)
+    const [applied,   setApplied]   = useState(INIT_SEARCH)
+    const [modalOpen, setModalOpen] = useState(false)
+    const [modalRow,  setModalRow]  = useState(null)
+
+    const { wlcResultFilter, clearWlcResultFilter } = useAppStore()
+
+    // 실행로그에서 넘어온 필터 감지 → 검색 조건 세팅 후 자동 조회
+    useEffect(() => {
+        if (!wlcResultFilter) return
+        const { calcId, bonbu, sabupso } = wlcResultFilter
+        const next = { ...INIT_SEARCH, searchType:'calcId', searchValue: calcId ?? '', bonbu: bonbu ?? '', sabupso: sabupso ?? '' }
+        setSearch(next)
+        setApplied(next)
+        clearWlcResultFilter()
+    }, [wlcResultFilter, clearWlcResultFilter]);
+
+    const { data, isLoading } = useQuery({
+        queryKey: ['wlc', 'result', 'list', applied],
+        queryFn: async () => {
+            // ── 실제 API 호출 예제 ────────────────────────────────────────
+            // import { wlcResultApi } from '@/services/wlc/wlcResult/wlcResService.js'
+            // return wlcResultApi.getList(applied)
+            // ─────────────────────────────────────────────────────────────
+            await new Promise(r => setTimeout(r, 200))
+            const list = MOCK_DATA.filter(row => {
+                if (applied.bonbu       && row.bonbu       !== applied.bonbu)       return false
+                if (applied.sabupso     && row.sabupso     !== applied.sabupso)     return false
+                if (applied.poleType    && row.poleType    !== applied.poleType)    return false
+                if (applied.poleShape   && row.poleShape   !== applied.poleShape)   return false
+                if (applied.poleSize    && row.poleSize    !== applied.poleSize)    return false
+                if (applied.supportFlag && row.supportFlag !== applied.supportFlag) return false
+                if (applied.result      && row.result      !== applied.result)      return false
+                if (applied.searchValue) {
+                    const v = applied.searchValue.toLowerCase()
+                    if (applied.searchType === 'gid'    && !row.gid.toLowerCase().includes(v))    return false
+                    if (applied.searchType === 'calcNo' && !row.calcNo.toLowerCase().includes(v)) return false
+                    if (applied.searchType === 'calcId' && !row.calcId.toLowerCase().includes(v)) return false
+                }
+                return true
+            })
+            return { list, totalCount: list.length }
+        },
+        staleTime: 0,
+    })
+
+    const [drawerOpen, setDrawerOpen] = useState(false)
+    const [drawerRow,  setDrawerRow]  = useState(null)
+
+    // 쿼리 데이터가 갱신되면 열린 드로어의 row 도 최신 데이터로 동기화
+    useEffect(() => {
+        if (!drawerRow || !data?.list) return
+        const updated = data.list.find(r => r.gid === drawerRow.gid)
+        if (updated) setDrawerRow(updated)
+    }, [data?.list])
+
+    const openDrawer = useCallback((row) => {
+        if (drawerRow?.gid === row.gid) { setDrawerOpen(o => !o) }
+        else { setDrawerRow(row); setDrawerOpen(true) }
+    }, [drawerRow])
+
+    const openModal  = useCallback((row) => { setModalRow(row); setModalOpen(true) }, [])
+    const closeModal = useCallback(() => setModalOpen(false), [])
+    const onSearch   = () => { setApplied({ ...search }); setDrawerOpen(false) }
+    const onReset    = () => { setSearch(INIT_SEARCH); setApplied(INIT_SEARCH); setDrawerOpen(false) }
+
+    const colDefs = useMemo(() => [
+        { field:'gid',    headerName:'설비GID',        flex:2, minWidth:80  },
+        { field:'calcNo',       headerName:'전산화번호', flex:2, minWidth:95 },
+        { field:'poleType',     headerName:'전주종류', flex:2, minWidth:90  },
+        { field:'poleShape',    headerName:'형태',     flex:1, minWidth:90  },
+        { field:'poleSize',     headerName:'규격',     flex:1, minWidth:80  },
+        { field:'result',       headerName:'판정결과', flex:1, minWidth:100,  cellRenderer: ({ value }) => <BasicLabel text={value} variant={RESULT_VARIANT[value] ?? 'default'} />, cellStyle:{ display:'flex', alignItems:'center', justifyContent:'center' } },
+        { headerName:'액션',    flex:1, minWidth:68,  sortable:false, filter:false,
+            cellRenderer: ({ data }) => data
+                ? <GridActionButtons data={data} buttons={[{ type:'detail', onClick: openModal }]} />
+                : null,
+        },
+    ], [openModal])
+
     return (
-        <div>
-            그리드
+        <div >
+            {/* ── 검색 조건 ── */}
+            <div style={{display:'grid', gridTemplateColumns:'305px 220px 120px 100px 100px', gap:10, alignItems:'center', paddingBottom:10}}>
+                <div className={styles.totalCount}>
+                    {isLoading
+                        ? '조회 중...'
+                        : <>총 <strong style={{ color:'var(--color-danger-total)' }}>{(data?.totalCount ?? 0).toLocaleString()}</strong>건</>
+                    }
+                </div>
+                <SearchInput
+                    style={{ gridColumn: 'span 3' }}
+                    options={SEARCH_TYPE_OPT}
+                    selectValue={search.searchType}
+                    onSelectChange={e => setSearch(s => ({ ...s, searchType: e.target.value }))}
+                    inputValue={search.searchValue}
+                    onInputChange={e => setSearch(s => ({ ...s, searchValue: e.target.value }))}
+                    onKeyDown={e => e.key === 'Enter' && onSearch()}
+                />
+                <div style={{ display:'flex', gap:8 }}>
+                    <BasicButton label="초기화" icon={RotateCcw}                    variant="secondary" onClick={onReset} />
+                    <BasicButton label="조회"   icon={isLoading ? Loader2 : Search} variant="primary"   onClick={onSearch} disabled={isLoading} />
+                </div>
+            </div>
+
+            {/* ── 그리드 + 드로어 ── */}
+            <BasicGrid
+                mode="paginate"
+                rowData={data?.list ?? []}
+                colDefs={colDefs}
+                onRowClick={openDrawer}
+                height="280px"
+                pageSize={5}
+                loading={isLoading}
+                defaultColDef={{ sortable:true, resizable:true, filter:false, minWidth:60, flex:1 }}
+            />
+
+
+            {/* 상세 모달 — API 연동 시 mock 분기를 useQuery 결과로 교체 */}
+            <GridDetailModal
+                width={'1000px'}
+                open={modalOpen}
+                title={modalRow ? `${modalRow.calcNo} · ${modalRow.poleType} ${modalRow.poleSize}` : '상세 정보'}
+                onClose={closeModal}
+            >
+                <WlcResDistDtlFeature initialPoleId="8027R504"/>
+            </GridDetailModal>
         </div>
     )
 }

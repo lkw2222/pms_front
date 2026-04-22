@@ -103,16 +103,16 @@ export default function WlcResDistMatrixFeature() {
         <div>
             {/* 헤더 영역 */}
             <div className={styles.metrixHeader}>
-                <span class={styles.pole} >평가 대상 전주 총 {total.toLocaleString()} 건</span>
-                <span class={styles.new} >
-                    이번달 최근 신규 <span class={styles.newCnt} >+ 42건</span>
+                <span className={styles.pole} >평가 대상 전주 총 {total.toLocaleString()} 건</span>
+                <span className={styles.new} >
+                    이번달 최근 신규 <span className={styles.newCnt} >+ 42건</span>
                 </span>
             </div>
 
             {/* 히트맵 */}
             <ReactECharts
                 option={option}
-                style={{ width: '100%', height: 220 }}
+                style={{ width: '100%', height: 160 }}
             />
         </div>
     )
