@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { LogOut, User } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore.js'
 import MyPageWidget from "@/widgets/common/auth/MyPageWidget.jsx";
-import styles from '@/styles/common/CommonAuth.module.css'
+import styles from '@/assets/styles/CommonAuth.module.css'
 
 export default function ProfileWidget() {
     const [open, setOpen] = useState(false)
@@ -24,10 +24,10 @@ export default function ProfileWidget() {
         setSessionExpired(true)
     }
 
-    const initial  = user?.name?.charAt(0) ?? 'A'
-    const name     = user?.name     ?? '김담당'
-    const subInfo  = [user?.bonbu, user?.sabupso].filter(Boolean).join(' · ') || user?.id || 'hongildong123'
-    const role     = user?.role     ?? '시스템관리자'
+    const initial  = user?.userId?.charAt(0) ?? 'A';
+    const name     = user?.userNm     ?? '김담당';
+    const subInfo  = [user?.headquarters, user?.branch].filter(Boolean).join(' · ') || user?.userId || 'hongildong123';
+    const role     = user?.auth     ?? '시스템관리자';
 
     return (
         <>

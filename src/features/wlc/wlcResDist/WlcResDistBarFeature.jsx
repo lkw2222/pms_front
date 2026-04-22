@@ -1,8 +1,8 @@
 import React from 'react'
 
 /**
- * 풍하중 평과결과 분포도 검색 폼
- * 풍하중 평과결과 분포 조회 의 검색조건이 있는 폼
+ * 풍하중 평과결과 분포도 바 차트
+ * 본부별 월간 안전율(수치) 산출 분포를 바 차트로 표현한다.
  *
  * @author LKW
  * @since 2026-04-22
@@ -13,10 +13,10 @@ import React from 'react'
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResultDistributionPieFeature() {
+export default function WlcResDistBarFeature() {
     return (
         <div>
-            검색조건
+            바차트
         </div>
     )
 }

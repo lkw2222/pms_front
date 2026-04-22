@@ -19,7 +19,7 @@ import WlcExecuteLogPanel       from '@/panels/wlc/wlcExecuteLog/WlcExecuteLogPa
 import WlcResultPanel           from '@/panels/wlc/wlcResult/WlcResultPanel.jsx';
 
 import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
-import WlcResultDistributionPanel from "@/panels/wlc/wlcResultDistribution/WlcResultDistributionPanel.jsx";
+import WlcResDistPanel from "@/panels/wlc/wlcResDist/WlcResDistPanel.jsx";
 
 // ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
 const PANEL_COMPONENTS = {
@@ -38,7 +38,7 @@ const PANEL_COMPONENTS = {
     wlcBatchExecutePanel: WlcBatchExecutePanel,
     wlcExecuteLogPanel:   WlcExecuteLogPanel,
     wlcResultPanel:       WlcResultPanel,
-    wlcResultDistributionPanel: WlcResultDistributionPanel,
+    wlcResDistPanel: WlcResDistPanel,
 
     emptyPanel:         EmptyPanel,
 }

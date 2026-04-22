@@ -37,7 +37,7 @@ const MENU_GROUPS = [
             { id:'wlc_1', label:'풍하중 배치 실행(수동)', icon:PlayCircle,  component:'wlcBatchExecutePanel' },
             { id:'wlc_2', label:'풍하중 실행로그 조회',   icon:ScrollText,  component:'wlcExecuteLogPanel' },
             { id:'wlc_3', label:'풍하중 결과',             icon:BarChart2,   component:'wlcResultPanel' },
-            { id:'wlc_4', label:'평가결과 분포도',         icon:PieChart,    component:'wlcResultDistributionPanel' },
+            { id:'wlc_4', label:'평가결과 분포도',         icon:PieChart,    component:'wlcResDistPanel' },
         ]},
     { id:'scc', label:'진단우선수위 평가', icon:ChartBarDecreasing, children:[
             { id:'scc_1', label:'SCC 배치 실행(수동)',        icon:PlayCircle,      component:'emptyPanel' },
