@@ -2,11 +2,11 @@ import React                    from 'react'
 import { useMutation }          from '@tanstack/react-query'
 import { toast }                from 'sonner'
 import ErrorBoundary             from '@/components/feedback/ErrorBoundary.jsx'
-import WlcBatchExecuteFeature    from '@/features/wlc/wlcBatchExecute/WlcBatchExecuteFeature.jsx'
+import WlcBatchExeFeature    from '@/features/wlc/wlcBatchExe/WlcBatchExeFeature.jsx'
 
 /**
  * 풍하중 평가 배치 실행 패널.
- * useMutation 을 담당하고 WlcBatchExecuteFeature 에 주입한다.
+ * useMutation 을 담당하고 WlcBatchExeFeature 에 주입한다.
  *
  * @author JDJ
  * @since 2026-04-20
@@ -31,7 +31,7 @@ function WlcBatchExecutePanelInner() {
     })
 
     return (
-        <WlcBatchExecuteFeature
+        <WlcBatchExeFeature
             onExecute={executeMutation.mutateAsync}
             isRunning={executeMutation.isPending}
         />

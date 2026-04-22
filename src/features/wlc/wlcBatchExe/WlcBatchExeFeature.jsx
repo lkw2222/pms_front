@@ -8,7 +8,7 @@ import ConfirmModal     from '@/components/modal/ConfirmModal.jsx'
 import { useAppStore }  from '@/store/useAppStore.js'
 import { Play, RotateCcw } from 'lucide-react'
 import { toast }        from 'sonner'
-import styles           from './WlcBatchExecuteFeature.module.css'
+import styles           from './WlcBatchExeFeature.module.css'
 
 // ── 목업 데이터 ────────────────────────────────────────────────────────────────
 const BONBU_OPTIONS = [
@@ -68,7 +68,7 @@ const MONTH_OPTIONS = {
  * |------------|--------|------|
  * | 2026-04-20 | JDJ    | 최초 작성 |
  */
-export default function WlcBatchExecuteFeature({ onExecute, isRunning }) {
+export default function WlcBatchExeFeature({ onExecute, isRunning }) {
     const { user } = useAppStore()
     const [form,        setForm]        = useState(INIT_FORM)
     const [confirmOpen, setConfirmOpen] = useState(false)

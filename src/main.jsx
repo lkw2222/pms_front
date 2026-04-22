@@ -36,7 +36,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <App />
       {/* 개발 환경에서만 TanStack Query Devtools 표시 */}
-      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+      {/*import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />*/}
     </QueryClientProvider>
   </React.StrictMode>
 )
