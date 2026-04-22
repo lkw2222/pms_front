@@ -36,6 +36,7 @@
     "axios": "^1.13.6",
     "dockview-react": "^5.1.0",
     "echarts": "^5.5.0",
+    "echarts-for-react": "^3.0.6",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "flatpickr": "^4.6.13",

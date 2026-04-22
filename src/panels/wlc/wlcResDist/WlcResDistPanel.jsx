@@ -24,13 +24,13 @@ export default function WlcResDistPanel() {
     return (
         <ErrorBoundary>
             <div className="grid-wrap">
-                <WlcResDistSearchFeature />
                 <div className={layout.panelWrap}>
                     <div className={layout.panelLeft}>
                         <div className={layout.panelBox}><WlcResDistMapFeature /></div>
                         <div className={layout.panelBox}><WlcResDistGridFeature /></div>
                     </div>
                     <div className={layout.panelRight}>
+                        <div className={layout.panelMinBox}><WlcResDistSearchFeature /></div>
                         <div className={layout.panelBox}><WlcResDistMatrixFeature /></div>
                         <div className={layout.panelBox}><WlcResDistPieFeature /></div>
                         <div className={layout.panelBox}><WlcResDistBarFeature /></div>
