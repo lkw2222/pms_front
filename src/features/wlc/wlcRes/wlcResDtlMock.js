@@ -1,6 +1,6 @@
 /**
  * 풍하중 결과 상세 목업 데이터.
- * API 연동 시 이 파일 전체를 삭제하고 wlcResultService.js 의 getDetail() 을 사용할 것.
+ * API 연동 시 이 파일 전체를 삭제하고 wlcResService.js 의 getDetail() 을 사용할 것.
  *
  * @author JDJ
  * @since 2026-04-21

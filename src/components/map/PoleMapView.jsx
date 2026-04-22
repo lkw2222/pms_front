@@ -45,7 +45,7 @@ const MARKER_STYLE = new Style({
  * @history
  * | 날짜       | 수정자 | 내용 |
  * |------------|--------|------|
- * | 2026-04-20 | JDJ    | 최초 작성 (WlcResultDetailGisFeature 패턴 참고) |
+ * | 2026-04-20 | JDJ    | 최초 작성 (WlcResDtlGisFeature 패턴 참고) |
  */
 export default function PoleMapView({ lon, lat, zoom = 17 }) {
   const containerRef = useRef(null)

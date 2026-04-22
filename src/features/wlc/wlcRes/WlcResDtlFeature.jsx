@@ -1,8 +1,8 @@
 import React from 'react'
 import BasicButton from "@/components/button/BasicButton.jsx"
 import { FileDown } from "lucide-react"
-import { exportWlcResultDetailExcel } from '@/services/wlc/wlcResult/wlcResultExcelService.js'
-import styles from './WlcResultDetailFeature.module.css'
+import { exportWlcResultDetailExcel } from '@/services/wlc/wlcRes/wlcResExcelService.js'
+import styles from './WlcResDtlFeature.module.css'
 
 /**
  * 풍하중 평가 결과 상세 화면.
@@ -18,23 +18,12 @@ import styles from './WlcResultDetailFeature.module.css'
  * | 2026-04-21 | JDJ    | 최초 작성 |
  */
 
-// ── 섹션별 배지 색상 ──────────────────────────────────────────────────────────
-const SECTION_COLORS = [
-    '#3B82F6', //  — blue
-    '#6366F1', //  — indigo
-    '#10B981', // — emerald
-    '#F59E0B', // — amber
-]
-
-// ── 섹션 래퍼 (color prop 은 배지 배경색만 동적 → 인라인 유지) ───────────────
-function Section({ badge, title, color, children }) {
+// ── 섹션 래퍼 ─────────────────────────────────────────────────────────────────
+function Section({ title, children }) {
     return (
         <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-                <span className={styles.sectionBadge} style={{ background: color }}>
-                    {badge}
-                </span>
-                <span className={styles.sectionTitle}>{title}</span>
+            <div className={styles.sectionLabel}>
+                <span className={styles.sectionLabelText}>{title}</span>
             </div>
             {children}
         </div>
@@ -238,7 +227,7 @@ const STAY_COLS = [
 ]
 
 // ── 메인 컴포넌트 ─────────────────────────────────────────────────────────────
-export default function WlcResultDetailFeature({ data }) {
+export default function WlcResDtlFeature({ data }) {
     if (!data) return (
         <div className={styles.empty}>
             데이터를 불러오는 중...
@@ -254,16 +243,16 @@ export default function WlcResultDetailFeature({ data }) {
                 <BasicButton label="엑셀" icon={FileDown} variant="excel" size="sm" onClick={() => exportWlcResultDetailExcel(data)} />
             </div>
 
-            <Section badge="01" title="기본 정보"          color={SECTION_COLORS[0]}><SummaryTable data={data} /></Section>
-            <Section badge="02" title="전주 인자"          color={SECTION_COLORS[1]}><DataTable columns={POLE_PARAMS_COLS} rows={data.poleParams    ? [data.poleParams]    : []} /></Section>
-            <Section badge="03" title="전주 풍력계수"      color={SECTION_COLORS[2]}><DataTable columns={WIND_COEF_COLS}   rows={data.windCoef      ? [data.windCoef]      : []} /></Section>
-            <Section badge="04" title="관련전주 목록"      color={SECTION_COLORS[3]}><DataTable columns={RELATED_POLE_COLS} rows={data.relatedPoles ?? []} /></Section>
-            <Section badge="05" title="지지대 인자 목록"   color={SECTION_COLORS[0]}><DataTable columns={SUPPORT_COLS}     rows={data.supportParams ?? []} /></Section>
-            <Section badge="06" title="전선 인자 목록"     color={SECTION_COLORS[1]}><DataTable columns={WIRE_COLS}        rows={data.wireParams    ?? []} /></Section>
-            <Section badge="07" title="가공설비 인자 목록" color={SECTION_COLORS[2]}><DataTable columns={AERIAL_COLS}      rows={data.aerialParams  ?? []} /></Section>
-            <Section badge="08" title="통신기기 인자 목록" color={SECTION_COLORS[3]}><DataTable columns={COMM_COLS}        rows={data.commParams    ?? []} /></Section>
-            <Section badge="09" title="전주 강도계산 결과" color={SECTION_COLORS[0]}><DataTable columns={STRENGTH_COLS}    rows={data.strengthResult ? [data.strengthResult] : []} /></Section>
-            <Section badge="10" title="지선 강도계산 결과" color={SECTION_COLORS[1]}><DataTable columns={STAY_COLS}        rows={data.stayResult    ? [data.stayResult]    : []} /></Section>
+            <Section title="기본 정보"         ><SummaryTable data={data} /></Section>
+            <Section title="전주 인자"         ><DataTable columns={POLE_PARAMS_COLS} rows={data.poleParams    ? [data.poleParams]    : []} /></Section>
+            <Section title="전주 풍력계수"     ><DataTable columns={WIND_COEF_COLS}   rows={data.windCoef      ? [data.windCoef]      : []} /></Section>
+            <Section title="관련전주 목록"     ><DataTable columns={RELATED_POLE_COLS} rows={data.relatedPoles ?? []} /></Section>
+            <Section title="지지대 인자 목록"  ><DataTable columns={SUPPORT_COLS}     rows={data.supportParams ?? []} /></Section>
+            <Section title="전선 인자 목록"    ><DataTable columns={WIRE_COLS}        rows={data.wireParams    ?? []} /></Section>
+            <Section title="가공설비 인자 목록"><DataTable columns={AERIAL_COLS}      rows={data.aerialParams  ?? []} /></Section>
+            <Section title="통신기기 인자 목록"><DataTable columns={COMM_COLS}        rows={data.commParams    ?? []} /></Section>
+            <Section title="전주 강도계산 결과"><DataTable columns={STRENGTH_COLS}    rows={data.strengthResult ? [data.strengthResult] : []} /></Section>
+            <Section title="지선 강도계산 결과"><DataTable columns={STAY_COLS}        rows={data.stayResult    ? [data.stayResult]    : []} /></Section>
 
         </div>
     )

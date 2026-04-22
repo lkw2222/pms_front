@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import BasicLabel  from '@/components/label/BasicLabel.jsx'
 import BasicButton from '@/components/button/BasicButton.jsx'
-import WlcResultDetailGisFeature from './WlcResultDetailGisFeature.jsx'
+import WlcResDtlGisFeature from './WlcResDtlGisFeature.jsx'
 import { ExternalLink } from 'lucide-react'
-import styles from './WlcResultDrawerFeature.module.css'
+import styles from './WlcResDrwFeature.module.css'
 
 /**
  * 풍하중 결과 그리드 행 클릭 시 우측에 열리는 드로어 내용.
@@ -96,7 +96,7 @@ function InfoGroup({ items }) {
 const DEFAULT_LON = 126.977969
 const DEFAULT_LAT = 37.566535
 
-export default function WlcResultDrawerFeature({ row, onOpenModal }) {
+export default function WlcResDrwFeature({ row, onOpenModal }) {
     const [tab, setTab] = useState('summary')
 
     // 지도 탭 전환 시 OL updateSize 트리거 (드로어 transition 후 크기 반영)
@@ -128,7 +128,7 @@ export default function WlcResultDrawerFeature({ row, onOpenModal }) {
 
             {/* ── 지도 탭: 항상 마운트 (OL 초기화를 드로어 애니메이션과 분리) ── */}
             <div className={styles.mapWrap} style={{ display: tab === 'map' ? 'block' : 'none' }}>
-                <WlcResultDetailGisFeature lon={lon} lat={lat} />
+                <WlcResDtlGisFeature lon={lon} lat={lat} />
             </div>
 
             {/* ── 요약 정보 탭 ── */}

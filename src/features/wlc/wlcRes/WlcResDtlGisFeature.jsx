@@ -341,7 +341,7 @@ function Tip({ text, side = 'right', children }) {
   )
 }
 
-export default function WlcResultDetailGisFeature() {
+export default function WlcResDtlGisFeature() {
   const mapRef       = useRef(null)
   const mapObj       = useRef(null)
   const drawRef      = useRef(null)

@@ -1,6 +1,6 @@
 import React                from 'react'
 import ErrorBoundary        from '@/components/feedback/ErrorBoundary.jsx'
-import WlcResultFeature     from '@/features/wlc/wlcResult/WlcResultFeature.jsx'
+import WlcResFeature     from '@/features/wlc/wlcRes/WlcResFeature.jsx'
 
 /**
  * 풍하중 평가 결과 조회 패널.
@@ -14,10 +14,10 @@ import WlcResultFeature     from '@/features/wlc/wlcResult/WlcResultFeature.jsx'
  * |------------|--------|------|
  * | 2026-04-20 | JDJ    | 최초 작성 |
  */
-export default function WlcResultPanel() {
+export default function WlcResPanel() {
     return (
         <ErrorBoundary>
-            <WlcResultFeature />
+            <WlcResFeature />
         </ErrorBoundary>
     )
 }

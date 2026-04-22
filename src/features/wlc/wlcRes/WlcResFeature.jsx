@@ -5,15 +5,15 @@ import BasicGrid             from '@/components/grid/BasicGrid.jsx'
 import GridDetailDrawer      from '@/components/grid/GridDetailDrawer.jsx'
 import GridDetailModal       from '@/components/grid/GridDetailModal.jsx'
 import GridActionButtons     from '@/components/grid/GridActionButtons.jsx'
-import WlcResultDrawerFeature from './WlcResultDrawerFeature.jsx'
+import WlcResDrwFeature from './WlcResDrwFeature.jsx'
 import SelectInput           from '@/components/input/SelectInput.jsx'
 import SearchInput           from '@/components/input/SearchInput.jsx'
 import BasicButton           from '@/components/button/BasicButton.jsx'
 import BasicLabel            from '@/components/label/BasicLabel.jsx'
-import WlcResultDetailFeature from './WlcResultDetailFeature.jsx'
-import { MOCK_DETAIL, MOCK_DETAIL_2 } from './wlcResultDetailMock.js'
+import WlcResDtlFeature from './WlcResDtlFeature.jsx'
+import { MOCK_DETAIL, MOCK_DETAIL_2 } from './wlcResDtlMock.js'
 import { Search, RotateCcw, Loader2, Download } from 'lucide-react'
-import styles                from './WlcResultFeature.module.css'
+import styles                from './WlcResFeature.module.css'
 
 // ── 목업 데이터 ────────────────────────────────────────────────────────────────
 const MOCK_DATA = [
@@ -96,7 +96,7 @@ const INIT_SEARCH = { bonbu:'', sabupso:'', poleType:'', poleShape:'', poleSize:
  * |------------|--------|------|
  * | 2026-04-20 | JDJ    | 최초 작성 |
  */
-export default function WlcResultFeature() {
+export default function WlcResFeature() {
     const [search,    setSearch]    = useState(INIT_SEARCH)
     const [applied,   setApplied]   = useState(INIT_SEARCH)
     const [modalOpen, setModalOpen] = useState(false)
@@ -120,7 +120,7 @@ export default function WlcResultFeature() {
         queryKey: ['wlc', 'result', 'list', applied],
         queryFn: async () => {
             // ── 실제 API 호출 예제 ────────────────────────────────────────
-            // import { wlcResultApi } from '@/services/wlc/wlcResult/wlcResultService.js'
+            // import { wlcResultApi } from '@/services/wlc/wlcResult/wlcResService.js'
             // return wlcResultApi.getList(applied)
             // ─────────────────────────────────────────────────────────────
             await new Promise(r => setTimeout(r, 200))
@@ -250,7 +250,7 @@ export default function WlcResultFeature() {
                     onClose={closeDrawer}
                     defaultWidth={500}
                 >
-                    <WlcResultDrawerFeature
+                    <WlcResDrwFeature
                         row={drawerRow}
                         onOpenModal={() => { setModalRow(drawerRow); setModalOpen(true) }}
                     />
@@ -264,7 +264,7 @@ export default function WlcResultFeature() {
                 title={modalRow ? `${modalRow.calcNo} · ${modalRow.poleType} ${modalRow.poleSize}` : '상세 정보'}
                 onClose={closeModal}
             >
-                <WlcResultDetailFeature
+                <WlcResDtlFeature
                     data={Number(modalRow?.gid) % 2 === 1 ? MOCK_DETAIL_2 : MOCK_DETAIL}
                 />
             </GridDetailModal>

@@ -21,7 +21,7 @@ function WlcBatchExecutePanelInner() {
     const executeMutation = useMutation({
         mutationFn: async (body) => {
             // ── 실제 API 호출 예제 ────────────────────────────────────────
-            // import { wlcBatchExecuteApi } from '@/services/wlc/wlcBatchExecute/wlcBatchExecuteService.js'
+            // import { wlcBatchExecuteApi } from '@/services/wlc/wlcBatchExecute/wlcBatchExeService.js'
             // return wlcBatchExecuteApi.execute(body)
             // ─────────────────────────────────────────────────────────────
             await new Promise(r => setTimeout(r, 1000))
@@ -38,7 +38,7 @@ function WlcBatchExecutePanelInner() {
     )
 }
 
-export default function WlcBatchExecutePanel() {
+export default function WlcBatchExePanel() {
     return (
         <ErrorBoundary>
             <WlcBatchExecutePanelInner />

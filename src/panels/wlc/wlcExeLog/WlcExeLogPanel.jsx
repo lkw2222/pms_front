@@ -1,6 +1,6 @@
 import React                  from 'react'
 import ErrorBoundary           from '@/components/feedback/ErrorBoundary.jsx'
-import WlcExecuteLogFeature    from '@/features/wlc/wlcExecuteLog/WlcExecuteLogFeature.jsx'
+import WlcExeLogFeature    from '@/features/wlc/wlcExeLog/WlcExeLogFeature.jsx'
 
 /**
  * 풍하중 실행로그 조회 패널.
@@ -14,10 +14,10 @@ import WlcExecuteLogFeature    from '@/features/wlc/wlcExecuteLog/WlcExecuteLogF
  * |------------|--------|------|
  * | 2026-04-20 | JDJ    | 최초 작성 |
  */
-export default function WlcExecuteLogPanel() {
+export default function WlcExeLogPanel() {
     return (
         <ErrorBoundary>
-            <WlcExecuteLogFeature />
+            <WlcExeLogFeature />
         </ErrorBoundary>
     )
 }

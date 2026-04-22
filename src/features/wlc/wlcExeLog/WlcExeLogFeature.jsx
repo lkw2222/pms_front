@@ -10,7 +10,7 @@ import BasicLabel         from '@/components/label/BasicLabel.jsx'
 import { useAppStore }     from '@/store/useAppStore.js'
 import { openDockPanel }  from '@/store/dockviewStore.js'
 import { Search, RotateCcw, Loader2 } from 'lucide-react'
-import styles             from './WlcExecuteLogFeature.module.css'
+import styles             from './WlcExeLogFeature.module.css'
 
 // ── 목업 데이터 ────────────────────────────────────────────────────────────────
 const MOCK_DATA = [
@@ -118,7 +118,7 @@ function DetailPane({ data }) {
  * |------------|--------|------|
  * | 2026-04-20 | JDJ    | 최초 작성 |
  */
-export default function WlcExecuteLogFeature() {
+export default function WlcExeLogFeature() {
     const [search,  setSearch]  = useState(INIT_SEARCH)
     const [applied, setApplied] = useState(INIT_SEARCH)
     const [detailOpen, setDetailOpen] = useState(false)
@@ -139,7 +139,7 @@ export default function WlcExecuteLogFeature() {
         queryKey: ['wlc', 'execute-log', 'list', applied],
         queryFn: async () => {
             // ── 실제 API 호출 예제 ────────────────────────────────────────
-            // import { wlcExecuteLogApi } from '@/services/wlc/wlcExecuteLog/wlcExecuteLogService.js'
+            // import { wlcExecuteLogApi } from '@/services/wlc/wlcExecuteLog/wlcExeLogService.js'
             // return wlcExecuteLogApi.getList(applied)
             // ─────────────────────────────────────────────────────────────
             await new Promise(r => setTimeout(r, 200))

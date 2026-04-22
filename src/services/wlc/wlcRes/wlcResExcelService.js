@@ -185,7 +185,7 @@ function writeSummary(ws, data) {
     }
 }
 
-// ── 컬럼 정의 (WlcResultDetailFeature 와 동일) ────────────────────────────────
+// ── 컬럼 정의 (WlcResDtlFeature 와 동일) ────────────────────────────────
 const POLE_PARAMS_COLS = [
     { key: 'designLoad',         label: '설계하중',        unit: 'N',   num: true },
     { key: 'windLoad',           label: '풍압하중',        unit: 'N/m', num: true },

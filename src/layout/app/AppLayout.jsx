@@ -14,9 +14,9 @@ import SamplePanel    from '@/panels/demo/sample/SamplePanel.jsx';
 import ReadmePanel    from '@/panels/demo/readme/ReadmePanel.jsx';
 import ArchivePanel             from '@/panels/demo/archive/ArchivePanel.jsx';
 import WindPressurePanel        from '@/panels/demo/windPressure/WindPressurePanel.jsx';
-import WlcBatchExecutePanel     from '@/panels/wlc/wlcBatchExecute/WlcBatchExecutePanel.jsx';
-import WlcExecuteLogPanel       from '@/panels/wlc/wlcExecuteLog/WlcExecuteLogPanel.jsx';
-import WlcResultPanel           from '@/panels/wlc/wlcResult/WlcResultPanel.jsx';
+import WlcBatchExePanel     from '@/panels/wlc/wlcBatchExe/WlcBatchExePanel.jsx';
+import WlcExeLogPanel       from '@/panels/wlc/wlcExeLog/WlcExeLogPanel.jsx';
+import WlcResPanel           from '@/panels/wlc/wlcRes/WlcResPanel.jsx';
 
 import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
 import WlcResDistPanel from "@/panels/wlc/wlcResDist/WlcResDistPanel.jsx";
@@ -35,9 +35,9 @@ const PANEL_COMPONENTS = {
     settingPanel:     SamplePanel,
     archivePanel:        ArchivePanel,
     windPressurePanel:   WindPressurePanel,
-    wlcBatchExecutePanel: WlcBatchExecutePanel,
-    wlcExecuteLogPanel:   WlcExecuteLogPanel,
-    wlcResultPanel:       WlcResultPanel,
+    wlcBatchExecutePanel: WlcBatchExePanel,
+    wlcExecuteLogPanel:   WlcExeLogPanel,
+    wlcResultPanel:       WlcResPanel,
     wlcResDistPanel: WlcResDistPanel,
 
     emptyPanel:         EmptyPanel,
