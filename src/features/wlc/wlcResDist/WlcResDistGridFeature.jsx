@@ -1,4 +1,5 @@
 import React from 'react'
+import BasicGrid from "@/components/grid/BasicGrid.jsx";
 
 /**
  * 풍하중 평과결과 분포도 그리드
@@ -16,7 +17,16 @@ import React from 'react'
 export default function WlcResDistGridFeature() {
     return (
         <div>
-            그리드
+            <BasicGrid
+                mode="paginate"
+                rowData={data?.list ?? []}
+                colDefs={colDefs}
+                onRowClick={openDrawer}
+                height="100%"
+                pageSize={10}
+                loading={isLoading}
+                defaultColDef={{ sortable:true, resizable:true, filter:false, minWidth:60, flex:1 }}
+            />
         </div>
     )
 }
