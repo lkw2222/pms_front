@@ -130,7 +130,7 @@ export default function WlcExeLogFeature() {
     // setOpenPanels 는 ContentArea onDidAddPanel 에서 자동 처리됨
     const goToResult = useCallback((row) => {
         setWlcResultFilter({ calcId: row.id, bonbu: row.bonbu, sabupso: row.sabupso })
-        openDockPanel({ id:'wlc_3' })
+        openDockPanel({ id:'wlcResultPanel' })
     }, [setWlcResultFilter])
 
     const sabupsoOptions = SABUPSO_MAP[search.bonbu] ?? []
