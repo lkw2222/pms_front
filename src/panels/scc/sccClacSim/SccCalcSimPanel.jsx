@@ -124,7 +124,7 @@ export default function SccCalcSimPanel() {
                     <div className={layout.panelLeft}>
                         <div className={layout.panelBox}>
                             <LineBarFeature
-                                title="본부별 월간 위험군별 산출 분포"
+                                title="본부별 현황 분석"
                                 series={series}
                                 xAxis={xAxis}
                                 yAxis={yAxis}

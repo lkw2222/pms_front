@@ -70,7 +70,7 @@ export default function LineBarFeature({title='', xAxis, yAxis, series, legendDa
             {/* 차트 */}
             <ReactECharts
                 option={option}
-                style={{ width: '100%', height: 200 }}
+                style={{ width: '100%', height: 180 }}
             />
         </div>
     );
