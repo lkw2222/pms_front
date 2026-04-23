@@ -1,0 +1,133 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--color-bg-searchbox);
+    border: 1px solid var(--color-border-box);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: #374151;
+}
+
+/* ── 상단 행 ── */
+.topRow {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1.2fr;
+    gap: 10px;
+}
+
+.summaryBox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    min-height: 44px;
+}
+
+.summaryLabel {
+    color: #4b5563;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.summaryValue {
+    margin-left: auto;
+    color: #1f2937;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 파란색 강조 박스가 있는 값 (0.857%) */
+.summaryValueHighlight {
+    margin-left: auto;
+    padding: 2px 12px;
+    color: #2563eb;
+    font-size: 18px;
+    font-weight: bold;
+    background: #ffffff;
+    border: 1px solid #93c5fd;
+    border-radius: 4px;
+}
+
+.unitText {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* ── 하단 행 ── */
+.bottomRow {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.leftTitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    min-width: 120px;
+    font-weight: bold;
+    color: #1f2937;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.leftUnit {
+    font-size: 12px;
+    color: #4b5563;
+    font-weight: normal;
+    margin-top: 2px;
+}
+
+/* 등급별 5개 컬럼 그리드 */
+.gradeGrid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+}
+
+.gradeCol {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.gradeHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    gap: 6px;
+}
+
+.gradeName {
+    color: #4b5563;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.gradeCount {
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.costBox {
+    padding: 12px 8px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1f2937;
+}

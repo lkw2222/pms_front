@@ -1,0 +1,119 @@
+.container {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    color: #374151;
+}
+
+/* ── 헤더 ── */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background: #e0f2fe;
+    border-bottom: 1px solid #d1d5db;
+}
+
+.title {
+    font-weight: bold;
+    color: #0369a1;
+    font-size: 12px;
+}
+
+.excelButton {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #0369a1;
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.excelButton:hover {
+    color: #075985;
+    text-decoration: underline;
+}
+
+/* ── 테이블 스크롤 영역 ── */
+.tableWrap {
+    max-height: 216px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* 스크롤바 스타일 (선택) */
+.tableWrap::-webkit-scrollbar {
+    width: 10px;
+}
+.tableWrap::-webkit-scrollbar-track {
+    background: #f3f4f6;
+}
+.tableWrap::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 4px;
+}
+.tableWrap::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* ── 테이블 ── */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-weight: bold;
+    padding: 6px 8px;
+    text-align: center;
+    border-bottom: 1px solid #d1d5db;
+    border-right: 1px solid #d1d5db;
+    z-index: 1;
+}
+
+.table thead th:last-child {
+    border-right: none;
+}
+
+.table tbody td {
+    padding: 6px 8px;
+    text-align: right;
+    border-bottom: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+    height: 24px;
+}
+
+.table tbody td:last-child {
+    border-right: none;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* 첫 번째 컬럼 (본부명) */
+.firstCol {
+    text-align: center !important;
+    background: #f9fafb;
+    font-weight: 500;
+    color: #4b5563;
+    min-width: 90px;
+}
+
+.table thead th.firstCol {
+    background: #e0f2fe;
+}

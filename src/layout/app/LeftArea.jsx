@@ -42,7 +42,8 @@ const MENU_GROUPS = [
     { id:'scc', label:'진단우선수위 평가', icon:ChartBarDecreasing, children:[
             { id:'sccBatchExePanel', label:'SCC 배치 실행(수동)',        icon:PlayCircle,      component:'sccBatchExePanel' },
             { id:'sccExeLogPanel', label:'SCC 실행로그 조회',          icon:ScrollText,      component:'sccExeLogPanel' },
-            { id:'scc_3', label:'SCC 종합평가 분포도',           icon:ClipboardCheck,  component:'sccResDistPanel' },
+            { id:'sccResDistPanel', label:'SCC 종합평가 분포도',           icon:ClipboardCheck,  component:'sccResDistPanel' },
+            { id:'sccCalcSimPanel', label:'SCC 산출 시뮬레이션',           icon:ClipboardCheck,  component:'sccCalcSimPanel' },
             { id:'scc_4', label:'종합평가 결과조회',          icon:TableProperties, component:'emptyPanel' },
             { id:'scc_5', label:'이상치 설비 목록조회',       icon:AlertTriangle,   component:'emptyPanel' },
             { id:'scc_6', label:'진단비용산출 시물레이션',   icon:Calculator,      component:'emptyPanel' },
@@ -116,7 +117,7 @@ function SidebarGroup({ group, sidebarOpen, openPanels, onOpen, onPip, expandedG
 
 export default function LeftArea({ apiRef }) {
     const {sidebarOpen, toggleSidebar, openPanels, setOpenPanels} = useAppStore();
-    const [pipBlocked,     setPipBlocked]     = useState(false);
+    const [ipBlocked,     setPipBlocked]     = useState(false);
     const [expandedGroups, setExpandedGroups] = useState(new Set([]));
 
     // MENU_GROUPS 는 모듈 상수 → 항상 동일 값이므로 렌더마다 호출해도 안전.
@@ -129,7 +130,7 @@ export default function LeftArea({ apiRef }) {
 
         const existing = apiRef.current.panels.find(p => p.id === item.id);
 
-        if (existing) { existing.focus(); return };
+        if (existing) { existing.focus(); return }
 
         apiRef.current.addPanel({ id:item.id, component:item.component, title:item.label });
         setOpenPanels(prev => new Set([...prev, item.id]));

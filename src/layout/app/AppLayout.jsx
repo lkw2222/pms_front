@@ -22,6 +22,7 @@ import WlcResDistPanel from "@/panels/wlc/wlcResDist/WlcResDistPanel.jsx";
 import SccBatchExePanel from "@/panels/scc/sccBatchExe/SccBatchExePanel";
 import SccExeLogPanel from "@/panels/scc/sccExeLog/SccExeLogPanel";
 import SccResDistPanel from "@/panels/scc/sccResDist/SccResDistPanel";
+import SccCalcSimPanel from "@/panels/scc/sccClacSim/SccCalcSimPanel.jsx";
 
 import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
 
@@ -51,6 +52,7 @@ const PANEL_COMPONENTS = {
     sccBatchExePanel:   SccBatchExePanel,
     sccExeLogPanel:     SccExeLogPanel,
     sccResDistPanel : SccResDistPanel,
+    sccCalcSimPanel : SccCalcSimPanel,
 
     emptyPanel:         EmptyPanel,
 }
@@ -85,7 +87,6 @@ export default function AppLayout() {
     if (new URLSearchParams(window.location.search).get('panel')) return <PanelOnlyApp />
 
     const apiRef = useRef(null)
-    const { theme } = useAppStore()
     const [pipBlocked,     setPipBlocked]     = useState(false)
 
     return (
