@@ -3,7 +3,7 @@ import { useSuspenseQuery }  from '@tanstack/react-query'
 import BasicLabel            from '@/components/label/BasicLabel.jsx'
 import BasicButton           from '@/components/button/BasicButton.jsx'
 import WlcResDtlGisFeature   from './WlcResDtlGisFeature.jsx'
-import { fetchDrawerDetail } from './wlcResDrwMock.js'
+import { fetchDrawerDetail } from '../../../../public/data/wlcResDrwMock.js'
 import { ExternalLink, Loader2 } from 'lucide-react'
 import styles from './WlcResDrwFeature.module.css'
 import {LoadingState} from "@/components/feedback/QueryState.jsx";
