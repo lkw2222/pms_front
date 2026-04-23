@@ -13,6 +13,9 @@ import { Style, Circle as CircleStyle, Fill, Stroke } from 'ol/style';
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import styles from './SccResDistDtlFeature.module.css'
+import {Search} from "lucide-react";
+import TextButton from '@/components/button/TextButton.jsx'
+import MultiGauegFeature from "@/features/common/charts/MultiGauegFeature.jsx";
 
 // 평가 등급 정의
 const GRADE = {
@@ -26,8 +29,8 @@ const GRADE_COLORS = {
 };
 
 /**
- * 풍하중 평과결과 분포도 상세
- * 풍하중 평과결과 분포도 그리드에서 클릭한 항목의 상세 조회
+ * SCC 평과결과 분포도 상세
+ * SCC 평과결과 분포도 그리드에서 클릭한 항목의 상세 조회
  *
  * @author LKW
  * @since 2026-04-22
@@ -220,21 +223,10 @@ export default function SccResDistDtlFeature({ initialPoleId = '8027R504' }) {
     };
 
     // 등급 필터 토글
-    const toggleGrade = (grade) => {
-        if (grade === 'all') {
-            const newValue = !visibleGrades.all;
-            setVisibleGrades({
-                all: newValue,
-                [GRADE.PASS]: newValue,
-                [GRADE.FAIL]: newValue,
-            });
-        } else {
-            setVisibleGrades((prev) => ({
-                ...prev,
-                [grade]: !prev[grade],
-                all: false,  // 개별 토글 시 전체 선택 해제
-            }));
-        }
+    const handleFilterChange = (filterState) => {
+        console.log('필터 변경:', filterState);
+        // 예: { all: false, S: true, A: false, B: true, C: true, D: true }
+        // → 지도나 차트에서 S, B, C, D만 표시하도록 처리
     };
 
     return (
@@ -270,36 +262,7 @@ export default function SccResDistDtlFeature({ initialPoleId = '8027R504' }) {
                     </div>
 
                     {/* 우측 상단: 등급 필터 */}
-                    <div className={styles.legendBox}>
-                        <div className={styles.legendTitle}>풍하중 평가결과</div>
-                        <label className={styles.legendItem}>
-                            <input
-                                type="checkbox"
-                                checked={visibleGrades.all}
-                                onChange={() => toggleGrade('all')}
-                            />
-                            <span className={styles.dot} style={{ background: '#000' }} />
-                            <span>전체</span>
-                        </label>
-                        <label className={styles.legendItem}>
-                            <input
-                                type="checkbox"
-                                checked={visibleGrades[GRADE.PASS]}
-                                onChange={() => toggleGrade(GRADE.PASS)}
-                            />
-                            <span className={styles.dot} style={{ background: GRADE_COLORS[GRADE.PASS] }} />
-                            <span>적합</span>
-                        </label>
-                        <label className={styles.legendItem}>
-                            <input
-                                type="checkbox"
-                                checked={visibleGrades[GRADE.FAIL]}
-                                onChange={() => toggleGrade(GRADE.FAIL)}
-                            />
-                            <span className={styles.dot} style={{ background: GRADE_COLORS[GRADE.FAIL] }} />
-                            <span>부적합</span>
-                        </label>
-                    </div>
+                    <SccLegendBox onFilterChange={handleFilterChange}/>
                 </div>
 
                 {/* 우측 상세정보 패널 */}
@@ -350,106 +313,6 @@ function PoleDetailPanel({ pole }) {
                 </dl>
             </section>
 
-            {/* 풍하중 평가결과 */}
-            <section className={styles.section}>
-                <h3 className={styles.sectionTitle}>풍하중 평가결과</h3>
-                <div className={styles.infoRow}>
-                    <dt>Health Index:</dt>
-                    <dd>{pole.healthIndex}</dd>
-                </div>
-                <div
-                    className={styles.gradeBadge}
-                    style={{
-                        color: isFail ? '#dc2626' : '#2563eb',
-                        fontWeight: 'bold',
-                        fontSize: 20,
-                        margin: '12px 0',
-                    }}
-                >
-                    {isFail ? '부적합' : '적합'}
-                </div>
-                {pole.설계하중 && (
-                    <dl className={styles.infoList}>
-                        <div className={styles.infoRow}>
-                            <dt>설계하중:</dt>
-                            <dd>{pole.설계하중}</dd>
-                        </div>
-                        {pole.전주저항 && (
-                            <div className={styles.infoRow}>
-                                <dt>전주저항:</dt>
-                                <dd>{pole.전주저항}</dd>
-                            </div>
-                        )}
-                        {pole.고온계지역 && (
-                            <div className={styles.infoRow}>
-                                <dt>고온계지역:</dt>
-                                <dd>{pole.고온계지역}</dd>
-                            </div>
-                        )}
-                        {pole.저온계지역 && (
-                            <div className={styles.infoRow}>
-                                <dt>저온계지역:</dt>
-                                <dd>{pole.저온계지역}</dd>
-                            </div>
-                        )}
-                        {pole.지선주각도 !== undefined && (
-                            <div className={styles.infoRow}>
-                                <dt>지선주 각도:</dt>
-                                <dd>{pole.지선주각도}</dd>
-                            </div>
-                        )}
-                    </dl>
-                )}
-
-                {pole.전주부담 && (
-                    <>
-                        <div className={styles.subTitle}>전주 부담</div>
-                        <dl className={styles.infoList}>
-                            <div className={styles.infoRow}>
-                                <dt>고온계:</dt>
-                                <dd>{pole.전주부담.고온계}</dd>
-                            </div>
-                            <div className={styles.infoRow}>
-                                <dt>저온계:</dt>
-                                <dd>{pole.전주부담.저온계}</dd>
-                            </div>
-                        </dl>
-                    </>
-                )}
-
-                {pole.안전율 && (
-                    <>
-                        <div className={styles.subTitle}>안전율</div>
-                        <dl className={styles.infoList}>
-                            <div className={styles.infoRow}>
-                                <dt>고온계:</dt>
-                                <dd>{pole.안전율.고온계}</dd>
-                            </div>
-                            <div className={styles.infoRow}>
-                                <dt>저온계:</dt>
-                                <dd>{pole.안전율.저온계}</dd>
-                            </div>
-                        </dl>
-                    </>
-                )}
-
-                {pole.전선MT합 && (
-                    <>
-                        <div className={styles.subTitle}>전선 MT 합</div>
-                        <dl className={styles.infoList}>
-                            <div className={styles.infoRow}>
-                                <dt>고온계:</dt>
-                                <dd>{pole.전선MT합.고온계}</dd>
-                            </div>
-                            <div className={styles.infoRow}>
-                                <dt>저온계:</dt>
-                                <dd>{pole.전선MT합.저온계}</dd>
-                            </div>
-                        </dl>
-                    </>
-                )}
-            </section>
-
             {/* 설치 이력 */}
             <section className={styles.section}>
                 <div className={styles.subTitle}>설치년월</div>
@@ -463,6 +326,122 @@ function PoleDetailPanel({ pole }) {
                 <div className={styles.subTitle}>최근 평가일자</div>
                 <div className={styles.infoText}>{pole.최근평가일자}</div>
             </section>
+
+            {/* SCC 평가결과 */}
+            <section className={styles.section}>
+                <h3 className={styles.sectionTitle}>
+                    종합 평가결과
+                </h3>
+                <div style={{float:'right'}}>
+                    <TextButton
+                        label="상세보기"
+                        type="button"
+                        size="sm"
+                        icon={Search}
+                    />
+                </div>
+
+                <div
+                    className={styles.gradeBadge}
+                    style={{
+                        color: '#2563eb',
+                        fontWeight: 'bold',
+                        fontSize: 20,
+                    }}
+                >
+                    57.25 점 | 정기진단(D)
+                </div>
+
+                <div>
+                    <MultiGauegFeature />
+                </div>
+
+            </section>
+        </div>
+    );
+}
+
+function SccLegendBox({ onFilterChange }) {
+    // 등급 정의
+    const grades = [
+        { code: 'S', name: '즉시위험',  range: '90점 이상',      color: '#ef4444' },
+        { code: 'A', name: '고위험',    range: '80점 ~ 89점',    color: '#f97316' },
+        { code: 'B', name: '중위험',    range: '70점 ~ 79점',    color: '#fbbf24' },
+        { code: 'C', name: '저위험',    range: '60점 ~ 69점',    color: '#06b6d4' },
+        { code: 'D', name: '정기진단',  range: '60점 미만',      color: '#9ca3af' },
+    ];
+
+    // 체크 상태
+    const [checked, setChecked] = useState({
+        all: true,
+        S: true,
+        A: true,
+        B: true,
+        C: true,
+        D: true,
+    });
+
+    // 전체 토글
+    const toggleAll = () => {
+        const newValue = !checked.all;
+        const newState = {
+            all: newValue,
+            S: newValue,
+            A: newValue,
+            B: newValue,
+            C: newValue,
+            D: newValue,
+        };
+        setChecked(newState);
+        onFilterChange?.(newState);
+    };
+
+    // 개별 항목 토글
+    const toggleGrade = (code) => {
+        const newState = {
+            ...checked,
+            [code]: !checked[code],
+        };
+        // 개별 상태로 전체 여부 재계산
+        newState.all = grades.every((g) => newState[g.code]);
+        setChecked(newState);
+        onFilterChange?.(newState);
+    };
+
+    return (
+        <div className={styles.box}>
+            {/* 헤더 */}
+            <div className={styles.header}>SCC 평가결과</div>
+
+            {/* 전체 행 */}
+            <label className={styles.row}>
+                <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    checked={checked.all}
+                    onChange={toggleAll}
+                />
+                <span className={styles.dot} style={{ background: '#000000' }} />
+                <span className={styles.label}>전체</span>
+            </label>
+
+            {/* 등급별 행 */}
+            {grades.map((grade) => (
+                <label key={grade.code} className={styles.row}>
+                    <input
+                        type="checkbox"
+                        className={styles.checkbox}
+                        checked={checked[grade.code]}
+                        onChange={() => toggleGrade(grade.code)}
+                    />
+                    <span
+                        className={styles.dot}
+                        style={{ background: grade.color }}
+                    />
+                    <span className={styles.label}>{grade.name}</span>
+                    <span className={styles.range}>{grade.range}</span>
+                </label>
+            ))}
         </div>
     );
 }

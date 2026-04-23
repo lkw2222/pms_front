@@ -12,6 +12,7 @@ import { Search, RotateCcw, Loader2 } from 'lucide-react'
 import styles from './SccResDistGridFeature.module.css'
 import SelectInput from "@/components/input/SelectInput.jsx";
 import BasicLabel from "@/components/label/BasicLabel.jsx";
+import SccResDistDtlFeature from "./SccResDistDtlFeature.jsx";
 
 const GRADE_SCORE = [
     {label:'즉시위험', value:'S'}
@@ -190,13 +191,13 @@ export default function SccResDistGridFeature() {
 
             {/* 상세 모달 — API 연동 시 mock 분기를 useQuery 결과로 교체 */}
             <GridDetailModal
-                width={'1100px'}
-                height={'1000px'}
+                width={'1200px'}
+                height={'720px'}
                 open={modalOpen}
                 title={modalRow ? `${modalRow.calcNo} · ${modalRow.poleType} ${modalRow.poleSize}` : '상세 정보'}
                 onClose={closeModal}
             >
-                <WlcResDistDtlFeature initialPoleId="8027R504"/>
+                <SccResDistDtlFeature initialPoleId="8027R504"/>
             </GridDetailModal>
         </div>
     )

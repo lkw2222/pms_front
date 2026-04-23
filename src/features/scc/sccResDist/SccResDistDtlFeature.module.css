@@ -90,7 +90,7 @@
 
 /* ── 우측 상세 패널 ── */
 .detailPanel {
-    width: 280px;
+    width: 430px;
     background: #ffffff;
     border-left: 1px solid #e5e7eb;
     overflow-y: auto;
@@ -171,4 +171,57 @@
 
 .gradeBadge {
     padding: 8px 0;
+}
+
+.box {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: inline-block;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 10px 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    font-size: 12px;
+    min-width: 180px;
+}
+
+.header {
+    font-weight: bold;
+    color: #374151;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #f3f4f6;
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.row:hover {
+    background: #f9fafb;
+    border-radius: 4px;
+}
+
+.checkbox {
+    margin: 0;
+    cursor: pointer;
+    accent-color: #2563eb;  /* 체크박스 색상 (최신 브라우저) */
+}
+
+.label {
+    color: #4b5563;
+    min-width: 56px;
+}
+
+.range {
+    color: #6b7280;
+    font-size: 11px;
 }
