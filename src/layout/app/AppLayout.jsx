@@ -20,6 +20,7 @@ import WlcResPanel           from '@/panels/wlc/wlcRes/WlcResPanel.jsx';
 import WlcResDistPanel from "@/panels/wlc/wlcResDist/WlcResDistPanel.jsx";
 
 import SccBatchExePanel from "@/panels/scc/sccBatchExe/SccBatchExePanel"
+import SccExeLogPanel from "@/panels/scc/sccExeLog/SccExeLogPanel"
 
 import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
 
@@ -46,7 +47,8 @@ const PANEL_COMPONENTS = {
     wlcResDistPanel: WlcResDistPanel,
 
 
-    sccBatchExePanel: SccBatchExePanel,
+    sccBatchExePanel:   SccBatchExePanel,
+    sccExeLogPanel:     SccExeLogPanel,
 
     emptyPanel:         EmptyPanel,
 }

@@ -41,7 +41,7 @@ const MENU_GROUPS = [
         ]},
     { id:'scc', label:'진단우선수위 평가', icon:ChartBarDecreasing, children:[
             { id:'sccBatchExePanel', label:'SCC 배치 실행(수동)',        icon:PlayCircle,      component:'sccBatchExePanel' },
-            { id:'scc_2', label:'SCC 실행로그 조회',          icon:ScrollText,      component:'emptyPanel' },
+            { id:'sccExeLogPanel', label:'SCC 실행로그 조회',          icon:ScrollText,      component:'sccExeLogPanel' },
             { id:'scc_3', label:'SCC 종합평가 결과',           icon:ClipboardCheck,  component:'emptyPanel' },
             { id:'scc_4', label:'종합평가 결과조회',          icon:TableProperties, component:'emptyPanel' },
             { id:'scc_5', label:'이상치 설비 목록조회',       icon:AlertTriangle,   component:'emptyPanel' },
