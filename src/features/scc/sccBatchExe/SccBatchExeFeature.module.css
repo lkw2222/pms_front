@@ -1,0 +1,21 @@
+.conditionWrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: end;
+}
+
+.conditionGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dropdownRow {
+    display: flex;
+    gap: 8px;
+}
+
+.dropdownRow > * {
+    flex: 1;
+}

@@ -17,9 +17,12 @@ import WindPressurePanel        from '@/panels/demo/windPressure/WindPressurePan
 import WlcBatchExePanel     from '@/panels/wlc/wlcBatchExe/WlcBatchExePanel.jsx';
 import WlcExeLogPanel       from '@/panels/wlc/wlcExeLog/WlcExeLogPanel.jsx';
 import WlcResPanel           from '@/panels/wlc/wlcRes/WlcResPanel.jsx';
+import WlcResDistPanel from "@/panels/wlc/wlcResDist/WlcResDistPanel.jsx";
+
+import SccBatchExePanel from "@/panels/scc/sccBatchExe/SccBatchExePanel"
 
 import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
-import WlcResDistPanel from "@/panels/wlc/wlcResDist/WlcResDistPanel.jsx";
+
 
 // ── 패널 컴포넌트 등록 ────────────────────────────────────────────────────────
 const PANEL_COMPONENTS = {
@@ -35,10 +38,15 @@ const PANEL_COMPONENTS = {
     settingPanel:     SamplePanel,
     archivePanel:        ArchivePanel,
     windPressurePanel:   WindPressurePanel,
+
+
     wlcBatchExecutePanel: WlcBatchExePanel,
     wlcExecuteLogPanel:   WlcExeLogPanel,
     wlcResultPanel:       WlcResPanel,
     wlcResDistPanel: WlcResDistPanel,
+
+
+    sccBatchExePanel: SccBatchExePanel,
 
     emptyPanel:         EmptyPanel,
 }

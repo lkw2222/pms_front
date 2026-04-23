@@ -40,7 +40,7 @@ const MENU_GROUPS = [
             { id:'wlcResDistPanel', label:'풍하중 평가결과 분포도',         icon:PieChart,    component:'wlcResDistPanel' },
         ]},
     { id:'scc', label:'진단우선수위 평가', icon:ChartBarDecreasing, children:[
-            { id:'scc_1', label:'SCC 배치 실행(수동)',        icon:PlayCircle,      component:'emptyPanel' },
+            { id:'sccBatchExePanel', label:'SCC 배치 실행(수동)',        icon:PlayCircle,      component:'sccBatchExePanel' },
             { id:'scc_2', label:'SCC 실행로그 조회',          icon:ScrollText,      component:'emptyPanel' },
             { id:'scc_3', label:'SCC 종합평가 결과',           icon:ClipboardCheck,  component:'emptyPanel' },
             { id:'scc_4', label:'종합평가 결과조회',          icon:TableProperties, component:'emptyPanel' },
