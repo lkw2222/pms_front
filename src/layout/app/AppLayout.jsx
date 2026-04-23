@@ -7,7 +7,7 @@ import { useAppStore } from '@/store/useAppStore.js'
 import LoginWidget  from '@/widgets/common/auth/LoginWidget.jsx'
 import styles from '@/assets/styles/layout.module.css'
 
-import DashboardPanel from '@/panels/demo/dashboard/DashboardPanel.jsx';
+import DashboardPanel from '@/panels/dashboard/DashboardPanel.jsx';
 import GridPanel      from '@/panels/demo/grid/GridPanel.jsx';
 import GisPanel       from '@/panels/demo/gis/GisPanel.jsx';
 import SamplePanel    from '@/panels/demo/sample/SamplePanel.jsx';

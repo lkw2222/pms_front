@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactECharts from 'echarts-for-react';
-import styles from './SccResDistPieFeature.module.css'
+import styles from './GradeDounutFeature.module.css'
 
 /**
  * 풍하중 평과결과 분포도 파이 차트
@@ -15,7 +15,7 @@ import styles from './SccResDistPieFeature.module.css'
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function SccResDistPieFeature() {
+export default function GradeDounutFeature() {
     const data = [
         {
             grade: 'S',

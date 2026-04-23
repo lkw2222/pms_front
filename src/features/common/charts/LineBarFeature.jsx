@@ -22,7 +22,7 @@ import SelectInput from "@/components/input/SelectInput";
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function LineBarFeature({title='', xAxis, yAxis, series, legendData}) {
+export default function LineBarFeature({title='', xAxis, yAxis, series, legendData, showFilter = true}) {
     const [year, setYear] = useState('2026');
 
     const option = {
@@ -60,11 +60,13 @@ export default function LineBarFeature({title='', xAxis, yAxis, series, legendDa
                     {title}
                 </span>
 
-                <SelectInput
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    options={[{label: "2026년", value: "2026"}, {label: "2025년", value: "2025"}]}
-                />
+                {showFilter && (
+                    <SelectInput
+                        value={year}
+                        onChange={(e) => setYear(e.target.value)}
+                        options={[{label: "2026년", value: "2026"}, {label: "2025년", value: "2025"}]}
+                    />
+                )}
             </div>
 
             {/* 차트 */}

@@ -1,0 +1,30 @@
+.dashboardHeader {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-shrink:0;
+}
+
+.dashboardTitle {
+    display:flex; align-items:center; gap:8px;
+}
+
+.dashboardDot {
+    width:4px; height:18px; background:var(--color-accent); border-radius:2px;
+}
+
+.dashboardTitleMain {
+    font-size:15px; font-weight:600; color:var(--color-text-primary);
+}
+
+.dashboardTitleSub {
+    font-size:11px; color:var(--color-text-muted);
+}
+
+.dashboardDate {
+    display:flex; align-items:center; gap:8px;
+}
+
+.dashboardDateText {
+    font-size:11px; color:var(--color-text-muted);
+}

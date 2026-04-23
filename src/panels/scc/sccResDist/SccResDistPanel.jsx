@@ -5,9 +5,10 @@ import MapFilterFeature from '@/features/common/charts/MapFilterFeature.jsx';
 import LineBarFeature from '@/features/common/charts/LineBarFeature.jsx';
 import DistMatrixFeature from '@/features/common/charts/DistMatrixFeature.jsx';
 import SccResDistGridFeature from '@/features/scc/sccResDist/SccResDistGridFeature.jsx';
-import SccResDistPieFeature from '@/features/scc/sccResDist/SccResDistPieFeature.jsx';
+import GradeDounutFeature from "@/features/common/charts/GradeDounutFeature.jsx";
 
 import layout from '@/assets/styles/layout.module.css';
+
 
 /**
  * SCC 평가결과 분포도 조회 패널.
@@ -125,7 +126,7 @@ export default function SccResDistPanel() {
                     <div className={layout.panelRight}>
                         <div className={layout.panelMinBox}><DateRangeFilterFeature /></div>
                         <div className={layout.panelBox}><DistMatrixFeature /></div>
-                        <div className={layout.panelBoxNonFlex}><SccResDistPieFeature /></div>
+                        <div className={layout.panelBoxNonFlex}><GradeDounutFeature /></div>
                         <div className={layout.panelBox}>
                             <LineBarFeature
                                 title="본부별 월간 위험군별 산출 분포"

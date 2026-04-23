@@ -1,0 +1,120 @@
+.container {
+    background: 1px solid var(--color-bg-body);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 12px;
+    color: #374151;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* 스크롤 영역 */
+.tableWrap {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+/* 스크롤바 */
+.tableWrap::-webkit-scrollbar {
+    width: 12px;
+    height: 10px;
+}
+
+.tableWrap::-webkit-scrollbar-track {
+    background: var(--color-bg-tabsbody);
+}
+
+.tableWrap::-webkit-scrollbar-thumb {
+    background: var(--color-bg-large-d);
+    border-radius: 4px;
+}
+
+.tableWrap::-webkit-scrollbar-thumb:hover {
+    background: var(--color-bg-hover);
+}
+
+/* ── 테이블 ── */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.table th,
+.table td {
+    padding: 6px 8px;
+    text-align: center;
+    border: 1px solid var(--color-border);
+    height: 28px;
+    white-space: nowrap;
+}
+
+/* 헤더 기본 스타일 */
+.table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--color-bg-dashboard);      /* 연한 파랑 */
+    color: var(--color-text-primary);
+    font-weight: bold;
+    z-index: 1;
+}
+
+/* "평가등급별 비율 (%)" 그룹 헤더 */
+.groupHeader {
+    color: var(--color-text-primary);
+}
+
+/* 첫 번째 행 (1차 헤더)의 sticky 위치 */
+.table thead tr:first-child th {
+    top: 0;
+}
+
+/* 두 번째 행 (2차 헤더)의 sticky 위치 */
+.table thead tr:nth-child(2) th {
+    top: 29px;   /* 첫 번째 헤더 높이만큼 아래로 */
+}
+
+/* 지역본부 컬럼 (좌측 첫 번째) */
+.hqCol {
+    font-weight: 500;
+    min-width: 90px;
+}
+
+/* 상세보기 컬럼 */
+.detailCol {
+    min-width: 80px;
+    background: var(--color-bg-primary);
+}
+
+/* 데이터 셀 */
+.table tbody td {
+    background: var(--color-bg-tabsbody);
+    color: var(--color-text-primary);
+}
+
+.table tbody tr:hover td {
+    background: var(--color-bg-hover);
+}
+
+.table tbody tr:hover  {
+    background: var(--color-bg-hover);
+}
+
+/* 상세보기 버튼 */
+.detailButton {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-accent);
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 500;
+
+
+}
+
+.detailButton:hover {
+    color: var(--color-accent-hover);
+    text-decoration: underline;
+}

@@ -391,3 +391,48 @@
 .panelMinBox {
   flex: 0;              /* 각 박스 균등 분배 */
 }
+
+.dashboardWrap {
+  width:100%;
+  height:100%;
+  overflow:auto;
+  padding:0px;
+  box-Sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.dashboardCard {
+  display:grid; grid-template-columns:repeat(7,1fr); gap:8px;
+}
+
+.dashboardChart {
+  display:grid; grid-template-columns:repeat(7,1fr); gap:8px;
+}
+
+.dashboardDounut {
+  position:relative;
+  background:var(--color-bg-secondary);
+  border:1px solid var(--color-border);
+  border-radius:8px;
+  padding:10px 14px;
+  grid-column: span 2;
+}
+
+.dashboardLineBar {
+  position:relative;
+  background:var(--color-bg-secondary);
+  border:1px solid var(--color-border);
+  border-radius:8px;
+  padding:10px 14px;
+  grid-column: span 5;
+}
+
+.dashboardTable {
+  position:relative;
+  background:var(--color-bg-secondary);
+  border:1px solid var(--color-border);
+  border-radius:8px;
+  padding:10px 14px;
+}
