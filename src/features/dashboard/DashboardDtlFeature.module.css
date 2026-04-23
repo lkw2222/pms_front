@@ -1,0 +1,274 @@
+.container {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--color-text-primary);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── 헤더 ── */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--color-text-primary);
+}
+
+.excelButton {
+    padding: 4px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.excelButton:hover {
+    background: var(--color-bg-hover);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+/* ── 테이블 스크롤 영역 ── */
+.tableWrap {
+    max-height: 360px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.tableWrap::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.tableWrap::-webkit-scrollbar-track {
+    background: var(--color-bg-tertiary);
+}
+
+.tableWrap::-webkit-scrollbar-thumb {
+    background: var(--color-bg-large-d);
+    border-radius: 4px;
+}
+
+.tableWrap::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+}
+
+/* ── 테이블 ── */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+}
+
+.table th,
+.table td {
+    padding: 4px 6px;
+    text-align: center;
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* ── 헤더 ── */
+.table thead th {
+    background: var(--color-bg-tabsheader);
+    color: var(--color-text-primary);
+    font-weight: bold;
+    z-index: 1;
+    padding: 4px 6px;
+}
+
+/* 1차 헤더: 맨 위 */
+.table thead tr:first-child th {
+    top: 0;
+}
+
+/* 2차 헤더: 1차 헤더 아래 */
+.table thead tr:nth-child(2) th {
+    top: 29px;
+}
+
+/* 그룹 헤더 (안전율, 판정등급) */
+.groupHeader {
+    background: var(--color-bg-large-m) !important;
+    color: var(--color-text-large-m) !important;
+}
+
+/* ── 본문 ── */
+.table tbody tr:nth-child(odd) td {
+    background: var(--color-bg-searchbox);
+}
+
+.table tbody tr:nth-child(even) td {
+    background: var(--color-bg-secondary);
+}
+
+.table tbody tr:hover td {
+    background: var(--color-bg-hover);
+}
+
+/* 특정 셀 강조 */
+.hqCell,
+.branchCell {
+    color: var(--color-seablue);
+    font-weight: 500;
+    min-width: 80px;
+    max-width: 80px;
+    white-space: normal;
+    line-height: 1.3;
+}
+
+.idCell {
+    color: var(--color-text-primary);
+    font-weight: 500;
+    min-width: 90px;
+}
+
+.scoreCell {
+    font-weight: bold;
+    color: var(--color-text-primary);
+    text-align: right !important;
+}
+
+/* 판정등급 셀 */
+.gradeCodeCell {
+    min-width: 32px;
+    padding: 4px !important;
+}
+
+.gradeBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    color: var(--color-text-large-m);
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.gradeNameCell {
+    min-width: 70px;
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+/* ── 빈 데이터 표시 ── */
+.emptyRow {
+    text-align: center !important;
+    padding: 30px !important;
+    color: var(--color-text-muted);
+    background: var(--color-bg-secondary) !important;
+}
+
+/* ── 페이징 영역 ── */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border);
+    font-size: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.paginationLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pageSizeLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-text-secondary);
+}
+
+.pageSizeSelect {
+    padding: 2px 6px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.pageSizeSelect:focus {
+    outline: none;
+    border-color: var(--color-border-focus);
+}
+
+.totalInfo {
+    color: var(--color-text-secondary);
+}
+
+.totalInfo b {
+    color: var(--color-text-primary);
+    font-weight: bold;
+}
+
+.paginationRight {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* 페이지 버튼 */
+.pageBtn {
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 500;
+}
+
+.pageBtn:hover:not(:disabled):not(.pageBtnActive) {
+    background: var(--color-bg-hover);
+    border-color: var(--color-border-focus);
+    color: var(--color-accent);
+}
+
+.pageBtn:disabled {
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+    background: var(--color-bg-tertiary);
+}
+
+/* 활성 페이지 */
+.pageBtnActive {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-text-large-m);
+    font-weight: bold;
+    cursor: default;
+}
+
+.pageBtnActive:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+}

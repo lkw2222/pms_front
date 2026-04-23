@@ -6,7 +6,7 @@ import DashboardCardFeature from "../../features/dashboard/DashboardCardFeature"
 import {UtilityPole, ScanSearch, Skull, Angry, Annoyed, Smile, SmilePlus} from "lucide-react";
 import GradeDounutFeature from "@/features/common/charts/GradeDounutFeature";
 import LineBarFeature from "@/features/common/charts/LineBarFeature.jsx";
-import DashBoardTableFeature from "@/features/dashboard/DashBoardTableFeature.jsx";
+import DashboardTableFeature from "@/features/dashboard/DashboardTableFeature.jsx";
 
 export default function DashboardPanel() {
     const xAxis = {
@@ -200,7 +200,7 @@ export default function DashboardPanel() {
 
                 {/*테이블*/}
                 <div className={layout.dashboardTable}>
-                    <DashBoardTableFeature/>
+                    <DashboardTableFeature/>
                 </div>
 
             </div>

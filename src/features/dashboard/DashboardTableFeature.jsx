@@ -1,5 +1,7 @@
-import React, { useMemo } from 'react';
-import styles from './DashBoardTableFeature.module.css';
+import React, {useCallback, useMemo, useState} from 'react';
+import styles from './DashboardTableFeature.module.css';
+import GridDetailModal from "@/components/grid/GridDetailModal.jsx";
+import DashboardDtlFeature from "./DashboardDtlFeature.jsx";
 
 /**
  * 본부별 평가등급 비율 통계표
@@ -8,7 +10,11 @@ import styles from './DashBoardTableFeature.module.css';
  * @since 2026-04-22
  * @returns {JSX.Element}
  */
-export default function DashBoardTableFeature({ data, onDetailClick }) {
+export default function DashboardTableFeature({ data }) {
+    const [modalOpen, setModalOpen] = useState(false);
+    const openModal  = useCallback(() => { setModalOpen(true) }, []);
+    const closeModal = useCallback(() => setModalOpen(false), []);
+
     // 기본 본부 목록
     const defaultHeadquarters = useMemo(() => [
         '서울', '남서울', '인천', '경기북부', '경기',
@@ -36,11 +42,7 @@ export default function DashBoardTableFeature({ data, onDetailClick }) {
     }, [data, defaultHeadquarters]);
 
     const handleDetail = (row) => {
-        if (onDetailClick) {
-            onDetailClick(row);
-        } else {
-            console.log('상세보기:', row);
-        }
+        openModal(row);
     };
 
     // 값 포맷
@@ -102,6 +104,17 @@ export default function DashBoardTableFeature({ data, onDetailClick }) {
                     </tbody>
                 </table>
             </div>
+
+            {/* 상세 모달 — API 연동 시 mock 분기를 useQuery 결과로 교체 */}
+            <GridDetailModal
+                width={'1200px'}
+                height={'720px'}
+                open={modalOpen}
+                title={'전주우선순위(SCC) 평가 결과 상세 조회'}
+                onClose={closeModal}
+            >
+                <DashboardDtlFeature initialPoleId="8027R504"/>
+            </GridDetailModal>
         </div>
     );
 }
