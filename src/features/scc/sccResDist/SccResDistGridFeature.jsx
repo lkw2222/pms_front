@@ -6,13 +6,30 @@ import GridDetailModal       from '@/components/grid/GridDetailModal.jsx'
 import GridActionButtons     from '@/components/grid/GridActionButtons.jsx'
 import SearchInput           from '@/components/input/SearchInput.jsx'
 import BasicButton           from '@/components/button/BasicButton.jsx'
-import BasicLabel            from '@/components/label/BasicLabel.jsx'
 import WlcResDistDtlFeature from '@/features/wlc/wlcResDist/WlcResDistDtlFeature.jsx'
 import { MOCK_DATA } from '../../../../public/data/wlcResMock.js'
 import { Search, RotateCcw, Loader2 } from 'lucide-react'
-import styles from './WlcResDistGridFeature.module.css'
+import styles from './SccResDistGridFeature.module.css'
+import SelectInput from "@/components/input/SelectInput.jsx";
+import BasicLabel from "@/components/label/BasicLabel.jsx";
 
-const RESULT_VARIANT = { '적합':'success', '부적합':'danger' }
+const GRADE_SCORE = [
+    {label:'즉시위험', value:'S'}
+    ,{label:'고 위험', value:'A'}
+    ,{label:'중 위험', value:'B'}
+    ,{label:'저 위험', value:'C'}
+    ,{label:'정기진단', value:'D'}
+];
+
+// 판정등급 색상 맵
+const GRADE_COLORS = {
+    S: {color:'danger', value:'즉시위험'},   // 즉시위험 - 빨강
+    A: {color:'warning', value:'고위험'},  // 고위험   - 주황
+    B: {color:'default', value:'중위험'},  // 중위험   - 노랑
+    C: {color:'success', value:'저위험'},  // 저위험   - 연두
+    D: {color:'info', value:'정기진단'}  // 정기진단 - 파랑
+};
+
 
 const SEARCH_TYPE_OPT = [
     { label:'설비 GID',       value:'gid'    },
@@ -34,7 +51,7 @@ const INIT_SEARCH = { bonbu:'', sabupso:'', poleType:'', poleShape:'', poleSize:
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResDistGridFeature() {
+export default function SccResDistGridFeature() {
     const [search,    setSearch]    = useState(INIT_SEARCH)
     const [applied,   setApplied]   = useState(INIT_SEARCH)
     const [modalOpen, setModalOpen] = useState(false)
@@ -102,12 +119,26 @@ export default function WlcResDistGridFeature() {
     const onReset    = () => { setSearch(INIT_SEARCH); setApplied(INIT_SEARCH); setDrawerOpen(false) }
 
     const colDefs = useMemo(() => [
-        { field:'gid',    headerName:'설비GID',        flex:2, minWidth:80  },
-        { field:'calcNo',       headerName:'전산화번호', flex:2, minWidth:95 },
-        { field:'poleType',     headerName:'전주종류', flex:2, minWidth:90  },
+        { field:'gid',    headerName:'설비GID',        flex:1, minWidth:100  },
+        { field:'calcNo',       headerName:'전산화번호', flex:1, minWidth:95 },
+        { field:'poleType',     headerName:'전주종류', flex:1, minWidth:90  },
         { field:'poleShape',    headerName:'형태',     flex:1, minWidth:90  },
         { field:'poleSize',     headerName:'규격',     flex:1, minWidth:80  },
-        { field:'result',       headerName:'판정결과', flex:1, minWidth:100,  cellRenderer: ({ value }) => <BasicLabel text={value} variant={RESULT_VARIANT[value] ?? 'default'} />, cellStyle:{ display:'flex', alignItems:'center', justifyContent:'center' } },
+        { field:'score',       headerName:'판정점수', flex:1, minWidth:100, valueFormatter: (params) => {
+                if (params.value == null) return '';
+                // 소수점 있으면 그대로, 없으면 정수로
+                return Number.isInteger(params.value)
+                    ? params.value.toString()
+                    : params.value.toFixed(2);
+            }},
+        {
+            headerName: '판정등급',
+            field: 'grade',
+            cellStyle:{ display:'flex', alignItems:'center', justifyContent:'center' },
+            cellRenderer: ({ value }) => {
+                return <BasicLabel text={value+' '+GRADE_COLORS[value].value} variant={GRADE_COLORS[value].color} />;
+            },
+        },
         { headerName:'액션',    flex:1, minWidth:68,  sortable:false, filter:false,
             cellRenderer: ({ data }) => data
                 ? <GridActionButtons data={data} buttons={[{ type:'detail', onClick: openModal }]} />
@@ -125,8 +156,12 @@ export default function WlcResDistGridFeature() {
                         : <>총 <strong style={{ color:'var(--color-danger-total)' }}>{(data?.totalCount ?? 0).toLocaleString()}</strong>건</>
                     }
                 </div>
+                <SelectInput
+                    placeholder='판정등급'
+                    options={GRADE_SCORE}
+                />
                 <SearchInput
-                    style={{ gridColumn: 'span 3' }}
+                    style={{ gridColumn: 'span 2' }}
                     options={SEARCH_TYPE_OPT}
                     selectValue={search.searchType}
                     onSelectChange={e => setSearch(s => ({ ...s, searchType: e.target.value }))}

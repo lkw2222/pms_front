@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactECharts from "echarts-for-react";
-import styles from './WlcResDistMatrixFeature.module.css'
+import styles from './DistMatrixFeature.module.css'
 
 /**
- * 풍하중 평과결과 분포도 매트릭스 차트 (히트맵 차트)
- * 풍하중 평과결과 분포도 평가 대상 전주를 매트릭스 차트로 조회
+ * 분포도 매트릭스 차트 (히트맵 차트)
  *
  * @author LKW
  * @since 2026-04-22
@@ -15,7 +14,7 @@ import styles from './WlcResDistMatrixFeature.module.css'
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResDistMatrixFeature() {
+export default function DistMatrixFeature() {
     // 이미지와 동일한 샘플 데이터 (5열 × 4행)
     // [x, y, value] 형식 — x: 열 인덱스, y: 행 인덱스 (위에서 아래)
     const rawData = [

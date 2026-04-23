@@ -1,11 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react'
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
-import styles             from '@/features/wlc/wlcResDist/WlcResDistMapFeature.module.css';
+import styles from './MapFilterFeature.module.css';
 
 /**
- * 풍하중 평과결과 분포도 맵
- * 풍하중 평과결과 분포도 맵 차트 조회
+ * 맵 필터 차트
  *
  * @author LKW
  * @since 2026-04-22
@@ -16,7 +15,7 @@ import styles             from '@/features/wlc/wlcResDist/WlcResDistMapFeature.m
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResDistMapFeature() {
+export default function MapFilterFeature() {
     const chartRef = useRef(null);
     const [sidoGeo, setSidoGeo] = useState(null);
     const [sigGeo, setSigGeo] = useState(null);

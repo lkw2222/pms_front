@@ -1,11 +1,10 @@
 import React, {useState} from 'react'
 import ReactECharts from 'echarts-for-react';
-import styles from './WlcResDistBarFeature.module.css'
-import SelectInput from "../../../components/input/SelectInput";
+import styles from './LineBarFeature.module.css'
+import SelectInput from "@/components/input/SelectInput";
 
 /**
- * 풍하중 평과결과 분포도 바 차트
- * 본부별 월간 안전율(수치) 산출 분포를 바 차트로 표현한다.
+ * 라인 + 바 차트
  *
  * @author LKW
  * @since 2026-04-22
@@ -16,7 +15,7 @@ import SelectInput from "../../../components/input/SelectInput";
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResDistBarFeature() {
+export default function LineBarFeature() {
     const [year, setYear] = useState('2026');
 
     const months = ['1월', '2월', '3월', '4월', '5월', '6월',

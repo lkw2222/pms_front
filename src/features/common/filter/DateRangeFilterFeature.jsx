@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DateInput          from '@/components/input/DateInput.jsx';
-import styles             from '@/features/wlc/wlcResDist/WlcResDistSearchFeature.module.css';
+import styles             from './DateRangeFilterFeature.module.css';
 
 const INIT_SEARCH = { bonbu:'', sabupso:'', dateFrom:'', dateTo:'', searchType:'id', searchValue:'' }
 
@@ -17,7 +17,7 @@ const INIT_SEARCH = { bonbu:'', sabupso:'', dateFrom:'', dateTo:'', searchType:'
  * |------------|--------|------|
  * | 2026-04-22 | LKW    | 최초 작성 |
  */
-export default function WlcResDistSearchFeature() {
+export default function DateRangeFilterFeature() {
 
     const [search,  setSearch]  = useState(INIT_SEARCH);
 
