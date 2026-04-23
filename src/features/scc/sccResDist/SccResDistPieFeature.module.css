@@ -1,48 +1,60 @@
-.wrap {
-    align-items: center;
-    max-width: 500px;
-    gap: 16px
-}
-
-.leftCon {
+.cardStyle {
     float: left;
 }
 
-.leftTitle {
+.titleStyle {
     font-size: 14px;
     font-weight: bold;
     color: #374151;
-    margin-bottom: 40px;
+    margin-bottom: 16px;
 }
 
-.leftStats {
-    margin-bottom : 8px;
+.bodyStyle {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-.leftTotalBlue {
-    font-size: 22px;
+.legendListStyle {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.legendRowStyle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.badgeStyle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    color: #ffffff;
+    font-Size: 11px;
     font-weight: bold;
-    color: #2563eb;
+    flex-shrink: 0;
 }
 
-.leftTotalRed {
-    font-size: 22px;
+.gradeNameStyle {
+    color: #4b5563;
+    flex: 1;
+}
+
+.percentStyle {
     font-weight: bold;
-    color: #ef4444;
+    color: #111827;
+    min-width: 46px;
+    text-align: right;
 }
 
-.leftCnt {
-    font-size: 14px; color: #6b7280; margin-left: 4px;
-}
 
-.gradeGood {
-    color: #2563eb;
-}
-
-.gradeBad {
-    color: #ef4444;
-}
-
-.rightCon {
-    width: 300px; height: 160px; flex-shrink: 0; float: right;
+.chartBoxStyle {
+    width: 300px; height: 200px; flex-shrink: 0; float: left;
 }

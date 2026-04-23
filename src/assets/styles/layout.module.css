@@ -381,6 +381,13 @@
   flex: 1;              /* 각 박스 균등 분배 */
 }
 
+.panelBoxNonFlex {
+  background: var(--color-bg-searchbox);
+  border: 1px solid var(--color-border-box);
+  border-radius: 6px;
+  padding: 16px;
+}
+
 .panelMinBox {
   flex: 0;              /* 각 박스 균등 분배 */
 }
