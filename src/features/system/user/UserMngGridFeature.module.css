@@ -1,0 +1,11 @@
+.gridWrap {
+    flex:1;
+    overflow: hidden;
+    display:flex;
+}
+
+.gridArea {
+    flex:1;
+    overflow:hidden;
+    minWidth:0px;
+}

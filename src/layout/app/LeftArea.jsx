@@ -53,10 +53,14 @@ const MENU_GROUPS = [
             { id:'gisPanel_sample',   label:'지도 샘플',      icon:Map,             component:'gisPanel'    },
         ]},
     { id:'system', label:'시스템', icon:Settings, children:[
-            { id:'archivePanel',      label:'자료실',     icon:Archive,      component:'archivePanel'      },
-            { id:'windPressurePanel', label:'전주 풍하중', icon:FileSpreadsheet, component:'windPressurePanel' },
-            { id:'loginPanel',        label:'로그인',     icon:LogIn,        component:'loginPanel',  pip:false },
-            { id:'settingPanel',      label:'설정',       icon:Settings,     component:'samplePanel', pip:false },
+            { id:'userMngPanel', label:'이용자 관리', component:'userMngPanel'},
+            { id:'userConLogPanel', label:'접속로그 조회', component:'userConLogPanel'},
+            { id:'menuMngPanel', label:'메뉴 관리', component:'menuMngPanel'},
+            { id:'authMngPanel', label:'권한 설정', component:'authMngPanel' },
+            { id:'jobCodePanel', label:'업무분류코드 관리', component:'jobCodePanel'},
+            { id:'commonCodePanel', label:'공통코드 관리', component:'commonCodePanel'},
+            { id:'noticePanel', label:'공지사항', component:'noticePanel'},
+            { id:'programRegPanel', label:'프로그램 등록 관리', component:'programRegPanel'}
         ]},
 ]
 

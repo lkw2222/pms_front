@@ -1,0 +1,40 @@
+.filtersWrap {
+    display:grid;
+    grid-template-columns:160px 160px 160px 360px;
+    gap:10px;
+    align-items:end;
+}
+
+.totalCount {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    position: relative;
+    top: 5px;
+}
+
+.cntStrong {
+    color:var(--color-danger-total);
+}
+
+.searchBtns {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+}
+
+.gidLink {
+    color: var(--color-accent);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 12px;
+}
+.gidLink:hover {
+    color: var(--color-accent-hover);
+}
+
+.resultPass {
+    color: var(--color-success);
+    font-weight: 600;
+}
+.resultFail {
+    color: var(--color-danger);
+    font-weight: 600;
+}

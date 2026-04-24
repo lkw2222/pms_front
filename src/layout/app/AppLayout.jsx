@@ -25,6 +25,15 @@ import SccResPanel from "@/panels/scc/sccRes/SccResPanel.jsx"
 import SccResDistPanel from "@/panels/scc/sccResDist/SccResDistPanel";
 import SccCalcSimPanel from "@/panels/scc/sccClacSim/SccCalcSimPanel.jsx";
 
+import AuthMngPanel from "@/panels/system/auth/AuthMngPanel.jsx";
+import NoticePanel from "@/panels/system/bbs/NoticePanel.jsx";
+import CommonCodePanel from "@/panels/system/code/CommonCodePanel.jsx";
+import JobCodePanel from "@/panels/system/code/JobCodePanel.jsx";
+import UserConLogPanel from "@/panels/system/logs/UserConLogPanel.jsx";
+import MenuMngPanel from "@/panels/system/menu/MenuMngPanel.jsx";
+import ProgramRegPanel from "@/panels/system/program/ProgramRegPanel.jsx";
+import UserMngPanel from "@/panels/system/user/UserMngPanel.jsx";
+
 import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
 
 
@@ -55,6 +64,16 @@ const PANEL_COMPONENTS = {
     sccResPanel:        SccResPanel,
     sccResDistPanel : SccResDistPanel,
     sccCalcSimPanel : SccCalcSimPanel,
+
+
+    authMngPanel : AuthMngPanel,
+    noticePanel : NoticePanel,
+    commonCodePanel : CommonCodePanel,
+    jobCodePanel : JobCodePanel,
+    userConLogPanel : UserConLogPanel,
+    menuMngPanel : MenuMngPanel,
+    programRegPanel : ProgramRegPanel,
+    userMngPanel : UserMngPanel,
 
     emptyPanel:         EmptyPanel,
 }
