@@ -43,13 +43,13 @@
 }
 
 .gradeNameStyle {
-    color: #4b5563;
+    color: var(--color-text-primary);
     flex: 1;
 }
 
 .percentStyle {
     font-weight: bold;
-    color: #111827;
+    color: var(--color-text-primary);
     min-width: 46px;
     text-align: right;
 }

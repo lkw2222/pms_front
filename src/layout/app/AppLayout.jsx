@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react'
 import ContentArea from "@/layout/app/ContentArea";
 import TopArea from "@/layout/app/TopArea.jsx";
 import LeftArea from "@/layout/app/LeftArea.jsx";
-import { useAppStore } from '@/store/useAppStore.js'
 
 import LoginWidget  from '@/widgets/common/auth/LoginWidget.jsx'
 import styles from '@/assets/styles/layout.module.css'
@@ -29,7 +28,6 @@ import AuthMngPanel from "@/panels/system/auth/AuthMngPanel.jsx";
 import NoticePanel from "@/panels/system/bbs/NoticePanel.jsx";
 import CommonCodePanel from "@/panels/system/code/CommonCodePanel.jsx";
 import JobCodePanel from "@/panels/system/code/JobCodePanel.jsx";
-import UserConLogPanel from "@/panels/system/logs/UserConLogPanel.jsx";
 import MenuMngPanel from "@/panels/system/menu/MenuMngPanel.jsx";
 import ProgramRegPanel from "@/panels/system/program/ProgramRegPanel.jsx";
 import UserMngPanel from "@/panels/system/user/UserMngPanel.jsx";
@@ -70,7 +68,6 @@ const PANEL_COMPONENTS = {
     noticePanel : NoticePanel,
     commonCodePanel : CommonCodePanel,
     jobCodePanel : JobCodePanel,
-    userConLogPanel : UserConLogPanel,
     menuMngPanel : MenuMngPanel,
     programRegPanel : ProgramRegPanel,
     userMngPanel : UserMngPanel,

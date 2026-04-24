@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactECharts from 'echarts-for-react';
+import { GRADE_COLOR, GRADE_BG, GRADE_NAME } from '@/constants/gradeConst.js'
 import styles from './GradeDounutFeature.module.css'
 
 /**
@@ -19,43 +20,43 @@ export default function GradeDounutFeature() {
     const data = [
         {
             grade: 'S',
-            name: '즉시 위험',
-            percent: 12.3,
+            name: GRADE_NAME.S,
+            percent: 5.5,
             count: 23,
-            trend: 'up',       // 'up' | 'down' | 'none'
-            color: '#ef4444',  // 빨강
+            trend: 'up',
+            color: GRADE_COLOR.S,
         },
         {
             grade: 'A',
-            name: '고 위험',
-            percent: 38.7,
-            count: 234,
+            name: GRADE_NAME.A,
+            percent: 6.7,
+            count: 28,
             trend: 'up',
-            color: '#fbbf24',  // 파랑
+            color: GRADE_COLOR.A,
         },
         {
             grade: 'B',
-            name: '중 위험',
-            percent: 25.8,
-            count: 87,
+            name: GRADE_NAME.B,
+            percent: 10.8,
+            count: 45,
             trend: 'down',
-            color: '#06d47e',  // 청록
+            color: GRADE_COLOR.B,
         },
         {
             grade: 'C',
-            name: '저 위험',
-            percent: 11.2,
-            count: 45,
+            name: GRADE_NAME.C,
+            percent: 20.9,
+            count: 87,
             trend: 'down',
-            color: '#06b6d4',  // 노랑
+            color: GRADE_COLOR.C,
         },
         {
             grade: 'D',
-            name: '정기진단',
-            percent: 12.0,
-            count: 0,          // 0이면 차트에서는 제외되거나 조그맣게
+            name: GRADE_NAME.D,
+            percent: 56.1,
+            count: 234,
             trend: 'none',
-            color: '#2563eb',  // 회색
+            color: GRADE_COLOR.D,
         },
     ];
 
@@ -81,9 +82,9 @@ export default function GradeDounutFeature() {
                 show: true,
                 position: 'inside',
                 formatter: '{c}',
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: 'bold',
-                color: '#374151',
+                color: '#ffffff',
             },
             labelLine: {
                 show: true,

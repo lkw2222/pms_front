@@ -3,6 +3,7 @@ import BasicButton from "@/components/button/BasicButton.jsx"
 import BasicLabel  from "@/components/label/BasicLabel.jsx"
 import { FileDown } from "lucide-react"
 import styles from './SccResDtlFeature.module.css'
+import { GRADE_VARIANT } from '@/constants/gradeConst.js'
 
 /**
  * SCC 평가 결과 상세 화면.
@@ -18,8 +19,6 @@ import styles from './SccResDtlFeature.module.css'
  * | 2026-04-21 | JDJ    | 최초 작성 |
  * | 2026-04-23 | JDJ    | SCC 채점 구조로 전면 개편 |
  */
-
-const GRADE_VARIANT = { S: 'danger', A: 'warning', B: 'info', C: 'success', D: 'default' }
 
 // ── 섹션 래퍼 ─────────────────────────────────────────────────────────────────
 function Section({ title, meta, children }) {

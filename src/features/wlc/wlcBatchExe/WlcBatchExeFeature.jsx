@@ -3,12 +3,16 @@ import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect'
 import 'flatpickr/dist/plugins/monthSelect/style.css'
 import SelectInput      from '@/components/input/SelectInput.jsx'
 import DateInput        from '@/components/input/DateInput.jsx'
-import BasicButton      from '@/components/button/BasicButton.jsx'
 import ConfirmModal     from '@/components/modal/ConfirmModal.jsx'
 import { useAppStore }  from '@/store/useAppStore.js'
-import { Play, RotateCcw } from 'lucide-react'
-import { toast }        from 'sonner'
-import styles           from './WlcBatchExeFeature.module.css'
+import {
+    Play, RotateCcw, History,
+    Info, Lightbulb,
+    UtilityPole, Cable, Cpu, Radio,
+    ArrowDown,
+} from 'lucide-react'
+import { toast }  from 'sonner'
+import styles     from './WlcBatchExeFeature.module.css'
 
 // ── 목업 데이터 ────────────────────────────────────────────────────────────────
 const BONBU_OPTIONS = [
@@ -52,6 +56,65 @@ const MONTH_OPTIONS = {
     dateFormat: 'Ym',
 }
 
+// ── 구성 요소별 계산 로직 정의 ──────────────────────────────────────────────────
+const CALC_LOGIC = [
+    {
+        key:    'pole',
+        icon:   UtilityPole,
+        label:  '전주',
+        color:  'blue',
+        items:  [
+            '전주 말구경 / 지표구경',
+            '전주 지표상 높이 / 근입',
+            '지름증가율 (K)',
+            '풍압하중 / 설계하중',
+            '전주 종류 계수 · 고도계수',
+        ],
+        result: '굽힘모멘트 (N·m)',
+    },
+    {
+        key:    'wire',
+        icon:   Cable,
+        label:  '전선',
+        color:  'teal',
+        items:  [
+            '전선 종류 / 조수',
+            '전선 직경 / 환산직경',
+            '경간 / 수풍길이',
+            '상정최대장력',
+            '가섭선계수 · 고도계수',
+        ],
+        result: '굽힘모멘트 (N·m)',
+    },
+    {
+        key:    'equip',
+        icon:   Cpu,
+        label:  '가공설비',
+        color:  'indigo',
+        items:  [
+            '설비 종류 (변압기 / 개폐기)',
+            '설비 직경 / 용량',
+            '최고높이 / 최저높이 / 봇싱높이',
+            '인하장치 이격거리',
+            '풍압계수 · 고도계수',
+        ],
+        result: '기기 굽힘모멘트 (N·m)',
+    },
+    {
+        key:    'comm',
+        icon:   Radio,
+        label:  '통신기기',
+        color:  'orange',
+        items:  [
+            '설비 종류명',
+            '기기 직경 / 기기 높이',
+            '최저 설치 높이',
+            '풍압 (N/m²) · 풍압계수 · 고도계수',
+        ],
+        result: '굽힘모멘트 (N·m)',
+    },
+]
+
 /**
  * 풍하중 평가 배치 실행 화면.
  * 지역본부/사업소 선택, 시작년월 입력 후 배치를 수동으로 요청한다.
@@ -67,6 +130,7 @@ const MONTH_OPTIONS = {
  * | 날짜       | 수정자 | 내용 |
  * |------------|--------|------|
  * | 2026-04-20 | JDJ    | 최초 작성 |
+ * | 2026-04-25 | JDJ    | UI 디자인 개선 — 구성 요소별 계산 로직 섹션 추가 |
  */
 export default function WlcBatchExeFeature({ onExecute, isRunning }) {
     const { user } = useAppStore()
@@ -98,71 +162,130 @@ export default function WlcBatchExeFeature({ onExecute, isRunning }) {
     const confirmMsg   = `대상: ${bonbuLabel} ${sabupsoLabel}\n시작년월: ${form.startYm}\n\n풍하중 평가 배치를 실행하시겠습니까?`
 
     return (
-        <div className="panel-container">
-            <div className="panel-toolbar panel-toolbar-col">
+        <div className={styles.pageWrap}>
 
-                {/* ── 조건 입력 박스 ── */}
-                <div className="panel-search-value">
-                    <div className={styles.conditionWrap}>
+            {/* ── 페이지 헤더 ── */}
+            <div className={styles.pageHeader}>
+                <div className={styles.pageHeaderLeft}>
+                    <span className={styles.pageTitle}>풍하중 배치 실행</span>
+                    <span className={styles.pageDesc}>지역본부 및 사업소를 선택하여 풍하중 평가 배치를 수동으로 실행합니다.</span>
+                </div>
+                <button className={styles.historyBtn} type="button">
+                    <History size={14} />
+                    풍하중 실행로그
+                </button>
+            </div>
 
-                        <div className={styles.conditionGroup}>
-                            <div className={styles.dropdownRow}>
-                                <SelectInput
-                                    label="지역본부"
-                                    value={form.bonbu}
-                                    onChange={handleBonbuChange}
-                                    options={BONBU_OPTIONS}
-                                    placeholder="지역본부"
-                                    isNotNull
-                                />
-                                <SelectInput
-                                    label="사업소명"
-                                    value={form.sabupso}
-                                    onChange={e => setForm(f => ({ ...f, sabupso: e.target.value }))}
-                                    options={sabupsoOptions}
-                                    placeholder="사업소명"
-                                    disabled={!form.bonbu}
-                                    isNotNull
-                                />
+            {/* ── 실행 조건 ── */}
+            <div className={styles.section}>
+                <div className={styles.sectionLabel}>
+                    <span className={styles.sectionLabelText}>실행 조건</span>
+                </div>
+                <div className={styles.sectionBody}>
+                    <div className={styles.conditionGrid}>
+                        <SelectInput
+                            label="지역본부"
+                            value={form.bonbu}
+                            onChange={handleBonbuChange}
+                            options={BONBU_OPTIONS}
+                            placeholder="지역본부 선택"
+                            isNotNull
+                        />
+                        <SelectInput
+                            label="사업소명"
+                            value={form.sabupso}
+                            onChange={e => setForm(f => ({ ...f, sabupso: e.target.value }))}
+                            options={sabupsoOptions}
+                            placeholder="사업소명 선택"
+                            disabled={!form.bonbu}
+                            isNotNull
+                        />
+                        <DateInput
+                            label="시작년월"
+                            placeholder="년월 선택"
+                            value={form.startYm}
+                            onChange={(dateStr) => setForm(f => ({ ...f, startYm: dateStr }))}
+                            options={MONTH_OPTIONS}
+                            isNotNull
+                        />
+                    </div>
+                    <div className={styles.conditionBottom}>
+                        <div className={styles.infoBox}>
+                            <Info size={14} className={styles.infoIcon} />
+                            <span>선택한 사업소의 해당 년월 이후 데이터에 대해 풍하중 평가가 일괄 수행됩니다. 기존 평가 결과는 덮어씌워집니다.</span>
+                        </div>
+                        <div className={styles.actionButtons}>
+                            <button
+                                type="button"
+                                className={`${styles.execBtn} ${styles.execBtnSecondary}`}
+                                onClick={handleReset}
+                                disabled={isRunning}
+                            >
+                                <RotateCcw size={15} />
+                                초기화
+                            </button>
+                            <button
+                                type="button"
+                                className={`${styles.execBtn} ${styles.execBtnPrimary}`}
+                                onClick={handleExecuteClick}
+                                disabled={isRunning}
+                            >
+                                <Play size={16} />
+                                {isRunning ? '실행 중...' : '배치 실행'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ── 구성 요소별 계산 로직 ── */}
+            <div className={styles.section}>
+                <div className={styles.sectionLabel}>
+                    <span className={styles.sectionLabelText}>구성 요소별 계산 로직</span>
+                </div>
+                <div className={styles.sectionBody}>
+                    <p className={styles.sectionDesc}>전주 풍하중 강도 계산을 위한 저항 모멘트 산출 로직을 안내합니다.</p>
+                    <div className={styles.calcGrid}>
+                        {CALC_LOGIC.map(({ key, icon: Icon, label, color, items, result }) => (
+                            <div key={key} className={`${styles.calcCard} ${styles[`calcCard_${color}`]}`}>
+                                {/* 카드 헤더 */}
+                                <div className={styles.calcCardHeader}>
+                                    <span className={`${styles.calcIconWrap} ${styles[`calcIconWrap_${color}`]}`}>
+                                        <Icon size={18} />
+                                    </span>
+                                    <span className={`${styles.calcCardTitle} ${styles[`calcCardTitle_${color}`]}`}>{label}</span>
+                                </div>
+
+                                {/* 계산 항목 */}
+                                <div className={`${styles.calcSection} ${styles.calcSectionItems}`}>
+                                    <span className={styles.calcSectionLabel}>계산 항목</span>
+                                    <ul className={styles.calcList}>
+                                        {items.map((item, i) => (
+                                            <li key={i} className={styles.calcListItem}>{item}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* 화살표 */}
+                                <div className={styles.calcArrow}>
+                                    <ArrowDown size={14} />
+                                </div>
+
+                                {/* 산출 결과 */}
+                                <div className={styles.calcSection}>
+                                    <span className={styles.calcSectionLabel}>산출 결과</span>
+                                    <span className={`${styles.calcResult} ${styles[`calcResult_${color}`]}`}>{result}</span>
+                                </div>
                             </div>
-                        </div>
-
-                        <div className={styles.conditionGroup}>
-                            <DateInput
-                                label="시작년월"
-                                placeholder="년월 선택"
-                                value={form.startYm}
-                                onChange={(dateStr) => setForm(f => ({ ...f, startYm: dateStr }))}
-                                options={MONTH_OPTIONS}
-                                isNotNull
-                            />
-                        </div>
-
+                        ))}
                     </div>
                 </div>
+            </div>
 
-                {/* ── 버튼 영역 ── */}
-                <div className="panel-search-function">
-                    <div />
-                    <div style={{ display: 'flex', gap: 8 }}>
-                        <BasicButton
-                            label={isRunning ? '실행 중...' : '배치 실행'}
-                            icon={Play}
-                            variant="primary"
-                            onClick={handleExecuteClick}
-                            disabled={isRunning}
-                        />
-                        <BasicButton
-                            label="초기화"
-                            icon={RotateCcw}
-                            variant="secondary"
-                            onClick={handleReset}
-                            disabled={isRunning}
-                        />
-                    </div>
-                    <div />
-                </div>
-
+            {/* ── TIP ── */}
+            <div className={styles.tipBox}>
+                <Lightbulb size={14} className={styles.tipIcon} />
+                <span><strong>TIP</strong> &nbsp;배치 실행은 데이터 양에 따라 <strong>몇 시간 이상</strong> 소요될 수 있습니다. 실행 중 화면을 닫아도 배치는 계속 진행되며, 완료 후 <em>풍하중 실행로그</em>에서 결과를 확인하세요.</span>
             </div>
 
             <ConfirmModal

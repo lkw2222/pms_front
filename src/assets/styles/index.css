@@ -34,8 +34,9 @@
   --color-accent:        #58a6ff;
   --color-accent-hover:  #388bfd;
   --color-success:       #3fb950;
-  --color-warning:       #d29922;
+  --color-warning:       #fbbf24;
   --color-danger:        #f85149;
+  --color-blue:          #2563eb;
   --color-danger-total:  #df5e58;
   --color-purple:        #bc8cff;
   --color-seablue:       #2d4a7a;
@@ -107,6 +108,7 @@
   --color-success:       #1a7f37;
   --color-warning:       #9a6700;
   --color-danger:        #cf222e;
+  --color-blue:          #1d4ed8;
   --color-danger-total:  #cf222e;
   --color-purple:        #8250df;
   --color-seablue:       #2f4d8a;

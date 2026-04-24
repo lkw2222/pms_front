@@ -4,6 +4,7 @@ import BasicButton           from '@/components/button/BasicButton.jsx'
 import SccResDtlGisFeature   from './SccResDtlGisFeature.jsx'
 import { ExternalLink }      from 'lucide-react'
 import styles from './SccResDrwFeature.module.css'
+import { GRADE_VARIANT } from '@/constants/gradeConst.js'
 
 /**
  * SCC 결과 그리드 행 클릭 시 우측에 열리는 드로어 내용.
@@ -22,8 +23,6 @@ import styles from './SccResDrwFeature.module.css'
  */
 
 // ── 상수 ──────────────────────────────────────────────────────────────────────
-const GRADE_VARIANT = { S: 'danger', A: 'warning', B: 'info', C: 'success', D: 'default' }
-
 const BONBU_OPTIONS = [
     { label:'서울본부',         value:'SEOUL'   },
     { label:'인천본부',         value:'INCHEON' },

@@ -7,6 +7,7 @@ import {UtilityPole, ScanSearch, Skull, Angry, Annoyed, Smile, SmilePlus} from "
 import GradeDounutFeature from "@/features/common/charts/GradeDounutFeature";
 import LineBarFeature from "@/features/common/charts/LineBarFeature.jsx";
 import DashboardTableFeature from "@/features/dashboard/DashboardTableFeature.jsx";
+import { GRADE_COLOR } from '@/constants/gradeConst.js'
 
 export default function DashboardPanel() {
     const xAxis = {
@@ -134,7 +135,7 @@ export default function DashboardPanel() {
                         sub:[{label: "430", value:"백만원"}],
                         Icon:Skull,
                         iconSize:17,
-                        color:"#f85149"
+                        color:GRADE_COLOR.S
                     }}/>
 
                     <DashboardCardFeature data={{
@@ -144,7 +145,7 @@ export default function DashboardPanel() {
                         sub:[{label: "121.1", value:"백만원"}],
                         Icon:Angry,
                         iconSize:17,
-                        color:"#d29922"
+                        color:GRADE_COLOR.A
                     }}/>
 
                     <DashboardCardFeature data={{
@@ -154,7 +155,7 @@ export default function DashboardPanel() {
                         sub:[{label: "72.2", value:"백만원"}],
                         Icon:Annoyed,
                         iconSize:17,
-                        color:"#ccd222"
+                        color:GRADE_COLOR.B
                     }}/>
 
                     <DashboardCardFeature data={{
@@ -164,7 +165,7 @@ export default function DashboardPanel() {
                         sub:[{label: "19.6", value:"백만원"}],
                         Icon:Smile,
                         iconSize:17,
-                        color:"#3fb950"
+                        color:GRADE_COLOR.C
                     }}/>
 
                     <DashboardCardFeature data={{
@@ -174,7 +175,7 @@ export default function DashboardPanel() {
                         sub:[{label: "0.4", value:"백만원"}],
                         Icon:SmilePlus,
                         iconSize:17,
-                        color:"#58a6ff"
+                        color:GRADE_COLOR.D
                     }}/>
                 </div>
 

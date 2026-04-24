@@ -1,21 +1,380 @@
-.conditionWrap {
+/* ── 전체 페이지 래퍼 ── */
+.pageWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px 24px;
+    height: 100%;
+    overflow-y: auto;
+    background: var(--color-bg-primary);
+    box-sizing: border-box;
+}
+
+/* ── 페이지 헤더 ── */
+.pageHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.pageHeaderLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pageTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+}
+
+.pageTitleSub {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    margin-left: 4px;
+}
+
+.pageDesc {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.historyBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.historyBtn:hover {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+/* ── 공통 섹션 ── */
+.section {
+    background: #ffffff;
+    border: 1px solid var(--color-border-box);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .section {
+    background: var(--color-bg-searchbox);
+}
+
+.sectionLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px 6px 16px;
+    flex-shrink: 0;
+}
+
+.sectionLabel::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 13px;
+    background: var(--color-accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.sectionLabelText {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.sectionBody {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ── 섹션 설명 ── */
+.sectionDesc {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin: 0 0 4px;
+    line-height: 1.5;
+}
+
+/* ── 실행 조건 그리드 ── */
+.conditionGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
     align-items: end;
 }
 
-.conditionGroup {
+/* ── 조건 하단 행 (infoBox + 버튼) ── */
+.conditionBottom {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ── 안내 박스 ── */
+.infoBox {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(88, 166, 255, 0.08);
+    border: 1px solid rgba(88, 166, 255, 0.25);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+.infoIcon {
+    color: var(--color-accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ── 버튼 묶음 ── */
+.actionButtons {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.execBtn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.execBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.execBtnPrimary {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(88, 166, 255, 0.35);
+}
+
+.execBtnPrimary:hover:not(:disabled) {
+    box-shadow: 0 4px 14px rgba(88, 166, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.execBtnPrimary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.execBtnSecondary {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    border: 1.5px solid var(--color-border);
+}
+
+.execBtnSecondary:hover:not(:disabled) {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+/* ── 채점 영역 그리드 ── */
+.calcGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+/* ── 채점 카드 공통 ── */
+.calcCard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+[data-theme="dark"] .calcCard {
+    background: var(--color-bg-secondary);
+}
+
+/* 카드 헤더 */
+.calcCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calcIconWrap {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.calcCardTitleWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.calcCardTitle {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.calcCardWeight {
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+/* 평가 항목 / 산출 결과 구역 */
+.calcSection {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.dropdownRow {
-    display: flex;
-    gap: 8px;
-}
-
-.dropdownRow > * {
+/* 평가 항목 섹션 — 남은 공간 차지 → 산출 결과 항상 바닥 */
+.calcSectionItems {
     flex: 1;
 }
+
+.calcSectionLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.03em;
+}
+
+.calcList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.calcListItem {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    padding-left: 10px;
+    position: relative;
+    line-height: 1.5;
+}
+
+.calcListItem::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--color-text-muted);
+}
+
+/* 화살표 */
+.calcArrow {
+    display: flex;
+    justify-content: center;
+    color: var(--color-text-muted);
+}
+
+/* 산출 결과 값 */
+.calcResult {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+/* ── TIP 박스 ── */
+.tipBox {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(251, 191, 36, 0.07);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+.tipBox em {
+    font-style: normal;
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+.tipIcon {
+    color: var(--color-warning);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ── 색상별 변형 ── */
+
+/* blue — 구조안전성 */
+.calcCard_blue        { border-color: rgba(88, 166, 255, 0.3); }
+.calcIconWrap_blue    { background: rgba(88, 166, 255, 0.12); color: var(--color-accent); }
+.calcCardTitle_blue   { color: var(--color-accent); }
+.calcCardWeight_blue  { color: var(--color-accent); }
+.calcResult_blue      { background: rgba(88, 166, 255, 0.1); color: var(--color-accent); }
+
+/* teal — 하중외력 */
+.calcCard_teal        { border-color: rgba(45, 212, 191, 0.3); }
+.calcIconWrap_teal    { background: rgba(45, 212, 191, 0.12); color: #2dd4bf; }
+.calcCardTitle_teal   { color: #2dd4bf; }
+.calcCardWeight_teal  { color: #2dd4bf; }
+.calcResult_teal      { background: rgba(45, 212, 191, 0.1); color: #2dd4bf; }
+
+/* orange — 환경부식 */
+.calcCard_orange      { border-color: rgba(251, 146, 60, 0.3); }
+.calcIconWrap_orange  { background: rgba(251, 146, 60, 0.12); color: #fb923c; }
+.calcCardTitle_orange { color: #fb923c; }
+.calcCardWeight_orange{ color: #fb923c; }
+.calcResult_orange    { background: rgba(251, 146, 60, 0.1); color: #fb923c; }
+
+/* indigo — 운영이력 */
+.calcCard_indigo      { border-color: rgba(99, 102, 241, 0.3); }
+.calcIconWrap_indigo  { background: rgba(99, 102, 241, 0.12); color: #818cf8; }
+.calcCardTitle_indigo { color: #818cf8; }
+.calcCardWeight_indigo{ color: #818cf8; }
+.calcResult_indigo    { background: rgba(99, 102, 241, 0.1); color: #818cf8; }

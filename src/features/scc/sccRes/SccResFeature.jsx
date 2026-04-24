@@ -17,8 +17,7 @@ import { Search, RotateCcw, Loader2, Download } from 'lucide-react'
 import styles                from './SccResFeature.module.css'
 import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect/index.js";
 import DateInput from "@/components/input/DateInput.jsx";
-
-const GRADE_VARIANT = { S: 'danger', A: 'warning', B: 'info', C: 'success', D: 'default' }
+import { GRADE_VARIANT } from '@/constants/gradeConst.js'
 const BONBU_OPTIONS = [
     { label:'서울본부',         value:'SEOUL'   },
     { label:'인천본부',         value:'INCHEON' },

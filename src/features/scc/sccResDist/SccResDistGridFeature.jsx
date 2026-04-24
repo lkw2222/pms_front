@@ -12,23 +12,15 @@ import styles from './SccResDistGridFeature.module.css'
 import SelectInput from "@/components/input/SelectInput.jsx";
 import BasicLabel from "@/components/label/BasicLabel.jsx";
 import SccResDistDtlFeature from "./SccResDistDtlFeature.jsx";
+import { GRADE_VARIANT, GRADE_NAME } from '@/constants/gradeConst.js'
 
 const GRADE_SCORE = [
-    {label:'즉시위험', value:'S'}
-    ,{label:'고 위험', value:'A'}
-    ,{label:'중 위험', value:'B'}
-    ,{label:'저 위험', value:'C'}
-    ,{label:'정기진단', value:'D'}
+    { label: GRADE_NAME.S, value: 'S' },
+    { label: GRADE_NAME.A, value: 'A' },
+    { label: GRADE_NAME.B, value: 'B' },
+    { label: GRADE_NAME.C, value: 'C' },
+    { label: GRADE_NAME.D, value: 'D' },
 ];
-
-// 판정등급 색상 맵
-const GRADE_COLORS = {
-    S: {color:'danger', value:'즉시위험'},   // 즉시위험 - 빨강
-    A: {color:'warning', value:'고위험'},  // 고위험   - 주황
-    B: {color:'default', value:'중위험'},  // 중위험   - 노랑
-    C: {color:'success', value:'저위험'},  // 저위험   - 연두
-    D: {color:'info', value:'정기진단'}  // 정기진단 - 파랑
-};
 
 
 const SEARCH_TYPE_OPT = [
@@ -136,7 +128,7 @@ export default function SccResDistGridFeature() {
             field: 'grade',
             cellStyle:{ display:'flex', alignItems:'center', justifyContent:'center' },
             cellRenderer: ({ value }) => {
-                return <BasicLabel text={value+' '+GRADE_COLORS[value].value} variant={GRADE_COLORS[value].color} />;
+                return <BasicLabel text={`${value} ${GRADE_NAME[value] ?? ''}`} variant={GRADE_VARIANT[value] ?? 'default'} />;
             },
         },
         { headerName:'액션',    flex:1, minWidth:68,  sortable:false, filter:false,

@@ -78,30 +78,27 @@ const BasicGrid = forwardRef(function BasicGrid({
   }, [onRowDoubleClick])
 
   // ── Theming API (v33+) ────────────────────────────────────────────────────
-  // theme 변경 시 CSS 변수값을 다시 읽어 그리드 테마 재적용
+  // CSS 변수 참조(var())를 직접 전달 → 브라우저가 현재 테마값으로 해석
+  // getComputedStyle 방식은 toggleTheme 시 DOM/React 타이밍 이슈로 이전 값을 읽는 문제 있음
   const { theme: appTheme } = useAppStore()
 
-  const theme = useMemo(() => {
-    const s = getComputedStyle(document.documentElement)
-    const v = (name) => s.getPropertyValue(name).trim()
-    return themeQuartz.withParams({
-      backgroundColor:            v('--color-bg-secondary')  || '#ffffff',
-      foregroundColor:            v('--color-text-primary')  || '#1f2328',
-      headerBackgroundColor:      v('--color-bg-tertiary')   || '#f6f8fa',
-      headerTextColor:            v('--color-text-secondary')|| '#656d76',
-      borderColor:                v('--color-border')        || '#d0d7de',
-      rowHoverColor:              v('--color-bg-hover')      || '#f3f4f6',
-      selectedRowBackgroundColor: appTheme === 'dark' ? 'rgba(88,166,255,0.15)' : 'rgba(37,99,235,0.08)',
-      oddRowBackgroundColor:      v('--color-bg-primary')    || '#f9fafb',
-      fontSize:                   13,
-      rowHeight:                  36,
-      headerHeight:               38,
-      cellHorizontalPaddingScale: 1.2,
-      fontFamily:                 'inherit',
-      borderRadius:               0,
-      wrapperBorderRadius:        0,
-    })
-  }, [appTheme])
+  const theme = useMemo(() => themeQuartz.withParams({
+    backgroundColor:            'var(--color-bg-secondary)',
+    foregroundColor:            'var(--color-text-primary)',
+    headerBackgroundColor:      'var(--color-bg-tertiary)',
+    headerTextColor:            'var(--color-text-secondary)',
+    borderColor:                'var(--color-border)',
+    rowHoverColor:              'var(--color-bg-hover)',
+    selectedRowBackgroundColor: appTheme === 'dark' ? 'rgba(88,166,255,0.15)' : 'rgba(37,99,235,0.08)',
+    oddRowBackgroundColor:      'var(--color-bg-primary)',
+    fontSize:                   13,
+    rowHeight:                  36,
+    headerHeight:               38,
+    cellHorizontalPaddingScale: 1.2,
+    fontFamily:                 'inherit',
+    borderRadius:               0,
+    wrapperBorderRadius:        0,
+  }), [appTheme])
 
   // ── 모드별 props ──────────────────────────────────────────────────────────
   const infiniteProps = mode === 'infinite' ? {

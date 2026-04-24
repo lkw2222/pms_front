@@ -7,7 +7,7 @@
     border-radius: 6px;
     padding: 6px 10px;
     font-size: 13px;
-    color: #374151;
+    color: var(--color-text-primary);
 }
 
 /* ── 상단 행 ── */
@@ -22,38 +22,39 @@
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    background: #f3f4f6;
+    background: var(--color-bg-tertiary);
     border-radius: 8px;
+    border: 1px solid var(--color-border);
     min-height: 44px;
 }
 
 .summaryLabel {
-    color: #4b5563;
+    color: var(--color-text-secondary);
     font-weight: 500;
     white-space: nowrap;
 }
 
 .summaryValue {
     margin-left: auto;
-    color: #1f2937;
+    color: var(--color-text-primary);
     font-size: 20px;
     font-weight: bold;
 }
 
-/* 파란색 강조 박스가 있는 값 (0.857%) */
+/* 파란색 강조 박스 값 */
 .summaryValueHighlight {
     margin-left: auto;
     padding: 2px 12px;
-    color: #2563eb;
+    color: var(--color-accent);
     font-size: 18px;
     font-weight: bold;
-    background: #ffffff;
-    border: 1px solid #93c5fd;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-focus);
     border-radius: 4px;
 }
 
 .unitText {
-    color: #6b7280;
+    color: var(--color-text-muted);
     font-size: 12px;
 }
 
@@ -70,11 +71,12 @@
     align-items: center;
     justify-content: center;
     padding: 16px;
-    background: #f3f4f6;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     min-width: 120px;
     font-weight: bold;
-    color: #1f2937;
+    color: var(--color-text-primary);
     text-align: center;
     font-size: 13px;
     line-height: 1.4;
@@ -82,7 +84,7 @@
 
 .leftUnit {
     font-size: 12px;
-    color: #4b5563;
+    color: var(--color-text-secondary);
     font-weight: normal;
     margin-top: 2px;
 }
@@ -110,13 +112,13 @@
 }
 
 .gradeName {
-    color: #4b5563;
+    color: var(--color-text-secondary);
     font-size: 12px;
     white-space: nowrap;
 }
 
 .gradeCount {
-    color: #2563eb;
+    color: var(--color-accent);
     font-weight: bold;
     font-size: 15px;
 }
@@ -124,10 +126,10 @@
 .costBox {
     padding: 12px 8px;
     text-align: center;
-    background: #ffffff;
-    border: 1px solid #d1d5db;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
     border-radius: 4px;
     font-size: 18px;
     font-weight: bold;
-    color: #1f2937;
+    color: var(--color-text-primary);
 }

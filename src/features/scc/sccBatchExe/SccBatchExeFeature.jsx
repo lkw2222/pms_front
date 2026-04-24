@@ -1,14 +1,18 @@
 import React, { useState, useCallback } from 'react'
 import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect'
 import 'flatpickr/dist/plugins/monthSelect/style.css'
-import SelectInput      from '@/components/input/SelectInput.jsx'
-import DateInput        from '@/components/input/DateInput.jsx'
-import BasicButton      from '@/components/button/BasicButton.jsx'
-import ConfirmModal     from '@/components/modal/ConfirmModal.jsx'
-import { useAppStore }  from '@/store/useAppStore.js'
-import { Play, RotateCcw } from 'lucide-react'
-import { toast }        from 'sonner'
-import styles           from './SccBatchExeFeature.module.css'
+import SelectInput  from '@/components/input/SelectInput.jsx'
+import DateInput    from '@/components/input/DateInput.jsx'
+import ConfirmModal from '@/components/modal/ConfirmModal.jsx'
+import { useAppStore } from '@/store/useAppStore.js'
+import {
+    Play, RotateCcw, History,
+    Info, Lightbulb,
+    ShieldCheck, Gauge, Droplets, ClipboardList,
+    ArrowDown,
+} from 'lucide-react'
+import { toast }  from 'sonner'
+import styles     from './SccBatchExeFeature.module.css'
 
 // ── 목업 데이터 ────────────────────────────────────────────────────────────────
 const BONBU_OPTIONS = [
@@ -52,6 +56,64 @@ const MONTH_OPTIONS = {
     dateFormat: 'Ym',
 }
 
+// ── 채점 영역별 평가 로직 정의 ──────────────────────────────────────────────────
+const SCORING_LOGIC = [
+    {
+        key:    'struct',
+        icon:   ShieldCheck,
+        label:  '구조안전성',
+        weight: 40,
+        color:  'blue',
+        items:  [
+            '전주 재령 / 노후 상태',
+            '균열 · 파손 · 꺾임 여부',
+            '근입 깊이 및 기초 상태',
+            '지선 설치 여부 / 지선 상태',
+        ],
+        result: '기여점수 (가중치 40%)',
+    },
+    {
+        key:    'load',
+        icon:   Gauge,
+        label:  '하중외력',
+        weight: 30,
+        color:  'teal',
+        items:  [
+            '풍하중 안전율',
+            '전선 하중 / 수평각 조건',
+            '공가 설비 하중 (변압기 · 개폐기 · 통신기기)',
+            '지형 및 풍속 환경',
+        ],
+        result: '기여점수 (가중치 30%)',
+    },
+    {
+        key:    'env',
+        icon:   Droplets,
+        label:  '환경부식',
+        weight: 20,
+        color:  'orange',
+        items:  [
+            '설치 지역 환경 등급',
+            '부식 환경 노출 정도',
+            '전주 재질 / 표면 상태',
+        ],
+        result: '기여점수 (가중치 20%)',
+    },
+    {
+        key:    'op',
+        icon:   ClipboardList,
+        label:  '운영이력',
+        weight: 10,
+        color:  'indigo',
+        items:  [
+            '사고 및 수리 이력',
+            '정기 점검 이력 / 결과',
+            '전주 교체 / 보강 이력',
+        ],
+        result: '기여점수 (가중치 10%)',
+    },
+]
+
 /**
  * SCC 평가 배치 실행 화면.
  * 지역본부/사업소 선택, 시작년월 입력 후 배치를 수동으로 요청한다.
@@ -67,6 +129,7 @@ const MONTH_OPTIONS = {
  * | 날짜       | 수정자 | 내용 |
  * |------------|--------|------|
  * | 2026-04-20 | JDJ    | 최초 작성 |
+ * | 2026-04-25 | JDJ    | UI 디자인 개선 — 채점 영역별 평가 로직 섹션 추가 |
  */
 export default function SccBatchExeFeature({ onExecute, isRunning }) {
     const { user } = useAppStore()
@@ -98,71 +161,133 @@ export default function SccBatchExeFeature({ onExecute, isRunning }) {
     const confirmMsg   = `대상: ${bonbuLabel} ${sabupsoLabel}\n시작년월: ${form.startYm}\n\nSCC 평가 배치를 실행하시겠습니까?`
 
     return (
-        <div className="panel-container">
-            <div className="panel-toolbar panel-toolbar-col">
+        <div className={styles.pageWrap}>
 
-                {/* ── 조건 입력 박스 ── */}
-                <div className="panel-search-value">
-                    <div className={styles.conditionWrap}>
+            {/* ── 페이지 헤더 ── */}
+            <div className={styles.pageHeader}>
+                <div className={styles.pageHeaderLeft}>
+                    <span className={styles.pageTitle}>SCC 배치 실행</span>
+                    <span className={styles.pageDesc}>지역본부 및 사업소를 선택하여 전주 SCC 평가 배치를 수동으로 실행합니다.</span>
+                </div>
+                <button className={styles.historyBtn} type="button">
+                    <History size={14} />
+                    SCC 실행로그
+                </button>
+            </div>
 
-                        <div className={styles.conditionGroup}>
-                            <div className={styles.dropdownRow}>
-                                <SelectInput
-                                    label="지역본부"
-                                    value={form.bonbu}
-                                    onChange={handleBonbuChange}
-                                    options={BONBU_OPTIONS}
-                                    placeholder="지역본부"
-                                    isNotNull
-                                />
-                                <SelectInput
-                                    label="사업소명"
-                                    value={form.sabupso}
-                                    onChange={e => setForm(f => ({ ...f, sabupso: e.target.value }))}
-                                    options={sabupsoOptions}
-                                    placeholder="사업소명"
-                                    disabled={!form.bonbu}
-                                    isNotNull
-                                />
+            {/* ── 실행 조건 ── */}
+            <div className={styles.section}>
+                <div className={styles.sectionLabel}>
+                    <span className={styles.sectionLabelText}>실행 조건</span>
+                </div>
+                <div className={styles.sectionBody}>
+                    <div className={styles.conditionGrid}>
+                        <SelectInput
+                            label="지역본부"
+                            value={form.bonbu}
+                            onChange={handleBonbuChange}
+                            options={BONBU_OPTIONS}
+                            placeholder="지역본부 선택"
+                            isNotNull
+                        />
+                        <SelectInput
+                            label="사업소명"
+                            value={form.sabupso}
+                            onChange={e => setForm(f => ({ ...f, sabupso: e.target.value }))}
+                            options={sabupsoOptions}
+                            placeholder="사업소명 선택"
+                            disabled={!form.bonbu}
+                            isNotNull
+                        />
+                        <DateInput
+                            label="시작년월"
+                            placeholder="년월 선택"
+                            value={form.startYm}
+                            onChange={(dateStr) => setForm(f => ({ ...f, startYm: dateStr }))}
+                            options={MONTH_OPTIONS}
+                            isNotNull
+                        />
+                    </div>
+                    <div className={styles.conditionBottom}>
+                        <div className={styles.infoBox}>
+                            <Info size={14} className={styles.infoIcon} />
+                            <span>선택한 사업소의 해당 년월 이후 전주에 대해 SCC 종합 평가가 일괄 수행됩니다. 기존 평가 결과는 덮어씌워집니다.</span>
+                        </div>
+                        <div className={styles.actionButtons}>
+                            <button
+                                type="button"
+                                className={`${styles.execBtn} ${styles.execBtnSecondary}`}
+                                onClick={handleReset}
+                                disabled={isRunning}
+                            >
+                                <RotateCcw size={15} />
+                                초기화
+                            </button>
+                            <button
+                                type="button"
+                                className={`${styles.execBtn} ${styles.execBtnPrimary}`}
+                                onClick={handleExecuteClick}
+                                disabled={isRunning}
+                            >
+                                <Play size={16} />
+                                {isRunning ? '실행 중...' : '배치 실행'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ── 채점 영역별 평가 로직 ── */}
+            <div className={styles.section}>
+                <div className={styles.sectionLabel}>
+                    <span className={styles.sectionLabelText}>채점 영역별 평가 로직</span>
+                </div>
+                <div className={styles.sectionBody}>
+                    <p className={styles.sectionDesc}>전주 SCC 종합 점수 산출을 위한 4개 채점 영역의 평가 항목을 안내합니다.</p>
+                    <div className={styles.calcGrid}>
+                        {SCORING_LOGIC.map(({ key, icon: Icon, label, weight, color, items, result }) => (
+                            <div key={key} className={`${styles.calcCard} ${styles[`calcCard_${color}`]}`}>
+                                {/* 카드 헤더 */}
+                                <div className={styles.calcCardHeader}>
+                                    <span className={`${styles.calcIconWrap} ${styles[`calcIconWrap_${color}`]}`}>
+                                        <Icon size={18} />
+                                    </span>
+                                    <div className={styles.calcCardTitleWrap}>
+                                        <span className={`${styles.calcCardTitle} ${styles[`calcCardTitle_${color}`]}`}>{label}</span>
+                                        <span className={`${styles.calcCardWeight} ${styles[`calcCardWeight_${color}`]}`}>가중치 {weight}%</span>
+                                    </div>
+                                </div>
+
+                                {/* 평가 항목 */}
+                                <div className={`${styles.calcSection} ${styles.calcSectionItems}`}>
+                                    <span className={styles.calcSectionLabel}>평가 항목</span>
+                                    <ul className={styles.calcList}>
+                                        {items.map((item, i) => (
+                                            <li key={i} className={styles.calcListItem}>{item}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* 화살표 */}
+                                <div className={styles.calcArrow}>
+                                    <ArrowDown size={14} />
+                                </div>
+
+                                {/* 산출 결과 */}
+                                <div className={styles.calcSection}>
+                                    <span className={styles.calcSectionLabel}>산출 결과</span>
+                                    <span className={`${styles.calcResult} ${styles[`calcResult_${color}`]}`}>{result}</span>
+                                </div>
                             </div>
-                        </div>
-
-                        <div className={styles.conditionGroup}>
-                            <DateInput
-                                label="시작년월"
-                                placeholder="년월 선택"
-                                value={form.startYm}
-                                onChange={(dateStr) => setForm(f => ({ ...f, startYm: dateStr }))}
-                                options={MONTH_OPTIONS}
-                                isNotNull
-                            />
-                        </div>
-
+                        ))}
                     </div>
                 </div>
+            </div>
 
-                {/* ── 버튼 영역 ── */}
-                <div className="panel-search-function">
-                    <div />
-                    <div style={{ display: 'flex', gap: 8 }}>
-                        <BasicButton
-                            label={isRunning ? '실행 중...' : '배치 실행'}
-                            icon={Play}
-                            variant="primary"
-                            onClick={handleExecuteClick}
-                            disabled={isRunning}
-                        />
-                        <BasicButton
-                            label="초기화"
-                            icon={RotateCcw}
-                            variant="secondary"
-                            onClick={handleReset}
-                            disabled={isRunning}
-                        />
-                    </div>
-                    <div />
-                </div>
-
+            {/* ── TIP ── */}
+            <div className={styles.tipBox}>
+                <Lightbulb size={14} className={styles.tipIcon} />
+                <span><strong>TIP</strong> &nbsp;배치 실행은 데이터 양에 따라 <strong>몇 시간 이상</strong> 소요될 수 있습니다. 실행 중 화면을 닫아도 배치는 계속 진행되며, 완료 후 <em>SCC 실행로그</em>에서 결과를 확인하세요.</span>
             </div>
 
             <ConfirmModal

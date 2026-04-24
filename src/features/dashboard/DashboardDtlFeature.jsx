@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import styles from './DashboardDtlFeature.module.css';
+import { GRADE_COLOR } from '@/constants/gradeConst.js'
 
 /**
  * 진단우선순위 (SCC) 평가 결과조회 - 상세 테이블
@@ -13,14 +14,6 @@ export default function DashboardDtlFeature({ data, onExcelDownload }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-    // 판정등급 색상
-    const GRADE_COLORS = {
-        S: 'var(--color-danger)',
-        A: 'var(--color-warning)',
-        B: 'var(--color-purple)',
-        C: 'var(--color-accent)',
-        D: 'var(--color-success)',
-    };
 
     // 샘플 데이터 (props 없을 경우)
     const tableData = useMemo(() => {
@@ -165,7 +158,7 @@ export default function DashboardDtlFeature({ data, onExcelDownload }) {
                                     <span
                                         className={styles.gradeBadge}
                                         style={{
-                                            background: GRADE_COLORS[row.grade] || 'var(--color-text-muted)',
+                                            background: GRADE_COLOR[row.grade] || 'var(--color-text-muted)',
                                         }}
                                     >
                                         {row.grade}

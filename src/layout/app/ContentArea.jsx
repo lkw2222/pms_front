@@ -23,7 +23,7 @@ function loadLayout() {
 }
 
 export default function ContentArea({ apiRef, components }) {
-    const { theme, setOpenPanels } = useAppStore()
+    const { setOpenPanels } = useAppStore()
 
 
     // ── Dockview 준비 → 레이아웃 복원 ───────────────────────────────────────
@@ -63,7 +63,7 @@ export default function ContentArea({ apiRef, components }) {
     return (
         <div className={styles.dockviewWrap}>
             <DockviewReact
-                className={theme==='dark' ? 'dv-theme-dark' : 'dv-theme-light'}
+                className="dv-theme-dark"
                 onReady={onReady}
                 components={components}
                 disableFloatingGroups={false}

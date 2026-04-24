@@ -48,6 +48,15 @@ export const useAppStore = create(
             openPanels: typeof updater === 'function' ? updater(state.openPanels) : updater
         })),
 
+        // ── 사이드바 1뎁스 펼침 상태 (배열로 저장 → Set 변환해서 사용) ────────
+        expandedGroups: [],
+        toggleExpandedGroup: (id) => set((s) => {
+            const arr = s.expandedGroups.includes(id)
+                ? s.expandedGroups.filter(v => v !== id)
+                : [...s.expandedGroups, id]
+            return { expandedGroups: arr }
+        }),
+
         // ── 풍하중 결과 초기 필터 (실행로그 → 결과 페이지 이동 시 사용) ──────
         // 결과 패널에서 읽은 뒤 반드시 clearWlcResultFilter() 호출
         wlcResultFilter: null,
@@ -62,7 +71,7 @@ export const useAppStore = create(
     }),
     {
       name: 'pms-app-store',
-      partialize: (s) => ({ theme: s.theme, sidebarOpen: s.sidebarOpen, user: s.user }),
+      partialize: (s) => ({ theme: s.theme, sidebarOpen: s.sidebarOpen, user: s.user, expandedGroups: s.expandedGroups }),
     }
   )
 )

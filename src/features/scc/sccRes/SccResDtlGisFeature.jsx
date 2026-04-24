@@ -24,14 +24,14 @@ import Select  from 'ol/interaction/Select'
 import { click } from 'ol/events/condition'
 import 'ol/ol.css'
 
-import { FACILITY_STYLE, GRADE_TEXT } from '@/utils/gis/gisStyle.js'
+import { FACILITY_STYLE } from '@/utils/gis/gisStyle.js'
+import { GRADE_VARIANT, GRADE_COLOR } from '@/constants/gradeConst.js'
 import { TILE_LAYERS }               from '@/utils/gis/tileLayer.js'
 import { useGisMeasure }             from '@/utils/gis/useGisMeasure.js'
 import GisMapControls                from '@/components/map/GisMapControls.jsx'
 import GisPopupOverlay               from '@/components/map/GisPopupOverlay.jsx'
 
-// ── 등급 → 팝업 variant 매핑 ────────────────────────────────────────────────────
-const GRADE_POPUP_VARIANT = { S: 'danger', A: 'warning', B: 'info', C: 'success', D: 'default' }
+// ── 등급 → 팝업 variant 매핑 (gradeConst.js 에서 import) ───────────────────────
 
 // ── 설비 샘플 데이터 (GeoServer 연동 시 WMS/WFS 레이어로 교체) ───────────────
 // OL Feature 생성자에 전달한 key/value 는 setProperties() 로 자동 등록됨
@@ -171,7 +171,7 @@ export default function SccResDtlGisFeature({ row }) {
         coord={popup?.coord}
         title={popup ? `${popup.type} · ${popup.id}` : null}
         badge={popup?.props?.등급
-          ? { text: popup.props.등급, color: GRADE_TEXT[popup.props.등급] ?? '#475569' }
+          ? { text: popup.props.등급, color: GRADE_COLOR[popup.props.등급] ?? '#475569' }
           : null
         }
         items={popup
@@ -181,7 +181,7 @@ export default function SccResDtlGisFeature({ row }) {
                 label,
                 value,
                 variant:
-                  label === '진단결과' ? (GRADE_POPUP_VARIANT[value?.charAt(0)] ?? 'default') :
+                  label === '진단결과' ? (GRADE_VARIANT[value?.charAt(0)] ?? 'default') :
                   label === '상태' && value !== '정상' ? 'warn' :
                   'default',
               }))

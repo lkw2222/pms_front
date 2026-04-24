@@ -7,6 +7,7 @@
  */
 
 import { Stroke, Fill, Style, Circle as CircleStyle, RegularShape, Icon as OlIcon, Text as OlText } from 'ol/style'
+import { GRADE_COLOR } from '@/constants/gradeConst.js'
 
 // ── 드로우(측정) 스타일 ───────────────────────────────────────────────────────
 export const DRAW_STYLE = new Style({
@@ -50,7 +51,8 @@ export const hexToRgba = (hex, alpha) => {
 // 포인트 공통 색상 (파랑 계열 통일)
 const F_POINT     = '#3b82f6'   // 기본 — blue-500
 const F_POINT_SEL = '#1d4ed8'   // 선택 — blue-700
-export const GRADE_TEXT = { S:'#f85149', A:'#d29922', B:'#58a6ff', C:'#3fb950', D:'#8b949e' }
+/** @deprecated gradeConst.js 의 GRADE_COLOR 를 직접 사용하세요 */
+export const GRADE_TEXT = GRADE_COLOR
 
 // ── 포인트 모양 생성 ──────────────────────────────────────────────────────────
 // RegularShape: points=꼭짓점 수, radius=크기, angle=회전각(라디안)
@@ -83,7 +85,7 @@ export const TYPE_SHAPE = {
 export const FACILITY_STYLE = (feature, selected = false) => {
   const geomType       = feature.getGeometry().getType()
   const grade          = feature.get('props')?.등급
-  const gradeTextColor = GRADE_TEXT[grade] ?? '#475569'
+  const gradeTextColor = GRADE_COLOR[grade] ?? '#475569'
 
   if (geomType === 'Point') {
     const shape = TYPE_SHAPE[feature.get('type')] ?? '원'

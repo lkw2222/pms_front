@@ -9,7 +9,7 @@ import styles from '../styles/BasicLabel.module.css'
  * @since 2026-04-15
  * @param {Object} props
  * @param {string} props.text                  라벨 텍스트
- * @param {string} [props.variant='default']   색상 테마 — default | success | warning | danger | info | purple
+ * @param {string} [props.variant='default']   색상 테마 — default | success | warning | danger | info | blue | purple
  * @returns {JSX.Element}
  *
  * @history

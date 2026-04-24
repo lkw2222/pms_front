@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import { useAppStore } from '@/store/useAppStore.js';
 import { setDockviewMenu } from '@/store/dockviewStore.js';
 import {
@@ -115,9 +115,10 @@ function SidebarGroup({ group, sidebarOpen, openPanels, onOpen, onPip, expandedG
 }
 
 export default function LeftArea({ apiRef }) {
-    const {sidebarOpen, toggleSidebar, openPanels, setOpenPanels} = useAppStore();
-    const [pipBlocked,     setPipBlocked]     = useState(false);
-    const [expandedGroups, setExpandedGroups] = useState(new Set([]));
+    const { sidebarOpen, toggleSidebar, openPanels, setOpenPanels,
+            expandedGroups: expandedGroupsArr, toggleExpandedGroup } = useAppStore();
+    const [pipBlocked, setPipBlocked] = React.useState(false);
+    const expandedGroups = new Set(expandedGroupsArr);
 
     // MENU_GROUPS 는 모듈 상수 → 항상 동일 값이므로 렌더마다 호출해도 안전.
     // useEffect([]) 는 Vite HMR 이 dockviewStore.js 를 재실행할 때 다시 호출되지 않으므로
@@ -144,9 +145,7 @@ export default function LeftArea({ apiRef }) {
         if (!popup) { setPipBlocked(true); setTimeout(() => setPipBlocked(false), 4000) }
     }, []);
 
-    const toggleGroup = (id) => setExpandedGroups(prev => {
-        const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s;
-    });
+    const toggleGroup = (id) => toggleExpandedGroup(id);
 
     return (
         <aside className={styles.sidebar}
