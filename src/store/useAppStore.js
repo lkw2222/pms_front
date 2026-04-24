@@ -53,6 +53,12 @@ export const useAppStore = create(
         wlcResultFilter: null,
         setWlcResultFilter:   (filter) => set({ wlcResultFilter: filter }),
         clearWlcResultFilter: ()       => set({ wlcResultFilter: null }),
+
+        // ── SCC 결과 초기 필터 (실행로그 → 결과 페이지 이동 시 사용) ──────
+        // 결과 패널에서 읽은 뒤 반드시 clearSccResultFilter() 호출
+        sccResultFilter: null,
+        setSccResultFilter:   (filter) => set({ sccResultFilter: filter }),
+        clearSccResultFilter: ()       => set({ sccResultFilter: null }),
     }),
     {
       name: 'pms-app-store',

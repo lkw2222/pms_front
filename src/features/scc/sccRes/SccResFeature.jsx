@@ -5,21 +5,20 @@ import BasicGrid             from '@/components/grid/BasicGrid.jsx'
 import GridDetailDrawer      from '@/components/grid/GridDetailDrawer.jsx'
 import GridDetailModal       from '@/components/grid/GridDetailModal.jsx'
 import GridActionButtons     from '@/components/grid/GridActionButtons.jsx'
-import WlcResDrwFeature      from './WlcResDrwFeature.jsx'
+import SccResDrwFeature from './SccResDrwFeature.jsx'
 import SelectInput           from '@/components/input/SelectInput.jsx'
 import SearchInput           from '@/components/input/SearchInput.jsx'
-import DateInput             from '@/components/input/DateInput.jsx'
 import BasicButton           from '@/components/button/BasicButton.jsx'
 import BasicLabel            from '@/components/label/BasicLabel.jsx'
-import WlcResDtlFeature      from './WlcResDtlFeature.jsx'
-import monthSelectPlugin     from 'flatpickr/dist/plugins/monthSelect'
-import 'flatpickr/dist/plugins/monthSelect/style.css'
-import { MOCK_DETAIL, MOCK_DETAIL_2 } from '../../../../public/data/wlcResDtlMock.js'
-import { MOCK_DATA }         from '../../../../public/data/wlcResMock.js'
+import SccResDtlFeature from './SccResDtlFeature.jsx'
+import { MOCK_DETAIL, MOCK_DETAIL_2 } from '../../../../public/data/sccResDtlMock.js'
+import { MOCK_DATA } from '../../../../public/data/sccResMock.js'
 import { Search, RotateCcw, Loader2, Download } from 'lucide-react'
-import styles                from './WlcResFeature.module.css'
+import styles                from './SccResFeature.module.css'
+import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect/index.js";
+import DateInput from "@/components/input/DateInput.jsx";
 
-const RESULT_VARIANT = { '적합':'success', '부적합':'danger' }
+const GRADE_VARIANT = { S: 'danger', A: 'warning', B: 'info', C: 'success', D: 'default' }
 const BONBU_OPTIONS = [
     { label:'서울본부',         value:'SEOUL'   },
     { label:'인천본부',         value:'INCHEON' },
@@ -52,8 +51,13 @@ const SABUPSO_MAP = {
     ULSAN:   [{ label:'울산지사', value:'US01' }, { label:'울주지사', value:'US02' }],
     JEJU:    [{ label:'제주지사', value:'JJ01' }, { label:'서귀포지사', value:'JJ02' }],
 }
-const YN_OPTIONS         = [{ label:'Y', value:'Y' }, { label:'N', value:'N' }]
-const RESULT_OPTIONS     = [{ label:'적합', value:'적합' }, { label:'부적합', value:'부적합' }]
+const GRADE_OPTIONS = [
+    { label: 'S (즉시위험)', value: 'S' },
+    { label: 'A (고위험)',   value: 'A' },
+    { label: 'B (중위험)',   value: 'B' },
+    { label: 'C (저위험)',   value: 'C' },
+    { label: 'D (정기진단)', value: 'D' },
+]
 const POLE_TYPE_OPTIONS  = [
     { label:'CP300kgf', value:'CP300kgf' }, { label:'CP500kgf', value:'CP500kgf' },
     { label:'CP700kgf', value:'CP700kgf' }, { label:'CP1000kgf', value:'CP1000kgf' },
@@ -94,12 +98,12 @@ const MONTH_PICKER_OPTIONS = {
 const SEARCH_TYPE_OPT = [
     { label:'설비 GID',       value:'gid'    },
     { label:'전산화번호',     value:'calcNo' },
-    { label:'풍하중 산출 ID', value:'calcId' },
+    { label:'SCC 산출 ID', value:'calcId' },
 ]
 
 const INIT_SEARCH = {
     bonbu: '', sabupso: '', poleType: '', poleShape: '', poleSize: '',
-    supportFlag: '', result: '',
+    gradeCode: '',
     hiScore: '',   // HI 점수 구간
     tilt:    '',   // 기울기 구간
     evalYm:  '',   // 평가년월 (YYYY-MM)
@@ -118,7 +122,7 @@ function VDivider() {
 }
 
 /**
- * 풍하중 평가 결과 조회 화면.
+ * SCC 평가 결과 조회 화면.
  *
  * @author JDJ
  * @since 2026-04-20
@@ -129,32 +133,32 @@ function VDivider() {
  * |------------|--------|------|
  * | 2026-04-20 | JDJ    | 최초 작성 |
  */
-export default function WlcResFeature() {
+export default function SccResFeature() {
     const [search,    setSearch]    = useState(INIT_SEARCH)
     const [applied,   setApplied]   = useState(INIT_SEARCH)
     const [modalOpen, setModalOpen] = useState(false)
     const [modalRow,  setModalRow]  = useState(null)
 
-    const { wlcResultFilter, clearWlcResultFilter } = useAppStore()
+    const { sccResultFilter, clearSccResultFilter } = useAppStore()
 
     // 실행로그에서 넘어온 필터 감지 → 검색 조건 세팅 후 자동 조회
     useEffect(() => {
-        if (!wlcResultFilter) return
-        const { calcId, bonbu, sabupso } = wlcResultFilter
+        if (!sccResultFilter) return
+        const { calcId, bonbu, sabupso } = sccResultFilter
         const next = { ...INIT_SEARCH, searchType:'calcId', searchValue: calcId ?? '', bonbu: bonbu ?? '', sabupso: sabupso ?? '' }
         setSearch(next)
         setApplied(next)
-        clearWlcResultFilter()
-    }, [wlcResultFilter, clearWlcResultFilter])
+        clearSccResultFilter()
+    }, [sccResultFilter, clearSccResultFilter])
 
     const sabupsoOptions = SABUPSO_MAP[search.bonbu] ?? []
 
     const { data, isLoading } = useQuery({
-        queryKey: ['wlc', 'result', 'list', applied],
+        queryKey: ['scc', 'result', 'list', applied],
         queryFn: async () => {
             // ── 실제 API 호출 예제 ────────────────────────────────────────
-            // import { wlcResultApi } from '@/services/wlc/wlcResult/wlcResService.js'
-            // return wlcResultApi.getList(applied)
+            // import { sccResultApi } from '@/services/scc/sccResult/sccResService.js'
+            // return sccResultApi.getList(applied)
             // ─────────────────────────────────────────────────────────────
             await new Promise(r => setTimeout(r, 200))
             const list = MOCK_DATA.filter(row => {
@@ -163,8 +167,7 @@ export default function WlcResFeature() {
                 if (applied.poleType    && row.poleType    !== applied.poleType)    return false
                 if (applied.poleShape   && row.poleShape   !== applied.poleShape)   return false
                 if (applied.poleSize    && row.poleSize    !== applied.poleSize)    return false
-                if (applied.supportFlag && row.supportFlag !== applied.supportFlag) return false
-                if (applied.result      && row.result      !== applied.result)      return false
+                if (applied.gradeCode   && row.gradeCode   !== applied.gradeCode)   return false
                 // HI 점수 구간 필터 (API 연동 시 서버에서 처리)
                 if (applied.hiScore && row.hiScore != null) {
                     const [min, max] = applied.hiScore === '500+'
@@ -216,23 +219,36 @@ export default function WlcResFeature() {
     const onReset    = () => { setSearch(INIT_SEARCH); setApplied(INIT_SEARCH); setDrawerOpen(false) }
 
     const colDefs = useMemo(() => [
-        { field:'seq',    headerName:'No',         flex:1, minWidth:50,  type:'numericColumn' },
-        { field:'calcId', headerName:'풍하중 산출ID', flex:2, minWidth:140 },
-        { field:'bonbu',  headerName:'지역본부',       flex:2, minWidth:110, valueFormatter: ({ value }) => BONBU_OPTIONS.find(o => o.value === value)?.label ?? value },
-        { field:'sabupso',headerName:'사업소',         flex:2, minWidth:80,  valueFormatter: ({ value }) => Object.values(SABUPSO_MAP).flat().find(o => o.value === value)?.label ?? value },
-        { field:'gid',    headerName:'설비GID',        flex:2, minWidth:80  },
-        { field:'calcNo',       headerName:'전산화번호', flex:2, minWidth:95 },
-        { field:'poleType',     headerName:'전주종류', flex:2, minWidth:90  },
-        { field:'poleShape',    headerName:'형태',     flex:1, minWidth:90  },
-        { field:'poleSize',     headerName:'규격',     flex:1, minWidth:80  },
-        { field:'supportFlag',  headerName:'지지대',   flex:1, minWidth:80,  cellStyle:{ textAlign:'center' } },
-        /*{ field:'relatedPoles', headerName:'관련전주', flex:1, minWidth:90,  type:'numericColumn' },
-        { field:'wireCount',    headerName:'전선',     flex:1, minWidth:70,  type:'numericColumn' },
-        { field:'overheadCount',headerName:'가공설비', flex:1, minWidth:90,  type:'numericColumn' },
-        { field:'commCount',    headerName:'통신기기', flex:1, minWidth:90,  type:'numericColumn' },*/
-        { field:'safetyFactor',   headerName:'안전율',   flex:1, minWidth:80,  type:'numericColumn', valueFormatter: ({ value }) => value != null ? value.toFixed(2) : '' },
-        { field:'result',       headerName:'판정결과', flex:1, minWidth:100,  cellRenderer: ({ value }) => <BasicLabel text={value} variant={RESULT_VARIANT[value] ?? 'default'} />, cellStyle:{ display:'flex', alignItems:'center', justifyContent:'center' } },
-        { headerName:'상세보기',    flex:1, minWidth:90,  sortable:false, filter:false,
+        { field:'seq',     headerName:'순번',         flex:1, minWidth:60,  type:'numericColumn' },
+        { field:'calcId',  headerName:'SCC 산출ID', flex:2, minWidth:80 },
+        { field:'bonbu',   headerName:'지역본부',   flex:2, minWidth:120, valueFormatter: ({ value }) => BONBU_OPTIONS.find(o => o.value === value)?.label ?? value },
+        { field:'sabupso', headerName:'사업소',     flex:2, minWidth:80,  valueFormatter: ({ value }) => Object.values(SABUPSO_MAP).flat().find(o => o.value === value)?.label ?? value },
+        { field:'gid',     headerName:'설비GID',    flex:1, minWidth:110  },
+        { field:'calcNo',  headerName:'전산화번호', flex:1, minWidth:110  },
+        { field:'poleType',  headerName:'전주종류', flex:1, minWidth:110  },
+        { field:'poleShape', headerName:'형태',     flex:1, minWidth:100  },
+        { field:'poleSize',  headerName:'규격',     flex:1, minWidth:100  },
+        {
+            headerName: '안전율', marryChildren: true,
+            children: [
+                { field:'windSafetyFactor',      headerName:'풍하중', flex:1, minWidth:100, type:'numericColumn', valueFormatter: ({ value }) => value != null ? value.toFixed(2) : '-' },
+                { field:'combinedSafetyFactor',  headerName:'복합하중', flex:1, minWidth:100, type:'numericColumn', valueFormatter: ({ value }) => value != null ? value.toFixed(2) : '-' },
+                { field:'compositeSafetyFactor', headerName:'합성하중', flex:1, minWidth:100, type:'numericColumn', valueFormatter: ({ value }) => value != null ? value.toFixed(2) : '-' },
+            ],
+        },
+        {
+            headerName: '판정등급', marryChildren: true,
+            children: [
+                { field:'gradeCode', headerName:'등급',    flex:1, minWidth:80,
+                  cellRenderer: ({ value }) => value
+                    ? <BasicLabel text={`${value} 등급`} variant={GRADE_VARIANT[value] ?? 'default'} />
+                    : null,
+                  cellStyle: { display:'flex', alignItems:'center', justifyContent:'center' },
+                },
+                { field:'gradeDesc', headerName:'진단결과', flex:1, minWidth:90 },
+            ],
+        },
+        { headerName:'상세보기', flex:1, minWidth:90, sortable:false, filter:false,
           cellRenderer: ({ data }) => data
             ? <GridActionButtons data={data} buttons={[{ type:'detail', onClick: openModal }]} />
             : null,
@@ -271,7 +287,7 @@ export default function WlcResFeature() {
                                 <DateInput   label="평가년월" value={search.evalYm}  onChange={dateStr => setSearch(s => ({ ...s, evalYm: dateStr }))} placeholder="년월 선택" options={MONTH_PICKER_OPTIONS} />
                                 <SelectInput label="HI 점수"  value={search.hiScore} onChange={e => setSearch(s => ({ ...s, hiScore: e.target.value }))} options={HI_SCORE_OPTIONS} placeholder="전체" />
                                 <SelectInput label="기울기"   value={search.tilt}    onChange={e => setSearch(s => ({ ...s, tilt:    e.target.value }))} options={TILT_OPTIONS}     placeholder="전체" />
-                                <SelectInput label="판정결과" value={search.result}  onChange={e => setSearch(s => ({ ...s, result:  e.target.value }))} options={RESULT_OPTIONS}   placeholder="전체" />
+                                <SelectInput label="판정등급" value={search.gradeCode} onChange={e => setSearch(s => ({ ...s, gradeCode: e.target.value }))} options={GRADE_OPTIONS} placeholder="전체" />
                             </div>
                         </div>
                     </div>
@@ -281,11 +297,10 @@ export default function WlcResFeature() {
 
                         <div className={styles.groupSm}>
                             <GroupLabel>{'전주\n제원'}</GroupLabel>
-                            <div className={`${styles.fieldGrid} ${styles.col4}`}>
-                                <SelectInput label="전주종류"   value={search.poleType}    onChange={e => setSearch(s => ({ ...s, poleType:    e.target.value }))} options={POLE_TYPE_OPTIONS}  placeholder="전체" />
-                                <SelectInput label="전주형태"   value={search.poleShape}   onChange={e => setSearch(s => ({ ...s, poleShape:   e.target.value }))} options={POLE_SHAPE_OPTIONS} placeholder="전체" />
-                                <SelectInput label="전주규격"   value={search.poleSize}    onChange={e => setSearch(s => ({ ...s, poleSize:    e.target.value }))} options={POLE_SIZE_OPTIONS}  placeholder="전체" />
-                                <SelectInput label="지지대여부" value={search.supportFlag} onChange={e => setSearch(s => ({ ...s, supportFlag: e.target.value }))} options={YN_OPTIONS}         placeholder="전체" />
+                            <div className={`${styles.fieldGrid} ${styles.col3}`}>
+                                <SelectInput label="전주종류" value={search.poleType}  onChange={e => setSearch(s => ({ ...s, poleType:  e.target.value }))} options={POLE_TYPE_OPTIONS}  placeholder="전체" />
+                                <SelectInput label="전주형태" value={search.poleShape} onChange={e => setSearch(s => ({ ...s, poleShape: e.target.value }))} options={POLE_SHAPE_OPTIONS} placeholder="전체" />
+                                <SelectInput label="전주규격" value={search.poleSize}  onChange={e => setSearch(s => ({ ...s, poleSize:  e.target.value }))} options={POLE_SIZE_OPTIONS}  placeholder="전체" />
                             </div>
                         </div>
 
@@ -344,7 +359,7 @@ export default function WlcResFeature() {
                     onClose={closeDrawer}
                     defaultWidth={500}
                 >
-                    <WlcResDrwFeature
+                    <SccResDrwFeature
                         row={drawerRow}
                         onOpenModal={() => { setModalRow(drawerRow); setModalOpen(true) }}
                     />
@@ -358,7 +373,7 @@ export default function WlcResFeature() {
                 title={modalRow ? `${modalRow.calcNo} · ${modalRow.poleType} ${modalRow.poleSize}` : '상세 정보'}
                 onClose={closeModal}
             >
-                <WlcResDtlFeature
+                <SccResDtlFeature
                     data={Number(modalRow?.gid) % 2 === 1 ? MOCK_DETAIL_2 : MOCK_DETAIL}
                 />
             </GridDetailModal>

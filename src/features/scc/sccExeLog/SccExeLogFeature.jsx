@@ -124,14 +124,14 @@ export default function SccExeLogFeature() {
     const [detailOpen, setDetailOpen] = useState(false)
     const [detailData, setDetailData] = useState(null)
 
-    const { setWlcResultFilter } = useAppStore()
+    const { setSccResultFilter } = useAppStore()
 
     // 산출 ID 클릭 → SCC 결과 패널 오픈 + 필터 전달
     // setOpenPanels 는 ContentArea onDidAddPanel 에서 자동 처리됨
     const goToResult = useCallback((row) => {
-        setWlcResultFilter({ calcId: row.id, bonbu: row.bonbu, sabupso: row.sabupso })
-        openDockPanel({ id:'wlcResultPanel' })
-    }, [setWlcResultFilter])
+        setSccResultFilter({ calcId: row.id, bonbu: row.bonbu, sabupso: row.sabupso })
+        openDockPanel({ id:'sccResPanel' })
+    }, [setSccResultFilter])
 
     const sabupsoOptions = SABUPSO_MAP[search.bonbu] ?? []
 

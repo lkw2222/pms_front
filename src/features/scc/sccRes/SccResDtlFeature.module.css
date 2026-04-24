@@ -1,0 +1,273 @@
+.wrap {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--color-text-muted);
+    font-size: 13px;
+}
+
+/* ── 페이지 헤더 ─────────────────────────────────────────────────────────── */
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pageTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+/* ── 섹션 ────────────────────────────────────────────────────────────────── */
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sectionLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sectionLabel::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 13px;
+    background: var(--color-accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.sectionLabelText {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+/* ── 테이블 ──────────────────────────────────────────────────────────────── */
+.tableWrap {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    color: var(--color-text-primary);
+}
+
+/* 짝수 행 줄무늬 (0-index 기준 홀수 → DOM 기준 짝수) */
+.table tbody tr:nth-child(even) {
+    background: var(--color-bg-tertiary);
+}
+
+.th {
+    background: var(--color-bg-large-d);
+    font-weight: 700;
+    padding: 6px 10px;
+    border: 1px solid var(--color-border);
+    text-align: center;
+    font-size: 11px;
+    white-space: nowrap;
+    line-height: 1.4;
+    color: var(--color-accent);
+}
+
+.thUnit {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    margin-top: 2px;
+    opacity: 0.75;
+}
+
+.td {
+    padding: 7px 10px;
+    border: 1px solid var(--color-border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+.tdLabel {
+    padding: 7px 12px;
+    border: 1px solid var(--color-border);
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: var(--color-bg-secondary);
+    white-space: nowrap;
+    width: 1px;
+}
+
+.tdValue {
+    padding: 7px 14px;
+    border: 1px solid var(--color-border);
+    text-align: left;
+    font-size: 12px;
+    color: var(--color-text-primary);
+}
+
+.tdNum {
+    padding: 7px 10px;
+    border: 1px solid var(--color-border);
+    text-align: right;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.emptyTd {
+    padding: 14px;
+    border: 1px solid var(--color-border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+/* ── 종합 점수 카드 ──────────────────────────────────────────────────────────── */
+.scoreCard {
+    display:     flex;
+    align-items: center;
+    gap:         20px;
+    padding:     18px 24px;
+    background:  var(--color-bg-secondary);
+    border:      1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.scoreMain {
+    display:        flex;
+    flex-direction: column;
+    align-items:    center;
+    min-width:      110px;
+}
+
+.scoreValue {
+    font-size:            36px;
+    font-weight:          800;
+    color:                var(--color-text-primary);
+    font-variant-numeric: tabular-nums;
+    line-height:          1;
+}
+
+.scoreLabel {
+    font-size:  11px;
+    color:      var(--color-text-muted);
+    margin-top: 4px;
+}
+
+.scoreDivider {
+    width:      1px;
+    align-self: stretch;
+    background: var(--color-border);
+    flex-shrink: 0;
+}
+
+.scoreBadge {
+    display:        flex;
+    flex-direction: column;
+    align-items:    center;
+    gap:            6px;
+    min-width:      90px;
+}
+
+.gradeDesc {
+    font-size:   13px;
+    font-weight: 600;
+    color:       var(--color-text-secondary);
+}
+
+.scoreSections {
+    flex:                  1;
+    display:               grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:                   16px;
+}
+
+.scoreItem {
+    display:        flex;
+    flex-direction: column;
+    gap:            4px;
+}
+
+.scoreItemLabel {
+    font-size: 11px;
+    color:     var(--color-text-muted);
+}
+
+.scoreItemValue {
+    font-size:            20px;
+    font-weight:          700;
+    color:                var(--color-text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.scoreItemWeight {
+    font-size: 10px;
+    color:     var(--color-text-muted);
+}
+
+/* ── 전주 기본 정보 테이블 ───────────────────────────────────────────────────── */
+.infoTable {
+    width:           100%;
+    border-collapse: collapse;
+    font-size:       12px;
+}
+
+.infoTdLabel {
+    padding:      7px 12px;
+    border:       1px solid var(--color-border);
+    font-size:    11px;
+    font-weight:  600;
+    color:        var(--color-text-muted);
+    background:   var(--color-bg-secondary);
+    white-space:  nowrap;
+    width:        1px;
+}
+
+.infoTdValue {
+    padding:   7px 14px;
+    border:    1px solid var(--color-border);
+    font-size: 12px;
+    color:     var(--color-text-primary);
+}
+
+/* ── 채점 섹션 메타 텍스트 ───────────────────────────────────────────────────── */
+.scoringMeta {
+    font-size:   11px;
+    color:       var(--color-text-muted);
+    font-weight: 400;
+    margin-left: 6px;
+}
+
+/* ── 합계·소계 강조 셀 ───────────────────────────────────────────────────────── */
+.tdBold {
+    padding:              7px 10px;
+    border:               1px solid var(--color-border);
+    text-align:           center;
+    font-size:            12px;
+    font-weight:          700;
+    color:                var(--color-text-primary);
+    font-variant-numeric: tabular-nums;
+    white-space:          nowrap;
+    background:           var(--color-bg-secondary);
+}

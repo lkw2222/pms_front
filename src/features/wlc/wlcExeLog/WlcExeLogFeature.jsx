@@ -219,11 +219,16 @@ export default function WlcExeLogFeature() {
                     <DateInput
                         label="조회기간(시작)"
                         value={search.dateFrom}
-                        onChange={v => setSearch(s => ({ ...s, dateFrom: v }))}
+                        onChange={v => setSearch(s => ({
+                            ...s,
+                            dateFrom: v,
+                            dateTo: s.dateTo && v > s.dateTo ? '' : s.dateTo,
+                        }))}
                     />
                     <DateInput
                         label="조회기간(종료)"
                         value={search.dateTo}
+                        options={{ minDate: search.dateFrom || undefined }}
                         onChange={v => setSearch(s => ({ ...s, dateTo: v }))}
                     />
                     <SearchInput

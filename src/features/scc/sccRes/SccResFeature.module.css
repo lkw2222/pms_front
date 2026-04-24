@@ -88,6 +88,7 @@
 }
 
 .col2 { grid-template-columns: 1fr 1fr;         }
+.col3 { grid-template-columns: repeat(3, 1fr);  }
 .col4 { grid-template-columns: repeat(4, 1fr);  }
 
 /* 검색바 래퍼 (그리드 없이 flex:1 만) */

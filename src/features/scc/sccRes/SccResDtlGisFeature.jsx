@@ -1,5 +1,5 @@
 /**
- * 풍하중 평가 결과 드로어 — 지도 탭.
+ * SCC 평가 결과 드로어 — 지도 탭.
  * row 변경 시 해당 전주 위치로 flyTo + 마커 갱신.
  *
  * 구조:
@@ -30,19 +30,22 @@ import { useGisMeasure }             from '@/utils/gis/useGisMeasure.js'
 import GisMapControls                from '@/components/map/GisMapControls.jsx'
 import GisPopupOverlay               from '@/components/map/GisPopupOverlay.jsx'
 
+// ── 등급 → 팝업 variant 매핑 ────────────────────────────────────────────────────
+const GRADE_POPUP_VARIANT = { S: 'danger', A: 'warning', B: 'info', C: 'success', D: 'default' }
+
 // ── 설비 샘플 데이터 (GeoServer 연동 시 WMS/WFS 레이어로 교체) ───────────────
 // OL Feature 생성자에 전달한 key/value 는 setProperties() 로 자동 등록됨
 // → f.get('type'), f.get('id'), f.get('props') 로 바로 접근 가능
 const FACILITY_FEATURES = [
-  new Feature({ geometry: new Point(fromLonLat([127.0246, 37.5326])),  type:'전주',   id:'P-001', props:{ 관리번호:'P-001', 규격:'16m/400kg',  재질:'철근콘크리트', 설치일:'2018-03-15', 관리기관:'한전 서울본부', 등급:'A', 상태:'정상'    } }),
+  new Feature({ geometry: new Point(fromLonLat([127.0246, 37.5326])),  type:'전주',   id:'P-001', props:{ 전산화번호:'1234A001', 전주종류:'CP700kgf', 전주형태:'단주', 전주규격:'16M', 등급:'A', 종합점수:'82.00', 진단결과:'A 고위험'   } }),
   new Feature({ geometry: new Point(fromLonLat([127.0268, 37.5312])),  type:'변압기', id:'T-001', props:{ 관리번호:'T-001', 용량:'100kVA',      전압:'22.9kV/380V',  설치일:'2020-07-22', 관리기관:'한전 서울본부', 등급:'C', 상태:'정상'    } }),
-  new Feature({ geometry: new Point(fromLonLat([127.0225, 37.5338])),  type:'전주',   id:'P-002', props:{ 관리번호:'P-002', 규격:'14m/350kg',  재질:'철근콘크리트', 설치일:'2019-11-05', 관리기관:'한전 서울본부', 등급:'E', 상태:'점검필요' } }),
+  new Feature({ geometry: new Point(fromLonLat([127.0225, 37.5338])),  type:'전주',   id:'P-002', props:{ 전산화번호:'1234A002', 전주종류:'CP300kgf', 전주형태:'B형주', 전주규격:'14M', 등급:'S', 종합점수:'93.00', 진단결과:'S 즉시위험' } }),
   new Feature({ geometry: new LineString([fromLonLat([127.0246,37.5326]),fromLonLat([127.0255,37.5320]),fromLonLat([127.0268,37.5312])]), type:'전선', id:'L-001', props:{ 관리번호:'L-001', 전압등급:'22.9kV', 전선종류:'ACSR 95mm²', 길이:'320m', 설치일:'2018-03-15', 등급:'B', 상태:'정상' } }),
   new Feature({ geometry: new LineString([fromLonLat([127.0225,37.5338]),fromLonLat([127.0235,37.5330]),fromLonLat([127.0246,37.5326])]), type:'전선', id:'L-002', props:{ 관리번호:'L-002', 전압등급:'22.9kV', 전선종류:'ACSR 95mm²', 길이:'280m', 설치일:'2019-11-05', 등급:'D', 상태:'정상' } }),
   new Feature({ geometry: new Polygon([[fromLonLat([127.0260,37.5335]),fromLonLat([127.0275,37.5335]),fromLonLat([127.0275,37.5325]),fromLonLat([127.0260,37.5325]),fromLonLat([127.0260,37.5335])]]), type:'변전소', id:'S-001', props:{ 관리번호:'S-001', 명칭:'강남 변전소', 전압등급:'154kV/22.9kV', 면적:'2,400m²', 준공일:'2010-06-01', 관리기관:'한전 서울본부', 등급:'B', 상태:'정상' } }),
 ]
 
-export default function WlcResDtlGisFeature({ row }) {
+export default function SccResDtlGisFeature({ row }) {
   const mapRef     = useRef(null)
   const baseLayers = useRef([])
 
@@ -147,8 +150,9 @@ export default function WlcResDtlGisFeature({ row }) {
       전주종류:   row.poleType,
       전주형태:   row.poleShape,
       전주규격:   row.poleSize,
-      안전율:     row.safetyFactor != null ? row.safetyFactor.toFixed(2) : '-',
-      판정:       row.result,
+      등급:       row.gradeCode,   // badge 용 (items 에서 필터링)
+      종합점수:   row.totalScore != null ? row.totalScore.toFixed(2) : '-',
+      진단결과:   row.gradeCode && row.gradeDesc ? `${row.gradeCode} ${row.gradeDesc}` : '-',
     })
     poleSourceRef.current.addFeature(f)
     flyTo(row.lon, row.lat, 17)
@@ -171,14 +175,16 @@ export default function WlcResDtlGisFeature({ row }) {
           : null
         }
         items={popup
-          ? Object.entries(popup.props).map(([label, value]) => ({
-              label,
-              value,
-              variant:
-                label === '판정' ? (value === '적합' ? 'success' : 'danger') :
-                label === '상태' && value !== '정상' ? 'warn' :
-                'default',
-            }))
+          ? Object.entries(popup.props)
+              .filter(([label]) => label !== '등급')   // badge 전용 필드 — 목록에서 제외
+              .map(([label, value]) => ({
+                label,
+                value,
+                variant:
+                  label === '진단결과' ? (GRADE_POPUP_VARIANT[value?.charAt(0)] ?? 'default') :
+                  label === '상태' && value !== '정상' ? 'warn' :
+                  'default',
+              }))
           : []
         }
         onClose={() => { popupOverlayRef.current?.setPosition(undefined); setPopup(null) }}

@@ -42,6 +42,8 @@ const VARIANT_COLOR = {
   success: 'var(--color-success)',
   danger:  'var(--color-danger)',
   warn:    'var(--color-warn)',
+  warning: 'var(--color-warning)',
+  info:    'var(--color-accent)',
   default: 'var(--color-text-primary)',
 }
 

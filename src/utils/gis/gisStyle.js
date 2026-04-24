@@ -50,7 +50,7 @@ export const hexToRgba = (hex, alpha) => {
 // 포인트 공통 색상 (파랑 계열 통일)
 const F_POINT     = '#3b82f6'   // 기본 — blue-500
 const F_POINT_SEL = '#1d4ed8'   // 선택 — blue-700
-export const GRADE_TEXT = { A:'#16a34a', B:'#2563eb', C:'#ca8a04', D:'#ea580c', E:'#dc2626', F:'#7f1d1d' }
+export const GRADE_TEXT = { S:'#f85149', A:'#d29922', B:'#58a6ff', C:'#3fb950', D:'#8b949e' }
 
 // ── 포인트 모양 생성 ──────────────────────────────────────────────────────────
 // RegularShape: points=꼭짓점 수, radius=크기, angle=회전각(라디안)

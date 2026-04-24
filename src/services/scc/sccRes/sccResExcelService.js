@@ -1,5 +1,5 @@
 /**
- * 풍하중 결과 상세 (전주 풍하중 산정표) 엑셀 내보내기 서비스.
+ * SCC 결과 상세 (전주 SCC 산정표) 엑셀 내보내기 서비스.
  * ExcelJS + file-saver 사용.
  *
  * @author JDJ
@@ -314,7 +314,7 @@ const STAY_COLS = [
 ]
 
 // ── 메인 내보내기 함수 ────────────────────────────────────────────────────────
-export async function exportWlcResultDetailExcel(data) {
+export async function exportSccResultDetailExcel(data) {
     if (!data) return
 
     const wb = new ExcelJS.Workbook()
@@ -324,7 +324,7 @@ export async function exportWlcResultDetailExcel(data) {
     // 가장 열이 많은 섹션 기준 (전선 인자: 21열)
     const TOTAL_COLS = WIRE_COLS.length
 
-    const ws = wb.addWorksheet('전주 풍하중 산정표')
+    const ws = wb.addWorksheet('전주 SCC 산정표')
     ws.views = [{ showGridLines: false }]
 
     // 열 너비 설정 (22열)
@@ -334,7 +334,7 @@ export async function exportWlcResultDetailExcel(data) {
     // ── 메인 제목 ─────────────────────────────────────────────────────────────
     ws.addRow([])
     ws.getRow(1).height = 36
-    styleTitle(ws.getCell(1, 1), '전주 풍하중 산정표')
+    styleTitle(ws.getCell(1, 1), '전주 SCC 산정표')
     ws.mergeCells(1, 1, 1, TOTAL_COLS)
 
     ws.addRow([])
@@ -370,6 +370,6 @@ export async function exportWlcResultDetailExcel(data) {
 
     // ── 저장 ─────────────────────────────────────────────────────────────────
     const buf      = await wb.xlsx.writeBuffer()
-    const fileName = `전주_풍하중_산정표_${data.calcNo ?? 'export'}.xlsx`
+    const fileName = `전주_SCC_산정표_${data.calcNo ?? 'export'}.xlsx`
     saveAs(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), fileName)
 }

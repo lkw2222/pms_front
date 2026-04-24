@@ -1,27 +1,28 @@
-import React, { Suspense, useState, useEffect } from 'react'
-import { useSuspenseQuery }  from '@tanstack/react-query'
+import React, { useState, useEffect } from 'react'
 import BasicLabel            from '@/components/label/BasicLabel.jsx'
 import BasicButton           from '@/components/button/BasicButton.jsx'
-import WlcResDtlGisFeature   from './WlcResDtlGisFeature.jsx'
-import { fetchDrawerDetail } from '../../../../public/data/wlcResDrwMock.js'
-import { ExternalLink, Loader2 } from 'lucide-react'
-import styles from './WlcResDrwFeature.module.css'
-import {LoadingState} from "@/components/feedback/QueryState.jsx";
+import SccResDtlGisFeature   from './SccResDtlGisFeature.jsx'
+import { ExternalLink }      from 'lucide-react'
+import styles from './SccResDrwFeature.module.css'
 
 /**
- * 풍하중 결과 그리드 행 클릭 시 우측에 열리는 드로어 내용.
- * - 요약 정보 탭: 설비 식별 · 강도계산 결과 (2열 레이아웃)
+ * SCC 결과 그리드 행 클릭 시 우측에 열리는 드로어 내용.
+ * - 요약 정보 탭: 전주 기본 정보 · SCC 평가 결과
  * - 지도 탭:     전주 설치 위치 (OpenLayers VWorld)
  *
- * 구조:
- *   SccResDrwFeature   — 탭 · 지도(항상 마운트) · Suspense 경계
- *   └─ DrawerContent   — useSuspenseQuery 로 카운트 조회 (row 있을 때만 마운트)
- *
  * @param {{ row: object|null, onOpenModal: function }} props
+ *
+ * @author JDJ
+ * @since 2026-04-22
+ * @history
+ * | 날짜       | 수정자 | 내용 |
+ * |------------|--------|------|
+ * | 2026-04-22 | JDJ    | 최초 작성 |
+ * | 2026-04-24 | JDJ    | SCC 평가 구조로 개편 (안전율·등급 표시) |
  */
 
 // ── 상수 ──────────────────────────────────────────────────────────────────────
-const RESULT_VARIANT = { '적합': 'success', '부적합': 'danger' }
+const GRADE_VARIANT = { S: 'danger', A: 'warning', B: 'info', C: 'success', D: 'default' }
 
 const BONBU_OPTIONS = [
     { label:'서울본부',         value:'SEOUL'   },
@@ -91,25 +92,22 @@ function InfoGroup({ items }) {
     )
 }
 
-// ── 드로어 데이터 컴포넌트 (useSuspenseQuery) ─────────────────────────────────
-// row 있을 때만 마운트되므로 null 체크 불필요
+// ── 드로어 요약 컨텐츠 ────────────────────────────────────────────────────────
 function DrawerContent({ row, onOpenModal }) {
-
-    // PK: calcId + seq — 카운트 데이터 별도 API 조회
-    // 실제 API 연동 시: fetchDrawerDetail → wlcResService.getDrawerDetail
-    const { data: detail } = useSuspenseQuery({
-        queryKey:  ['wlc', 'result', 'drawer', row.calcId, row.seq],
-        queryFn:   () => fetchDrawerDetail(row.calcId, row.seq),
-        staleTime: 5 * 60 * 1000,  // 5분 캐싱 — 같은 행 재클릭 시 재호출 없음
-    })
-
-    const bonbuLabel   = BONBU_OPTIONS.find(o => o.value === row.bonbu)?.label   ?? row.bonbu
+    const bonbuLabel   = BONBU_OPTIONS.find(o => o.value === row.bonbu)?.label ?? row.bonbu
     const sabupsoLabel = Object.values(SABUPSO_MAP).flat().find(o => o.value === row.sabupso)?.label ?? row.sabupso
+    const variant      = GRADE_VARIANT[row.gradeCode] ?? 'default'
+
+    const fmt = (v) => v != null ? v.toFixed(2) : '-'
 
     return (
         <>
             <div className={styles.content}>
-                <div className={styles.sectionLabel}><span className={styles.sectionLabelText}>전주 기본 정보</span></div>
+
+                {/* ── 전주 기본 정보 ── */}
+                <div className={styles.sectionLabel}>
+                    <span className={styles.sectionLabelText}>전주 기본 정보</span>
+                </div>
                 <InfoGroup items={[
                     { label: '지역본부',   value: bonbuLabel },
                     { label: '사업소',     value: sabupsoLabel },
@@ -118,27 +116,37 @@ function DrawerContent({ row, onOpenModal }) {
                     { label: '전주종류',   value: row.poleType },
                     { label: '전주형태',   value: row.poleShape },
                     { label: '전주규격',   value: row.poleSize },
-                    { label: '지지대',     value: row.supportFlag },
-                    { label: '관련전주',   value: `${detail.relatedPoles}건` },
-                    { label: '전선',       value: `${detail.wireCount}건` },
-                    { label: '가공설비',   value: `${detail.overheadCount}건` },
-                    { label: '통신기기',   value: `${detail.commCount}건` },
                 ]} />
 
-                <div className={styles.sectionLabel}><span className={styles.sectionLabelText}>전주 강도계산 결과</span></div>
+                {/* ── 안전율 ── */}
+                <div className={styles.sectionLabel}>
+                    <span className={styles.sectionLabelText}>안전율</span>
+                </div>
                 <InfoGroup items={[
-                    { label: '배전설비',   value: row.distEquipLoad    != null ? `${row.distEquipLoad.toLocaleString()} N·m`    : null },
-                    { label: '공가설비',   value: row.aerialEquipLoad  != null ? `${row.aerialEquipLoad.toLocaleString()} N·m`   : null },
-                    { label: '전주강도합', value: row.poleStrengthTotal != null ? `${row.poleStrengthTotal.toLocaleString()} N·m` : null },
-                    { label: '전선MT합',   value: row.wireMtSum        != null ? `${row.wireMtSum.toLocaleString()} N·m`         : null },
-                    { label: '지선부담',   value: row.stayLoad         != null ? `${row.stayLoad.toLocaleString()} N·m`          : null },
-                    { label: '전주부담',   value: row.poleLoad         != null ? `${row.poleLoad.toLocaleString()} N·m`          : null },
-                    { label: '안전율',     value: row.safetyFactor     != null ? row.safetyFactor.toFixed(2)                     : null },
-                    { label: '판정',       value: <BasicLabel text={row.result} variant={RESULT_VARIANT[row.result] ?? 'default'} /> },
+                    { label: '풍하중',   value: fmt(row.windSafetyFactor)      },
+                    { label: '복합하중', value: fmt(row.combinedSafetyFactor)  },
+                    { label: '합성하중', value: fmt(row.compositeSafetyFactor) },
                 ]} />
+
+                {/* ── SCC 평가 결과 ── */}
+                <div className={styles.sectionLabel}>
+                    <span className={styles.sectionLabelText}>SCC 평가 결과</span>
+                </div>
+                <InfoGroup items={[
+                    { label: '구조안전성', value: fmt(row.structScore) },
+                    { label: '하중외력',   value: fmt(row.loadScore)   },
+                    { label: '환경부식',   value: fmt(row.envScore)    },
+                    { label: '운영이력',   value: fmt(row.opScore)     },
+                    { label: '종합점수',   value: fmt(row.totalScore) },
+                    { label: '진단결과',   value: row.gradeCode
+                        ? <BasicLabel text={`${row.gradeCode} ${row.gradeDesc}`} variant={variant} />
+                        : '-'
+                    },
+                ]} />
+
             </div>
 
-            {/* 푸터: content 밖 → 항상 하단 고정 */}
+            {/* 푸터 */}
             <div className={styles.footer}>
                 <BasicButton
                     label="전체 상세 보기"
@@ -153,10 +161,9 @@ function DrawerContent({ row, onOpenModal }) {
 }
 
 // ── 메인 컴포넌트 ─────────────────────────────────────────────────────────────
-export default function WlcResDrwFeature({ row, onOpenModal }) {
+export default function SccResDrwFeature({ row, onOpenModal }) {
     const [tab, setTab] = useState('summary')
 
-    // 지도 탭 전환 시 OL updateSize 트리거 (드로어 transition 후 크기 반영)
     useEffect(() => {
         if (tab === 'map') setTimeout(() => window.dispatchEvent(new Event('resize')), 50)
     }, [tab])
@@ -177,20 +184,15 @@ export default function WlcResDrwFeature({ row, onOpenModal }) {
                 ))}
             </div>
 
-            {/* ── 지도: 항상 마운트 ──────────────────────────────────────────────
-                row 바뀔 때마다 SccResDtlGisFeature 내부에서 feature 레이어 갱신.
-                OL 초기화는 최초 1회만 — 드로어 애니메이션 중 블로킹 없음.        */}
+            {/* ── 지도: 항상 마운트 ── */}
             <div className={styles.mapWrap} style={{ display: tab === 'map' ? 'block' : 'none' }}>
-                <WlcResDtlGisFeature row={row} />
+                <SccResDtlGisFeature row={row} />
             </div>
 
             {/* ── 요약 정보 탭 ── */}
             {tab === 'summary' && (
                 row
-                    /* row 있을 때만 마운트 → useSuspenseQuery null 문제 없음 */
-                    ? <Suspense fallback={<LoadingState message="데이터 로딩 중..." />}>
-                          <DrawerContent row={row} onOpenModal={onOpenModal} />
-                      </Suspense>
+                    ? <DrawerContent row={row} onOpenModal={onOpenModal} />
                     : <div className={styles.empty}>행을 선택하세요</div>
             )}
 

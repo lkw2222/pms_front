@@ -19,8 +19,9 @@ import WlcExeLogPanel       from '@/panels/wlc/wlcExeLog/WlcExeLogPanel.jsx';
 import WlcResPanel           from '@/panels/wlc/wlcRes/WlcResPanel.jsx';
 import WlcResDistPanel from "@/panels/wlc/wlcResDist/WlcResDistPanel.jsx";
 
-import SccBatchExePanel from "@/panels/scc/sccBatchExe/SccBatchExePanel";
-import SccExeLogPanel from "@/panels/scc/sccExeLog/SccExeLogPanel";
+import SccBatchExePanel from "@/panels/scc/sccBatchExe/SccBatchExePanel.jsx"
+import SccExeLogPanel from "@/panels/scc/sccExeLog/SccExeLogPanel.jsx"
+import SccResPanel from "@/panels/scc/sccRes/SccResPanel.jsx"
 import SccResDistPanel from "@/panels/scc/sccResDist/SccResDistPanel";
 import SccCalcSimPanel from "@/panels/scc/sccClacSim/SccCalcSimPanel.jsx";
 
@@ -51,6 +52,7 @@ const PANEL_COMPONENTS = {
 
     sccBatchExePanel:   SccBatchExePanel,
     sccExeLogPanel:     SccExeLogPanel,
+    sccResPanel:        SccResPanel,
     sccResDistPanel : SccResDistPanel,
     sccCalcSimPanel : SccCalcSimPanel,
 
