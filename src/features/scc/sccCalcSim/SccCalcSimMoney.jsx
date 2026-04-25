@@ -56,7 +56,6 @@ export default function SccCalcSimMoney({
                 {/* 왼쪽 타이틀 박스 */}
                 <div className={styles.leftTitle}>
                     <div>진단비용 산출</div>
-                    <div className={styles.leftUnit}>(백만원)</div>
                 </div>
 
                 {/* 등급별 카드 영역 */}
@@ -66,16 +65,18 @@ export default function SccCalcSimMoney({
                             {/* 상단: 등급명 + 개수 */}
                             <div className={styles.gradeHeader}>
                                 <span className={styles.gradeName}>
-                                    {grade.name} (개)
+                                    {grade.name}
                                 </span>
                                 <span className={styles.gradeCount}>
                                     {grade.count.toLocaleString()}
+                                    <span className={styles.unitTextRight}>개</span>
                                 </span>
                             </div>
 
                             {/* 하단: 비용 박스 */}
                             <div className={styles.costBox}>
                                 {grade.cost.toLocaleString()}
+                                <span className={styles.unitTextRight}>백만원</span>
                             </div>
                         </div>
                     ))}

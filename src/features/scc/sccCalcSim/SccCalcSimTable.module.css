@@ -41,7 +41,7 @@
 
 /* ── 테이블 스크롤 영역 ── */
 .tableWrap {
-    max-height: 216px;
+    max-height: 203px;
     overflow-y: auto;
     overflow-x: hidden;
 }
