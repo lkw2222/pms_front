@@ -31,6 +31,7 @@ import JobCodePanel from "@/panels/system/code/JobCodePanel.jsx";
 import MenuMngPanel from "@/panels/system/menu/MenuMngPanel.jsx";
 import ProgramRegPanel from "@/panels/system/program/ProgramRegPanel.jsx";
 import UserMngPanel from "@/panels/system/user/UserMngPanel.jsx";
+import UserConLogPanel from "@/panels/system/logs/UserConLogPanel.jsx";
 
 import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
 
@@ -71,6 +72,7 @@ const PANEL_COMPONENTS = {
     menuMngPanel : MenuMngPanel,
     programRegPanel : ProgramRegPanel,
     userMngPanel : UserMngPanel,
+    userConLogPanel : UserConLogPanel,
 
     emptyPanel:         EmptyPanel,
 }

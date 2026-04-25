@@ -1,6 +1,5 @@
 import React from "react";
-import ErrorBoundary from "@/components/feedback/ErrorBoundary.jsx";
-import layout from '@/assets/styles/layout.module.css';
+import ComingSoon from "@/components/layout/ComingSoon.jsx";
 
 /**
  * 메뉴관리 패널.
@@ -16,8 +15,6 @@ import layout from '@/assets/styles/layout.module.css';
  */
 export default function MenuMngPanel() {
     return (
-        <ErrorBoundary>
-            <div>메뉴관리</div>
-        </ErrorBoundary>
+        <ComingSoon title="시스템 - 메뉴관리" />
     )
 }
