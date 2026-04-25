@@ -2,19 +2,15 @@ import React, {useCallback} from 'react';
 import { useAppStore } from '@/store/useAppStore.js';
 import { setDockviewMenu } from '@/store/dockviewStore.js';
 import {
-    AlertTriangle,
-    Archive,
     BarChart2,
-    Calculator,
     ChevronDown,
     ChevronLeft,
     ChevronRight as ChevRight,
     ChevronRight,
     ClipboardCheck,
-    FileSpreadsheet, HelpCircle,
-    LayoutDashboard, ListOrdered, LogIn, Map, MapPin, MonitorCog,
+    HelpCircle,
+    LayoutDashboard, Map, MonitorCog,
     PieChart, PlayCircle, ScrollText, Settings,
-    TableProperties, Trophy,
     UtilityPole, Wind, ChartBarDecreasing
 } from "lucide-react";
 
@@ -39,7 +35,7 @@ const MENU_GROUPS = [
             { id:'wlcResultPanel', label:'풍하중 평가결과',             icon:BarChart2,   component:'wlcResultPanel' },
             { id:'wlcResDistPanel', label:'풍하중 평가결과 분포도',         icon:PieChart,    component:'wlcResDistPanel' },
         ]},
-    { id:'scc', label:'진단우선수위 평가', icon:ChartBarDecreasing, children:[
+    { id:'scc', label:'진단우선순위 평가', icon:ChartBarDecreasing, children:[
             { id:'sccBatchExePanel', label:'SCC 배치 실행(수동)',        icon:PlayCircle,      component:'sccBatchExePanel' },
             { id:'sccExeLogPanel', label:'SCC 실행로그 조회',          icon:ScrollText,      component:'sccExeLogPanel' },
             { id:'sccResPanel', label:'진단우선순위 결과조회',           icon:ClipboardCheck,  component:'sccResPanel' },
