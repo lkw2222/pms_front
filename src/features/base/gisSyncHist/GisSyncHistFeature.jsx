@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef } from 'react'
 import { useQuery }    from '@tanstack/react-query'
 import BasicGrid       from '@/components/grid/BasicGrid.jsx'
-import SelectInput     from '@/components/input/SelectInput.jsx'
 import DateInput       from '@/components/input/DateInput.jsx'
 import SearchInput     from '@/components/input/SearchInput.jsx'
 import BasicButton     from '@/components/button/BasicButton.jsx'
@@ -36,16 +35,16 @@ const SEARCH_TYPE_OPT = [
 
 // ── 샘플 데이터 ───────────────────────────────────────────────────────────────
 const GIS_SYNC_HIST_DATA = [
-    { id:1,  tgtTableId:'KBT5101', tgtTableName:'전주기본정보',   logDt:'2026-04-25 16:00:30', totCnt:12450, insCnt:120, updCnt:35,  delCnt:5,  syncLog:'정상 처리' },
-    { id:2,  tgtTableId:'KBT5201', tgtTableName:'전선경로정보',   logDt:'2026-04-25 16:05:10', totCnt:8320,  insCnt:85,  updCnt:20,  delCnt:2,  syncLog:'정상 처리' },
-    { id:3,  tgtTableId:'KBT5301', tgtTableName:'GIS 설비위치',   logDt:'2026-04-25 16:10:45', totCnt:3210,  insCnt:40,  updCnt:12,  delCnt:0,  syncLog:'정상 처리' },
-    { id:4,  tgtTableId:'KBT5601', tgtTableName:'행정구역정보',   logDt:'2026-04-25 16:15:00', totCnt:3520,  insCnt:0,   updCnt:3,   delCnt:0,  syncLog:'정상 처리' },
-    { id:5,  tgtTableId:'KBT5101', tgtTableName:'전주기본정보',   logDt:'2026-04-24 16:00:30', totCnt:12330, insCnt:95,  updCnt:28,  delCnt:3,  syncLog:'정상 처리' },
-    { id:6,  tgtTableId:'KBT5201', tgtTableName:'전선경로정보',   logDt:'2026-04-24 16:05:10', totCnt:8235,  insCnt:60,  updCnt:15,  delCnt:1,  syncLog:'정상 처리' },
-    { id:7,  tgtTableId:'KBT5301', tgtTableName:'GIS 설비위치',   logDt:'2026-04-24 16:10:45', totCnt:3170,  insCnt:22,  updCnt:8,   delCnt:0,  syncLog:'정상 처리' },
-    { id:8,  tgtTableId:'KBT5101', tgtTableName:'전주기본정보',   logDt:'2026-04-23 16:00:30', totCnt:12235, insCnt:110, updCnt:42,  delCnt:7,  syncLog:'오류 발생 - 연결 타임아웃' },
-    { id:9,  tgtTableId:'KBT5201', tgtTableName:'전선경로정보',   logDt:'2026-04-23 16:05:10', totCnt:8175,  insCnt:75,  updCnt:18,  delCnt:4,  syncLog:'정상 처리' },
-    { id:10, tgtTableId:'KBT5601', tgtTableName:'행정구역정보',   logDt:'2026-04-23 16:15:00', totCnt:3520,  insCnt:0,   updCnt:1,   delCnt:0,  syncLog:'정상 처리' },
+    { id:1,  tgtTableId:'KBT5101', tgtTableName:'전주기본정보',   logDt:'2026-04-25 16:00:30', totCnt:160, insCnt:120, updCnt:35,  delCnt:5,  syncLog:'정상 처리' },
+    { id:2,  tgtTableId:'KBT5201', tgtTableName:'전선경로정보',   logDt:'2026-04-25 16:05:10', totCnt:107,  insCnt:85,  updCnt:20,  delCnt:2,  syncLog:'정상 처리' },
+    { id:3,  tgtTableId:'KBT5301', tgtTableName:'GIS 설비위치',   logDt:'2026-04-25 16:10:45', totCnt:52,  insCnt:40,  updCnt:12,  delCnt:0,  syncLog:'정상 처리' },
+    { id:4,  tgtTableId:'KBT5601', tgtTableName:'행정구역정보',   logDt:'2026-04-25 16:15:00', totCnt:3,  insCnt:0,   updCnt:3,   delCnt:0,  syncLog:'정상 처리' },
+    { id:5,  tgtTableId:'KBT5101', tgtTableName:'전주기본정보',   logDt:'2026-04-24 16:00:30', totCnt:126, insCnt:95,  updCnt:28,  delCnt:3,  syncLog:'정상 처리' },
+    { id:6,  tgtTableId:'KBT5201', tgtTableName:'전선경로정보',   logDt:'2026-04-24 16:05:10', totCnt:76,  insCnt:60,  updCnt:15,  delCnt:1,  syncLog:'정상 처리' },
+    { id:7,  tgtTableId:'KBT5301', tgtTableName:'GIS 설비위치',   logDt:'2026-04-24 16:10:45', totCnt:30,  insCnt:22,  updCnt:8,   delCnt:0,  syncLog:'정상 처리' },
+    { id:8,  tgtTableId:'KBT5101', tgtTableName:'전주기본정보',   logDt:'2026-04-23 16:00:30', totCnt:159, insCnt:110, updCnt:42,  delCnt:7,  syncLog:'오류 발생 - 연결 타임아웃' },
+    { id:9,  tgtTableId:'KBT5201', tgtTableName:'전선경로정보',   logDt:'2026-04-23 16:05:10', totCnt:97,  insCnt:75,  updCnt:18,  delCnt:4,  syncLog:'정상 처리' },
+    { id:10, tgtTableId:'KBT5601', tgtTableName:'행정구역정보',   logDt:'2026-04-23 16:15:00', totCnt:1,  insCnt:0,   updCnt:1,   delCnt:0,  syncLog:'정상 처리' },
 ]
 
 // ── 로그 일괄 삭제 Modal ──────────────────────────────────────────────────────

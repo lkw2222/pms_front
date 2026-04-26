@@ -24,7 +24,6 @@ import styles from './BaseInfoFeature.module.css'
 
 // ── 옵션 정의 ─────────────────────────────────────────────────────────────────
 const INFO_TYPE_SEARCH = [
-    { label: '전체', value: ''    },
     { label: '일반', value: '일반' },
     { label: 'GIS',  value: 'GIS' },
 ]

@@ -27,7 +27,8 @@ import SccCalcSimPanel from "@/panels/scc/sccClacSim/SccCalcSimPanel.jsx";
 import BaseInfoPanel    from "@/panels/base/baseInfo/BaseInfoPanel.jsx";
 import LnkPgmStsPanel   from "@/panels/base/lnkPgmSts/LnkPgmStsPanel.jsx";
 import GisSyncHistPanel from "@/panels/base/gisSyncHist/GisSyncHistPanel.jsx";
-import SccEvalItmMngPanel from "@/panels/base/sccEvalItmMng/SccEvalItmMngPanel";
+import SccEvalItmMngPanel from "@/panels/base/sccEvalItmMng/SccEvalItmMngPanel.jsx";
+import SccEvalGrdMngPanel from "@/panels/base/sccEvalGrdMng/SccEvalGrdMngPanel.jsx";
 
 import AuthMngPanel from "@/panels/system/auth/AuthMngPanel.jsx";
 import NoticePanel from "@/panels/system/bbs/NoticePanel.jsx";
@@ -73,6 +74,7 @@ const PANEL_COMPONENTS = {
     lnkPgmStsPanel   : LnkPgmStsPanel,
     gisSyncHistPanel : GisSyncHistPanel,
     sccEvalItmMngPanel : SccEvalItmMngPanel,
+    sccEvalGrdMngPanel : SccEvalGrdMngPanel,
 
 
     authMngPanel : AuthMngPanel,

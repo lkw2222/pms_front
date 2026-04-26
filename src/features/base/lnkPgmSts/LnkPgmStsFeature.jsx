@@ -13,6 +13,7 @@ import ConfirmModal      from '@/components/modal/ConfirmModal.jsx'
 import { Search, RotateCcw, Plus, Download, Pencil, Trash2, X, Save, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import styles from './LnkPgmStsFeature.module.css'
+import BasicLabel from "@/components/label/BasicLabel.jsx";
 
 /**
  * 데이터 연계프로그램 현황 기능 컴포넌트.
@@ -29,17 +30,27 @@ const SEARCH_TYPE_OPT = [
     { label: '타겟 테이블명',  value: 'tgtTableName' },
 ]
 const SW_TYPE_SEARCH = [
-    { label: '일반',         value: '일반'         },
+    { label: 'ETL',         value: 'ETL'         },
     { label: 'GIS',          value: 'GIS'          },
+    { label: 'API',          value: 'API'          },
     { label: 'DMP',          value: 'DMP'          },
-    { label: 'DB Procedure', value: 'DB Procedure' },
+    { label: 'DB Procedure', value: 'DB' },
 ]
 const SW_TYPE_OPTIONS = [
-    { label: '일반',         value: '일반'         },
+    { label: 'ETL',         value: 'ETL'         },
     { label: 'GIS',          value: 'GIS'          },
+    { label: 'API',          value: 'API'          },
     { label: 'DMP',          value: 'DMP'          },
-    { label: 'DB Procedure', value: 'DB Procedure' },
+    { label: 'DB Procedure', value: 'DB' },
 ]
+
+const SW_TYPE_VARIANT = {
+    ETL: 'purple'
+    , GIS: 'success'
+    , API: 'warning'
+    , DMP: 'default'
+    , DB: 'blue'
+}
 
 // ── 샘플 데이터 ───────────────────────────────────────────────────────────────
 const LNK_PGM_DATA = [
@@ -50,7 +61,7 @@ const LNK_PGM_DATA = [
     { id:5,  swType:'ETL', pgmId:'EI-0005', pgmName:'영배4.0연계 - 가공설비기본',   srcTableId:'JLT0503', tgtTableId:'JMT7301', tgtTableName:'가공설비기본',    remark:'' },
     { id:6,  swType:'DMP', pgmId:'EI-0006', pgmName:'DMP연계 - 점검결과정보',       srcTableId:'DMP0101', tgtTableId:'KBT5401', tgtTableName:'점검결과',        remark:'분기별 배치' },
     { id:7,  swType:'DMP', pgmId:'EI-0007', pgmName:'DMP연계 - 사고이력정보',       srcTableId:'DMP0201', tgtTableId:'KBT5501', tgtTableName:'사고이력',        remark:'분기별 배치' },
-    { id:8,  swType:'DB Procedure', pgmId:'EI-0008', pgmName:'통계집계 - 전주현황', srcTableId:'JMT7101', tgtTableId:'STAT0101', tgtTableName:'전주현황통계',   remark:'일별 자동실행' },
+    { id:8,  swType:'DB', pgmId:'EI-0008', pgmName:'통계집계 - 전주현황', srcTableId:'JMT7101', tgtTableId:'STAT0101', tgtTableName:'전주현황통계',   remark:'일별 자동실행' },
     { id:9,  swType:'API', pgmId:'EI-0009', pgmName:'K-GIS연계 - 행정구역정보',     srcTableId:'KBT5601', tgtTableId:'KBT5601', tgtTableName:'행정구역',        remark:'' },
     { id:10, swType:'ETL', pgmId:'EI-0010', pgmName:'영배4.0연계 - 통신기기기본',   srcTableId:'JLT0504', tgtTableId:'JMT7401', tgtTableName:'통신기기기본',    remark:'' },
 ]
@@ -111,7 +122,12 @@ function DetailView({ data }) {
             {rows.map(([label, value]) => (
                 <div key={label} className="detail-row">
                     <span className="detail-label">{label}</span>
-                    <span className="detail-value">{value || '—'}</span>
+                    <span className="detail-value">
+                        {label === 'SW구분'
+                            ? <BasicLabel text={value} variant={SW_TYPE_VARIANT[value] ?? 'default'} />
+                            : (value ?? '—')
+                        }
+                    </span>
                 </div>
             ))}
         </div>
@@ -275,7 +291,10 @@ export default function LnkPgmStsFeature({ onRegister, onEdit, onDelete }) {
     const onReset  = () => { setSearch(INIT_SEARCH); setApplied(INIT_SEARCH); closeDrawer() }
 
     const colDefs = useMemo(() => [
-        { field:'swType',       headerName:'SW구분',       width:130, flex:0 },
+        {
+            field:'swType',       headerName:'SW구분',       width:130, flex:0,
+            cellRenderer: ({ value }) => <BasicLabel text={value} variant={SW_TYPE_VARIANT[value] ?? 'default'} />,
+        },
         { field:'pgmId',        headerName:'프로그램 ID',  width:130, flex:0 },
         { field:'pgmName',      headerName:'프로그램명',   flex:1,    minWidth:160 },
         { field:'srcTableId',   headerName:'소스 테이블ID', width:130, flex:0 },

@@ -47,8 +47,8 @@ const MENU_GROUPS = [
             { id:'lnkPgmStsPanel', label:'연계 프로그램 현황',      component:'lnkPgmStsPanel' },
             { id:'gisSyncHistPanel', label:'GIS 연계 현황',  component:'gisSyncHistPanel' },
             { id:'sccEvalItmMngPanel', label:'SCC 평가 인자관리',  component:'sccEvalItmMngPanel' },
-            { id:'', label:'SCC 평가기준 점수관리',  component:'' },
-            { id:'', label:'SCC 평가등급 코드관리',  component:'' },
+          /*  { id:'', label:'SCC 평가기준 점수관리',  component:'' },*/
+            { id:'sccEvalGrdMngPanel', label:'SCC 평가등급 관리',  component:'sccEvalGrdMngPanel' },
         ]},
     { id:'system', label:'시스템', icon:Settings, children:[
             { id:'userMngPanel', label:'이용자 관리', component:'userMngPanel'},
