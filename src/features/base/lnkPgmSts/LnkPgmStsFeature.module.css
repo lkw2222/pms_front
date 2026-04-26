@@ -1,0 +1,27 @@
+/* ── 총 건수 표시 ─────────────────────────────────────────────────────────────── */
+.totalCount {
+    justify-self: start;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    position: relative;
+    top: 5px;
+}
+
+/* ── 연계정보 필드 그룹 ──────────────────────────────────────────────────────── */
+.linkInfoWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.linkInfoLabel {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.linkInfoFields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}

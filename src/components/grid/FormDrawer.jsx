@@ -1,8 +1,9 @@
 import React, { useRef, useCallback, useState } from 'react'
 import { X } from 'lucide-react'
 
-const MIN_WIDTH = 400
-const MAX_WIDTH = 900
+const MIN_WIDTH  = 400
+const MAX_WIDTH  = 900
+const TRANSITION = 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)'
 
 /**
  * 등록 / 수정 전용 우측 고정형 드로어. 드래그 리사이즈(400~900px) 지원
@@ -23,23 +24,27 @@ const MAX_WIDTH = 900
  * |------------|--------|------|
  */
 export default function FormDrawer({ open, title, onClose, footer, children, defaultWidth = 600 }) {
-  const [width, setWidth] = useState(defaultWidth)
-  const dragging = useRef(false)
-  const startX   = useRef(0)
-  const startW   = useRef(0)
+  const [width,      setWidth]      = useState(defaultWidth)
+  const [isResizing, setIsResizing] = useState(false)
+  const panelRef = useRef(null)
 
   const onMouseDown = useCallback((e) => {
-    dragging.current = true
-    startX.current   = e.clientX
-    startW.current   = width
+    const startX = e.clientX
+    const startW = panelRef.current ? panelRef.current.offsetWidth : width
 
-    const onMove = (e) => {
-      if (!dragging.current) return
-      const delta = startX.current - e.clientX
-      setWidth(Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startW.current + delta)))
+    setIsResizing(true)
+
+    const onMove = (mv) => {
+      const newW = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startW + (startX - mv.clientX)))
+      if (panelRef.current) {
+        panelRef.current.style.width    = `${newW}px`
+        panelRef.current.style.minWidth = `${newW}px`
+      }
     }
-    const onUp = () => {
-      dragging.current = false
+    const onUp = (up) => {
+      const newW = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startW + (startX - up.clientX)))
+      setWidth(newW)
+      setIsResizing(false)
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseup',   onUp)
     }
@@ -61,11 +66,11 @@ export default function FormDrawer({ open, title, onClose, footer, children, def
       )}
 
       {/* 패널 본체 */}
-      <div style={{
+      <div ref={panelRef} style={{
         width:         open ? width : 0,
         minWidth:      open ? width : 0,
         overflow:      'hidden',
-        transition:    dragging.current ? 'none' : 'width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1)',
+        transition:    isResizing ? 'none' : TRANSITION,
         borderLeft:    open ? '1px solid var(--color-border)' : 'none',
         background:    'var(--color-bg-secondary)',
         display:       'flex',
@@ -78,9 +83,14 @@ export default function FormDrawer({ open, title, onClose, footer, children, def
           borderBottom:'1px solid var(--color-border)', flexShrink:0,
           display:'flex', alignItems:'center', justifyContent:'space-between',
         }}>
-          <span style={{ fontSize:13, fontWeight:700, color:'var(--color-text-primary)' }}>{title}</span>
+          <span style={{
+            fontSize:13, fontWeight:700, color:'var(--color-text-primary)',
+            overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+          }}>
+            {title}
+          </span>
           <button onClick={onClose} style={{
-            display:'flex', alignItems:'center', justifyContent:'center',
+            display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
             width:26, height:26, border:'1px solid transparent', borderRadius:'var(--radius-md)',
             background:'transparent', cursor:'pointer', color:'var(--color-text-muted)', transition:'all 0.15s',
           }}
@@ -99,7 +109,7 @@ export default function FormDrawer({ open, title, onClose, footer, children, def
         {/* 푸터 */}
         {footer && (
           <div style={{
-            borderTop:'1px solid var(--color-border)', padding:'10px 16px',
+            borderTop:'1px solid var(--color-border)', padding:'6px 16px',
             display:'flex', justifyContent:'flex-end', gap:8, flexShrink:0,
           }}>
             {footer}

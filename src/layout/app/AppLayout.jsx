@@ -21,8 +21,13 @@ import WlcResDistPanel from "@/panels/wlc/wlcResDist/WlcResDistPanel.jsx";
 import SccBatchExePanel from "@/panels/scc/sccBatchExe/SccBatchExePanel.jsx"
 import SccExeLogPanel from "@/panels/scc/sccExeLog/SccExeLogPanel.jsx"
 import SccResPanel from "@/panels/scc/sccRes/SccResPanel.jsx"
-import SccResDistPanel from "@/panels/scc/sccResDist/SccResDistPanel";
+import SccResDistPanel from "@/panels/scc/sccResDist/SccResDistPanel.jsx";
 import SccCalcSimPanel from "@/panels/scc/sccClacSim/SccCalcSimPanel.jsx";
+
+import BaseInfoPanel    from "@/panels/base/baseInfo/BaseInfoPanel.jsx";
+import LnkPgmStsPanel   from "@/panels/base/lnkPgmSts/LnkPgmStsPanel.jsx";
+import GisSyncHistPanel from "@/panels/base/gisSyncHist/GisSyncHistPanel.jsx";
+import SccEvalItmMngPanel from "@/panels/base/sccEvalItmMng/SccEvalItmMngPanel";
 
 import AuthMngPanel from "@/panels/system/auth/AuthMngPanel.jsx";
 import NoticePanel from "@/panels/system/bbs/NoticePanel.jsx";
@@ -31,7 +36,6 @@ import JobCodePanel from "@/panels/system/code/JobCodePanel.jsx";
 import MenuMngPanel from "@/panels/system/menu/MenuMngPanel.jsx";
 import ProgramRegPanel from "@/panels/system/program/ProgramRegPanel.jsx";
 import UserMngPanel from "@/panels/system/user/UserMngPanel.jsx";
-import UserConLogPanel from "@/panels/system/logs/UserConLogPanel.jsx";
 
 import EmptyPanel       from '@/panels/demo/sample/EmptyPanel.jsx';
 
@@ -65,6 +69,12 @@ const PANEL_COMPONENTS = {
     sccCalcSimPanel : SccCalcSimPanel,
 
 
+    baseInfoPanel    : BaseInfoPanel,
+    lnkPgmStsPanel   : LnkPgmStsPanel,
+    gisSyncHistPanel : GisSyncHistPanel,
+    sccEvalItmMngPanel : SccEvalItmMngPanel,
+
+
     authMngPanel : AuthMngPanel,
     noticePanel : NoticePanel,
     commonCodePanel : CommonCodePanel,
@@ -72,7 +82,6 @@ const PANEL_COMPONENTS = {
     menuMngPanel : MenuMngPanel,
     programRegPanel : ProgramRegPanel,
     userMngPanel : UserMngPanel,
-    userConLogPanel : UserConLogPanel,
 
     emptyPanel:         EmptyPanel,
 }

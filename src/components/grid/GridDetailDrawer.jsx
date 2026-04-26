@@ -103,7 +103,6 @@ export default function GridDetailDrawer({
           height:38, padding:'0 16px', boxSizing:'border-box',
           borderBottom:'1px solid var(--color-border)', flexShrink:0,
           display:'flex', alignItems:'center', justifyContent:'space-between',
-          background:'var(--color-bg-tertiary)',
         }}>
           <span style={{
             fontSize:13, fontWeight:700, color:'var(--color-text-primary)',

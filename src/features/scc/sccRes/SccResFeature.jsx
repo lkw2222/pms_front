@@ -347,7 +347,7 @@ export default function SccResFeature() {
                         colDefs={colDefs}
                         onRowClick={openDrawer}
                         height="100%"
-                        pageSize={10}
+                        pageSize={20}
                         loading={isLoading}
                         defaultColDef={{ sortable:true, resizable:true, filter:false, minWidth:60, flex:1 }}
                     />

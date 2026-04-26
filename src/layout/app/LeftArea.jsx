@@ -42,11 +42,13 @@ const MENU_GROUPS = [
             { id:'sccResDistPanel', label:'SCC 종합평가 분포도',           icon:ClipboardCheck,  component:'sccResDistPanel' },
             { id:'sccCalcSimPanel', label:'SCC 산출 시뮬레이션',           icon:ClipboardCheck,  component:'sccCalcSimPanel' },
         ]},
-    { id:'sample', label:'개발 샘플', icon:MonitorCog, children:[
-            { id:'samplePanel',       label:'컴포넌트',       icon:MonitorCog, component:'samplePanel' },
-            { id:'readmePanel',       label:'개발 표준 문서', icon:HelpCircle,      component:'readmePanel' },
-            { id:'gridPanel_sample',  label:'그리드 샘플',    icon:BarChart2,       component:'gridPanel'   },
-            { id:'gisPanel_sample',   label:'지도 샘플',      icon:Map,             component:'gisPanel'    },
+    { id:'base', label:'기초정보', icon:ChartBarDecreasing, children:[
+            { id:'baseInfoPanel', label:'기초 정보 현황',       component:'baseInfoPanel' },
+            { id:'lnkPgmStsPanel', label:'연계 프로그램 현황',      component:'lnkPgmStsPanel' },
+            { id:'gisSyncHistPanel', label:'GIS 연계 현황',  component:'gisSyncHistPanel' },
+            { id:'sccEvalItmMngPanel', label:'SCC 평가 인자관리',  component:'sccEvalItmMngPanel' },
+            { id:'', label:'SCC 평가기준 점수관리',  component:'' },
+            { id:'', label:'SCC 평가등급 코드관리',  component:'' },
         ]},
     { id:'system', label:'시스템', icon:Settings, children:[
             { id:'userMngPanel', label:'이용자 관리', component:'userMngPanel'},
@@ -57,6 +59,14 @@ const MENU_GROUPS = [
             { id:'commonCodePanel', label:'공통코드 관리', component:'commonCodePanel'},
             { id:'noticePanel', label:'공지사항', component:'noticePanel'},
             { id:'programRegPanel', label:'프로그램 등록 관리', component:'programRegPanel'}
+        ]},
+    { id:'sample', label:'개발 샘플', icon:MonitorCog, children:[
+            { id:'samplePanel',       label:'컴포넌트',       icon:MonitorCog, component:'samplePanel' },
+            { id:'readmePanel',       label:'개발 표준 문서', icon:HelpCircle,      component:'readmePanel' },
+            { id:'gridPanel_sample',  label:'그리드 샘플',    icon:BarChart2,       component:'gridPanel'   },
+            { id:'gisPanel_sample',   label:'지도 샘플',      icon:Map,             component:'gisPanel'    },
+            { id:'archivePanel',   label:'자료실 샘플',      icon:Map,             component:'archivePanel'    },
+
         ]},
 ]
 

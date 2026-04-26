@@ -264,7 +264,7 @@ export default function WlcExeLogFeature() {
                         rowData={data?.list ?? []}
                         colDefs={colDefs}
                         height="100%"
-                        pageSize={10}
+                        pageSize={20}
                         loading={isLoading}
                         defaultColDef={{ sortable:true, resizable:true, filter:false, minWidth:80, flex:1 }}
                     />
