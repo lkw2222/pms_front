@@ -72,7 +72,7 @@
 }
 
 .sectionLabelText {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--color-text-primary);
 }
@@ -91,7 +91,7 @@
 
 .cell {
     display: grid;
-    grid-template-columns: 54px 1fr;
+    grid-template-columns: 65px 1fr;
     padding: 8px 10px;
     gap: 6px;
     align-items: center;
@@ -101,12 +101,12 @@
 /* 단일 항목 (홀수 마지막 or full 지정) — 전체 너비, 라벨 컬럼 넓게 */
 .cellFull {
     grid-column: 1 / -1;
-    grid-template-columns: 76px 1fr;
-    padding: 8px 14px;
+    grid-template-columns: 65px 1fr;
+    padding: 8px 10px;
 }
 
 .cellLabel {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--color-text-muted);
     white-space: nowrap;
@@ -115,7 +115,7 @@
 }
 
 .cellValue {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--color-text-primary);
     word-break: break-all;
     min-width: 0;
