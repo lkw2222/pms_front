@@ -12,8 +12,15 @@ import logoDarkImg from '@/assets/image/logo-dark.png'
 
 export default function TopArea({apiRef}) {
     const { theme, toggleTheme, toggleSidebar, openPanels } = useAppStore();
-    const closeAllPanels = useCallback(() => [...(apiRef.current?.panels??[])].forEach(p => p.api.close()), []);
-    const closeActivePanel = useCallback(() => apiRef.current?.activePanel?.api.close(), []);
+    const closeAllPanels   = useCallback(() =>
+        [...(apiRef.current?.panels ?? [])]
+            .filter(p => p.id !== 'dashboardPanel')
+            .forEach(p => p.api.close()), [])
+    const closeActivePanel = useCallback(() => {
+        const active = apiRef.current?.activePanel
+        if (!active || active.id === 'dashboardPanel') return
+        active.api.close()
+    }, [])
     const [notiOpen, setNotiOpen] = useState(false);
     const [jobOpen, setJobOpen] = useState(false);
 
@@ -35,7 +42,7 @@ export default function TopArea({apiRef}) {
             </div>
 
             <div className={styles.topbarRight}>
-                {openPanels.size > 0 && (
+                {[...openPanels].some(id => id !== 'dashboardPanel') && (
                     <>
                         <div className={styles.divider} />
                         <button className={styles.tabCloseBtn} onClick={closeActivePanel} title="현재 탭 닫기">

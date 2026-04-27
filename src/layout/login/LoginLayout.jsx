@@ -68,6 +68,7 @@ export default function LoginLayout() {
         mutationFn: ({ id, password }) => loginApi.login(id, password),
         throwOnError: false,
         onSuccess: (result) => {
+            localStorage.removeItem('pms-layout') // 로그인 시 레이아웃 초기화 → 대시보드만 표시
             setAuth(result.user, result.token);
             setSessionExpired(false);
             toast.success('로그인되었습니다. 작업을 계속하세요.');

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { toast }  from 'sonner'
 import styles     from './SccBatchExeFeature.module.css'
+import {openDockPanel} from "@/store/dockviewStore.js";
 
 // ── 목업 데이터 ────────────────────────────────────────────────────────────────
 const BONBU_OPTIONS = [
@@ -138,6 +139,10 @@ export default function SccBatchExeFeature({ onExecute, isRunning }) {
 
     const sabupsoOptions = SABUPSO_MAP[form.bonbu] ?? []
 
+    const goToExeLog = useCallback((row) => {
+        openDockPanel({ id:'sccExeLogPanel' })
+    }, [])
+
     const handleBonbuChange = useCallback((e) => {
         setForm(f => ({ ...f, bonbu: e.target.value, sabupso: '' }))
     }, [])
@@ -169,7 +174,7 @@ export default function SccBatchExeFeature({ onExecute, isRunning }) {
                     <span className={styles.pageTitle}>SCC 배치 실행</span>
                     <span className={styles.pageDesc}>지역본부 및 사업소를 선택하여 전주 SCC 평가 배치를 수동으로 실행합니다.</span>
                 </div>
-                <button className={styles.historyBtn} type="button">
+                <button className={styles.historyBtn} onClick={goToExeLog} type="button">
                     <History size={14} />
                     SCC 실행로그
                 </button>

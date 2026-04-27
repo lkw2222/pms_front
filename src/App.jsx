@@ -6,7 +6,8 @@ import {useAppStore} from "@/store/useAppStore.js";
 
 // ── App ────────────────────────────────────────────────────────────────────────
 export default function App() {
-    const { user, theme } = useAppStore();
+    const user  = useAppStore(s => s.user)
+    const theme = useAppStore(s => s.theme)
 
     // ── 뒤로가기 / 백스페이스 방지 ──────────────────────────────────────────
     useEffect(() => {

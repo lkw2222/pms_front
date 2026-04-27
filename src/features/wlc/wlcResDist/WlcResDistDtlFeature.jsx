@@ -2,9 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
@@ -13,6 +11,7 @@ import { Style, Circle as CircleStyle, Fill, Stroke } from 'ol/style';
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import styles from './WlcResDistDtlFeature.module.css'
+import { TILE_LAYERS } from '@/utils/gis/tileLayer.js'
 
 // 평가 등급 정의
 const GRADE = {
@@ -113,7 +112,7 @@ export default function WlcResDistDtlFeature({ initialPoleId = '8027R504' }) {
         const map = new Map({
             target: mapContainerRef.current,
             layers: [
-                new TileLayer({ source: new OSM() }),
+                TILE_LAYERS.Base.create(),
                 vectorLayer,
             ],
             view: new View({
