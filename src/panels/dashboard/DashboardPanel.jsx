@@ -2,7 +2,7 @@ import React from 'react'
 import ErrorBoundary    from '@/components/feedback/ErrorBoundary.jsx'
 import layout from '@/assets/styles/layout.module.css';
 import DashboardHeaderFeature from "../../features/dashboard/DashboardHeaderFeature.jsx";
-import DashboardCardFeature from "../../features/dashboard/DashboardCardFeature";
+import StatsCardFeature from "@/features/common/charts/StatsCardFeature.jsx";
 import {UtilityPole, ScanSearch, Skull, Angry, Annoyed, Smile, SmilePlus} from "lucide-react";
 import GradeDounutFeature from "@/features/common/charts/GradeDounutFeature";
 import LineBarFeature from "@/features/common/charts/LineBarFeature.jsx";
@@ -111,72 +111,72 @@ export default function DashboardPanel() {
 
                 {/* 카드 */}
                 <div className={layout.dashboardCard}>
-                    <DashboardCardFeature data={{
-                        label:"전체",
-                        value:"3,500",
-                        unit:"개",
-                        Icon:UtilityPole,
-                        iconSize:17
-                    }}/>
+                    <StatsCardFeature
+                        label="전체"
+                        value="3,500"
+                        unit="개"
+                        Icon={UtilityPole}
+                        iconSize="17"
+                    />
 
-                    <DashboardCardFeature data={{
-                        label:"진단대상",
-                        value:"3,500",
-                        unit:"개",
-                        sub:[{label: "HI점수 200이상", value:"1,000"}, {label: "기울기 3도 이상", value:"2,000"}],
-                        Icon:ScanSearch,
-                        iconSize:17
-                    }}/>
+                    <StatsCardFeature
+                        label="진단대상"
+                        value="3,500"
+                        unit="개"
+                        sub={[{label: "HI점수 200이상", value:"1,000"}, {label: "기울기 3도 이상", value:"2,000"}]}
+                        Icon={ScanSearch}
+                        iconSize="17"
+                    />
 
-                    <DashboardCardFeature data={{
-                        label:"즉시위험(S등급)",
-                        value:"430",
-                        unit:"개",
-                        sub:[{label: "430", value:"백만원"}],
-                        Icon:Skull,
-                        iconSize:17,
-                        color:GRADE_COLOR.S
-                    }}/>
+                    <StatsCardFeature
+                        label="즉시위험(S등급)"
+                        value="430"
+                        unit="개"
+                        sub={[{label: "430", value:"백만원"}]}
+                        Icon={Skull}
+                        iconSize="17"
+                        color={GRADE_COLOR.S}
+                    />
 
-                    <DashboardCardFeature data={{
-                        label:"고위험(A등급)",
-                        value:"1,354",
-                        unit:"개",
-                        sub:[{label: "121.1", value:"백만원"}],
-                        Icon:Angry,
-                        iconSize:17,
-                        color:GRADE_COLOR.A
-                    }}/>
+                    <StatsCardFeature
+                        label="고위험(A등급)"
+                        value="1,354"
+                        unit="개"
+                        sub={[{label: "121.6", value:"백만원"}]}
+                        Icon={Angry}
+                        iconSize="17"
+                        color={GRADE_COLOR.A}
+                    />
 
-                    <DashboardCardFeature data={{
-                        label:"중위험(B등급)",
-                        value:"903",
-                        unit:"개",
-                        sub:[{label: "72.2", value:"백만원"}],
-                        Icon:Annoyed,
-                        iconSize:17,
-                        color:GRADE_COLOR.B
-                    }}/>
+                    <StatsCardFeature
+                        label="중위험(B등급)"
+                        value="903"
+                        unit="개"
+                        sub={[{label: "72.6", value:"백만원"}]}
+                        Icon={Annoyed}
+                        iconSize="17"
+                        color={GRADE_COLOR.B}
+                    />
 
-                    <DashboardCardFeature data={{
-                        label:"저위험(C등급)",
-                        value:"392",
-                        unit:"개",
-                        sub:[{label: "19.6", value:"백만원"}],
-                        Icon:Smile,
-                        iconSize:17,
-                        color:GRADE_COLOR.C
-                    }}/>
+                    <StatsCardFeature
+                        label="저위험(C등급)"
+                        value="392"
+                        unit="개"
+                        sub={[{label: "19.6", value:"백만원"}]}
+                        Icon={Smile}
+                        iconSize="17"
+                        color={GRADE_COLOR.C}
+                    />
 
-                    <DashboardCardFeature data={{
-                        label:"정기진단(D등급)",
-                        value:"420",
-                        unit:"개",
-                        sub:[{label: "0.4", value:"백만원"}],
-                        Icon:SmilePlus,
-                        iconSize:17,
-                        color:GRADE_COLOR.D
-                    }}/>
+                    <StatsCardFeature
+                        label="정기진단(D등급)"
+                        value="420"
+                        unit="개"
+                        sub={[{label: "0.4", value:"백만원"}]}
+                        Icon={SmilePlus}
+                        iconSize="17"
+                        color={GRADE_COLOR.D}
+                    />
                 </div>
 
                 <div className={layout.dashboardChart}>

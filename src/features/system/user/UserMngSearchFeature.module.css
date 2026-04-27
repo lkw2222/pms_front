@@ -1,6 +1,6 @@
 .filtersWrap {
     display:grid;
-    grid-template-columns:160px 160px 160px 360px;
+    grid-template-columns:160px 160px 160px 220px;
     gap:10px;
     align-items:end;
 }
@@ -37,4 +37,15 @@
 .resultFail {
     color: var(--color-danger);
     font-weight: 600;
+}
+
+.cardWrap {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    grid-column:span 4;
+}
+
+.cardItem {
+    cursor: pointer;
 }

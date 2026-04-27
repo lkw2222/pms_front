@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 import styles from './UserMngGridFeature.module.css';
 import BasicGrid from "@/components/grid/BasicGrid.jsx";
 
@@ -14,75 +14,7 @@ import BasicGrid from "@/components/grid/BasicGrid.jsx";
  * |------------|--------|------|
  * | 2026-04-24 | LKW    | 최초 작성 |
  */
-export default function UserMngGridFeature() {
-    const [rowData, setRowData] = useState([]);
-
-    // 샘플 데이터 로드
-    useEffect(() => {
-        // 실제로는 fetch('/api/users').then(...)
-        setRowData([
-            {
-                userId: 'xor80584',
-                userName: '박정희',
-                headquarters: '충남',
-                branch: '전력연구원',
-                pwHint: '01053926757',
-                auth: 'SUPER',
-                pwResetRequest: 'N',
-                requestDate: '2026-04-03',
-                processDate: '2026-04-03',
-                useYn: 'Y',
-                createDate: '2026-04-03',
-                updateDate: '2026-04-03',
-                purpose: '운영관리',
-            },
-            {
-                userId: 'kdongkim',
-                userName: '김길동',
-                headquarters: '충남',
-                branch: '전력연구원',
-                pwHint: '김길동',
-                auth: 'SUPER',
-                pwResetRequest: 'N',
-                requestDate: '2026-04-03',
-                processDate: '',
-                useYn: 'N',
-                createDate: '2026-04-03',
-                updateDate: '2026-04-03',
-                purpose: '운영관리',
-            },
-            {
-                userId: 'jchulyang',
-                userName: '양진철',
-                headquarters: '충남',
-                branch: '전력연구원',
-                pwHint: 'didwlscjf',
-                auth: 'SUPER',
-                pwResetRequest: 'N',
-                requestDate: '2026-04-03',
-                processDate: '',
-                useYn: 'N',
-                createDate: '2026-04-03',
-                updateDate: '2026-04-03',
-                purpose: '운영관리',
-            },
-            {
-                userId: 'yhpark',
-                userName: '박용훈',
-                headquarters: '충남',
-                branch: '전력연구원',
-                pwHint: '19887602',
-                auth: 'SUPER',
-                pwResetRequest: 'N',
-                requestDate: '2026-04-03',
-                processDate: '',
-                useYn: 'N',
-                createDate: '2026-04-03',
-                updateDate: '2026-04-03',
-                purpose: '운영관리',
-            },
-        ]);
-    }, []);
+export default function UserMngGridFeature({rowData}) {
 
     // 컬럼 정의
     const columnDefs = useMemo(() => [
@@ -133,7 +65,7 @@ export default function UserMngGridFeature() {
                     rowData={rowData}
                     colDefs={columnDefs}
                     rowSelection="multiple"
-                    height="100%"
+                    height="450PX"
                     pageSize={10}
                     defaultColDef={{ sortable:true, resizable:true, filter:false, minWidth:80, flex:1 }}
                 />
